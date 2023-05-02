@@ -59,8 +59,8 @@ namespace ODF.API.MinimalApi
 
 				var password2Translation = await mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), default);
 				var emailTranslation = await mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_email", countryCode), default);
-				var firstNameTranslation = await mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_first_name", countryCode), default);
-				var lastNameTranslation = await mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_last_name", countryCode), default);
+				var firstNameTranslation = await mediator.Send(new GetTranslationQuery("Jméno", "login_first_name", countryCode), default);
+				var lastNameTranslation = await mediator.Send(new GetTranslationQuery("Příjmení", "login_last_name", countryCode), default);
 
 				var title = await mediator.Send(new GetTranslationQuery("Přihlášení se nezdařilo", "login_failed_title", countryCode), default);
 				string message = await mediator.Send(new GetTranslationQuery("Zkontrolujte, že jste zadali správné údaje k účtu", "login_failed_msg", countryCode), default);
