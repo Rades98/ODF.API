@@ -1,0 +1,113 @@
+﻿version: "3.7"
+
+services:
+  redis-odf:
+    container_name: redis-odf
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - redis-odf
+    volumes:
+      - ./var/lib/redis:/redis
+
+  redis-commander-odf:
+    image: rediscommander/redis-commander
+    container_name: redis-commander-odf
+    restart: always
+    environment:
+      - REDIS_HOSTS=redis
+      - REDIS_PORT=6379
+    ports:
+      - "8081:8081"
+    networks:
+      - redis-odf
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    container_name: elasticsearch-odf
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=kjKSzpjAeyakMiHesoyAm
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    networks:
+      - elastic-odf
+    volumes:
+       - ./var/lib/elastic:/elastic
+      
+
+  kibana-odf:
+    image: docker.elastic.co/kibana/kibana:7.16.3
+    container_name: kibana-odf
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=kjKSzpjAeyakMiHesoyAm
+    ports:
+        - 5601:5601
+    depends_on:
+        - elasticsearch
+    networks:
+        - elastic-odf
+  api:
+    restart: always
+    container_name: odf-api
+    build: .
+    ports:
+      - "8981:443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_HTTPS_PORT: "443"
+      ASPNETCORE_URLS: "https://+"
+      ApiSettings__ApiUrl: "https://127.0.0.1:8981"
+      ElasticsearchSettings__DefaultIndex: "odf-articles"
+      ElasticsearchSettings__Nodes__0: http://elasticsearch:9200
+      ElasticsearchSettings__Password: "kjKSzpjAeyakMiHesoyAm"
+      Jwt__Key: "E9B22F7125BFDC355B2149B2A42C28918E862E69BBAFC32FC174ADE6FF"
+     
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic-odf
+networks:
+  elastic-odf:
+  redis-odf:
+
+volumes:
+  esdata:
+    driver: local
+
+# RTFM
+# cd .\ODF.API\
+# dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\ODF.API.pfx -p kjkszpj
+# dotnet dev-certs https --trust
+# dotnet user-secrets set "Kestrel:Certificates:Development:Password" "kjkszpj"
+# cd ../
+# docker-compose up --build -d
+
+#to down
+# docker-compose down --remove-orphans
+
+#API LOGIN: admin : heslopyco
+
+#To see logs type to cmd docker logs odf-api
+
+#To see shit in kibana: 127.0.0.1:5601 -> elastic : kjKSzpjAeyakMiHesoyAm
+# - Analytics
+#    |-- Discover
+#         |-- Create index pattern
+#              |-- select odf-api-development + create
+#    |-- Discover again
+#  CG! u can see shit

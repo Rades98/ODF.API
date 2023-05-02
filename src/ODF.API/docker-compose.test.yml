@@ -1,0 +1,68 @@
+version: "3.7"
+
+services:
+  redis-odf:
+    container_name: redis-odf
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - redis-odf
+    volumes:
+      - ./var/lib/redis:/redis
+
+  redis-commander-odf:
+    image: rediscommander/redis-commander
+    container_name: redis-commander-odf
+    restart: always
+    environment:
+      - REDIS_HOSTS=redis
+      - REDIS_PORT=6379
+    ports:
+      - "8081:8081"
+    networks:
+      - redis-odf
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=kjKSzpjAeyakMiHesoyAm
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    networks:
+      - elastic-odf
+    volumes:
+       - esdata:/usr/share/elasticsearch/data
+      
+
+  kibana-odf:
+    image: docker.elastic.co/kibana/kibana:7.16.3
+    container_name: kibana-odf
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=kjKSzpjAeyakMiHesoyAm
+    ports:
+        - 5601:5601
+    depends_on:
+        - elasticsearch
+    networks:
+        - elastic-odf
+
+networks:
+  elastic-odf:
+  redis-odf:
+
+volumes:
+  esdata:
+    driver: local
