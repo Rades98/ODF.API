@@ -7,9 +7,9 @@ using Nest;
 using ODF.Data.Contracts.Entities;
 using ODF.Data.Contracts.Interfaces;
 
-namespace ODF.Data.Elastic
+namespace ODF.Data.Elastic.Repos.Translations
 {
-	public class TranslationRepo : ITranslationRepo
+	internal class TranslationRepo : ITranslationRepo
 	{
 		private readonly IElasticClient _elasticClient;
 
@@ -27,12 +27,11 @@ namespace ODF.Data.Elastic
 				Text = text,
 			};
 
-			return (await _elasticClient.IndexAsync(translation, i => i.Index("translations"), cancellationToken)).IsValid;
+			return (await _elasticClient.IndexAsync(translation, i => i, cancellationToken)).IsValid;
 		}
 
 		public async Task<IEnumerable<Translation>> GetPagedAsync(int size, int offset, int languageId, CancellationToken cancellationToken)
 			=> (await _elasticClient.SearchAsync<Translation>(s => s
-							.Index("translations")
 							.Query(q => q
 								.Bool(bq => bq
 									.Filter(
@@ -47,7 +46,7 @@ namespace ODF.Data.Elastic
 		{
 			var translation = await GetAsync(translationIdentifier, languageId, cancellationToken);
 
-			if(translation is null)
+			if (translation is null)
 			{
 				return string.Empty;
 			}
@@ -72,7 +71,6 @@ namespace ODF.Data.Elastic
 
 		public async Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
 			=> (await _elasticClient.CountAsync<Translation>(c => c
-							.Index("translations")
 							.Query(q => q
 								.Bool(bq => bq
 									.Filter(
@@ -86,33 +84,31 @@ namespace ODF.Data.Elastic
 		{
 			var translation = await GetAsync(translationIdentifier, languageId, cancellationToken);
 
-			if(translation is not null)
+			if (translation is not null)
 			{
 				var scriptParams = new Dictionary<string, object> { { "Text", text } };
 
 				return (await _elasticClient.UpdateByQueryAsync<Translation>(s => s
-				.Index("translations")
-				.Query(q => q
-					.Bool(bq => bq
-						.Filter(
-							fq => fq.Terms(t => t.Field(f => f.TranslationCode).Terms(translationIdentifier)),
-							fq => fq.Terms(t => t.Field(f => f.LanguageId).Terms(languageId))
+					.Query(q => q
+						.Bool(bq => bq
+							.Filter(
+								fq => fq.Terms(t => t.Field(f => f.TranslationCode).Terms(translationIdentifier)),
+								fq => fq.Terms(t => t.Field(f => f.LanguageId).Terms(languageId))
+							)
 						)
 					)
-				)
-				.Size(1)
-				.Script(s => s
-					.Source("ctx._source.propertyName = params.paramName;")
-					.Params(scriptParams))
-				)).IsValid;
+					.Size(1)
+					.Script(s => s
+						.Source("ctx._source.propertyName = params.paramName;")
+						.Params(scriptParams))
+					)).IsValid;
 			}
 
 			return await AddTranslationAsync(translationIdentifier, text, languageId, cancellationToken);
 		}
 
-		private async Task<Translation>GetAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
+		private async Task<Translation> GetAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
 			=> (await _elasticClient.SearchAsync<Translation>(s => s
-							.Index("translations")
 							.Query(q => q
 								.Bool(bq => bq
 									.Filter(

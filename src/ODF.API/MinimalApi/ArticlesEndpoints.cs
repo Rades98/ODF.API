@@ -20,9 +20,9 @@ namespace ODF.API.MinimalApi
 	{
 		public static WebApplication MapArticlesEndpoints(this WebApplication app, IMediator mediator, ApiSettings apiSettings)
 		{
-			app.MapPut("/articles", [Authorize(Roles = UserRoles.Admin)] async ([FromBody] AddArticleRequestForm model, CancellationToken cancellationToken) =>
+			app.MapPut("/{countryCode}/articles", [Authorize(Roles = UserRoles.Admin)] async ([FromBody] AddArticleRequestForm model, [FromRoute] string countryCode, CancellationToken cancellationToken) =>
 			{
-				var result = await mediator.Send(new AddArticleCommand(model.TitleTranslationCode, model.Title, model.TextTranslationCode, model.Text, model.PageId, model.CountryCode, model.ImageUrl), cancellationToken);
+				var result = await mediator.Send(new AddArticleCommand(model.TitleTranslationCode, model.Title, model.TextTranslationCode, model.Text, model.PageId, countryCode, model.ImageUrl), cancellationToken);
 
 				if (!result)
 				{
@@ -30,7 +30,7 @@ namespace ODF.API.MinimalApi
 				}
 
 				var responseModel = new PutArticleResponseModel(apiSettings.ApiUrl, "Článek byl úspěšně přidán.",
-					ArticleFormFactory.GetAddArticleForm(model.Title, model.TitleTranslationCode, model.Text, model.TitleTranslationCode, model.PageId, model.CountryCode, model.ImageUrl));
+					ArticleFormFactory.GetAddArticleForm(model.Title, model.TitleTranslationCode, model.Text, model.TitleTranslationCode, model.PageId, model.ImageUrl));
 
 				responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(apiSettings.ApiUrl, model.Title, Languages.Deutsch.GetCountryCode());
 				responseModel.AddTextDeTranslation = GetTranslateArticleTextAction(apiSettings.ApiUrl, model.Text, Languages.Deutsch.GetCountryCode());
@@ -85,11 +85,11 @@ namespace ODF.API.MinimalApi
 		}
 
 		private static NamedAction GetTranslateArticleTextAction(string baseUrl, string translationCode, string countryCode)
-			=> new NamedAction($"{baseUrl}/articles", $"Přeložit text do {countryCode}", "translate_article", HttpMethods.Put,
+			=> new NamedAction($"{baseUrl}/{countryCode}/articles", $"Přeložit text do {countryCode}", "translate_article", HttpMethods.Put,
 					TranslationFormFactory.GetChangeTranslationForm(translationCode, "", countryCode));
 
 		private static NamedAction GetTranslateArticleTitleAction(string baseUrl, string translationCode, string countryCode)
-			=> new NamedAction($"{baseUrl}/articles", $"Přeložit nadpis do {countryCode}", "translate_article", HttpMethods.Put,
+			=> new NamedAction($"{baseUrl}/{countryCode}/articles", $"Přeložit nadpis do {countryCode}", "translate_article", HttpMethods.Put,
 					TranslationFormFactory.GetChangeTranslationForm(translationCode, "", countryCode));
 	}
 }

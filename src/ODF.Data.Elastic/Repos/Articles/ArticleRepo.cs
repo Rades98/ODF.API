@@ -7,9 +7,9 @@ using Nest;
 using ODF.Data.Contracts.Entities;
 using ODF.Data.Contracts.Interfaces;
 
-namespace ODF.Data.Elastic
+namespace ODF.Data.Elastic.Repos.Articles
 {
-	public class ArticleRepo : IArticleRepo
+	internal class ArticleRepo : IArticleRepo
 	{
 		private readonly IElasticClient _elasticClient;
 
