@@ -14,6 +14,7 @@ builder.Configuration
 // Add services to the container.
 builder.Services.RegisterAppServices(builder.Configuration)
 				.AddDistributedMemoryCache()
+				.AddMemoryCache()
 				.AddEndpointsApiExplorer()
 				.AddSwaggerGen()
 				.AddControllers();

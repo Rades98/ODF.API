@@ -19,9 +19,6 @@ namespace ODF.API.RequestModels.Forms
 		[JsonProperty("pageId", Required = Required.Always)]
 		public int PageId { get; set; }
 
-		[JsonProperty("countryCode", Required = Required.Always)]
-		public string CountryCode { get; set; } = string.Empty;
-
 		[JsonProperty("imageUrl", Required = Required.AllowNull)]
 		public string ImageUrl { get; set; } = string.Empty;
 	}

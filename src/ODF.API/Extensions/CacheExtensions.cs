@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace ODF.API.Extensions
 {
-	public static class DistributedCacheExtensions
+	public static class CacheExtensions
 	{
 		public async static Task<T?> GetCachedValueAsyn<T>(this IDistributedCache cache, string key, CancellationToken cancellationToken) where T : class, new()
 		{

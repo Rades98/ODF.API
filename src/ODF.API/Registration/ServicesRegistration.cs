@@ -1,11 +1,13 @@
 ﻿using System.IO.Compression;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using ODF.API.Middleware;
 using ODF.API.Registration.SettingModels;
 using ODF.AppLayer.Settings;
@@ -19,15 +21,34 @@ namespace ODF.API.Registration
 		{
 			services.ConfigureElasticsearch(conf)
 					.AddAppLayerServices()
-					.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-					.AddJwtBearer(o =>
+					.AddAuthentication(options =>
 					{
-						o.TokenValidationParameters = new TokenValidationParameters
+						options.DefaultScheme = "JWT_OR_COOKIE";
+						options.DefaultChallengeScheme = "JWT_OR_COOKIE";
+					})
+					.AddCookie(options =>
+					{
+						options.ExpireTimeSpan = TimeSpan.FromDays(1);
+					})
+					.AddJwtBearer(options =>
+					{
+						options.TokenValidationParameters = new TokenValidationParameters
 						{
-							IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf["Jwt:Key"]!)),
 							ValidateIssuer = false,
 							ValidateAudience = false,
-							ValidateIssuerSigningKey = true
+							ValidateIssuerSigningKey = true,
+							IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf["Jwt:Key"]!))
+						};
+					})
+					.AddPolicyScheme("JWT_OR_COOKIE", "JWT_OR_COOKIE", options =>
+					{
+						options.ForwardDefaultSelector = context =>
+						{
+							string authorization = context.Request.Headers[HeaderNames.Authorization]!;
+							if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
+								return JwtBearerDefaults.AuthenticationScheme;
+
+							return CookieAuthenticationDefaults.AuthenticationScheme;
 						};
 					});
 

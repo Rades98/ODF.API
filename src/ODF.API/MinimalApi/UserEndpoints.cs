@@ -2,6 +2,8 @@
 using System.Security.Claims;
 using System.Text;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ODF.API.FormFactories;
@@ -46,13 +48,24 @@ namespace ODF.API.MinimalApi
 
 					tokenDescriptor.Subject.AddClaims(userResult.Claims);
 
+					var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
+					identity.AddClaims(tokenDescriptor.Subject.Claims);
+					var principal = new ClaimsPrincipal(identity);
+					await context.SignInAsync(
+						CookieAuthenticationDefaults.AuthenticationScheme,
+						principal,
+						new AuthenticationProperties
+						{
+							IsPersistent = true,
+							AllowRefresh = true,
+							ExpiresUtc = DateTime.UtcNow.AddDays(1)
+						});
+
 					var tokenHandler = new JwtSecurityTokenHandler();
 					var token = tokenHandler.CreateToken(tokenDescriptor);
-					var stringToken = tokenHandler.WriteToken(token);
 
-					context.Response.Cookies.Append("Token", stringToken);
-
-					var responseModel = new UserResponseModel(apiSettings.ApiUrl, userResult.UserName, stringToken, countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+					var responseModel = new UserResponseModel(apiSettings.ApiUrl, userResult.UserName, tokenHandler.WriteToken(token), countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+					responseModel.AddAction($"/{countryCode}/navigation", "nav", HttpMethods.Get);
 
 					return Results.Ok(responseModel);
 				}

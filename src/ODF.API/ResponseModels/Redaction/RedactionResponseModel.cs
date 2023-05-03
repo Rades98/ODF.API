@@ -18,5 +18,8 @@ namespace ODF.API.ResponseModels.Redaction
 
 		[JsonProperty("addAssociationArticle", Required = Required.Always)]
 		public NamedAction? AddAssociationArticle { get; set; }
+
+		[JsonProperty("addLineupItem", Required = Required.Always)]
+		public NamedAction? AddLineupItem { get; set; }
 	}
 }
