@@ -7,8 +7,8 @@ namespace ODF.API.FormFactories
 		public static Form GetLoginForm(string userNameTranslation, string passwordTranslation, string userName = "", string password = "")
 		{
 			var form = new Form();
-			form.AddMember(new(userNameTranslation, nameof(userName), userName.GetType().Name, userName, true));
-			form.AddMember(new(passwordTranslation, nameof(password), password.GetType().Name, password, true));
+			form.AddMember(new(userNameTranslation, nameof(userName), "text", userName, true));
+			form.AddMember(new(passwordTranslation, nameof(password), "password", password, true));
 
 			return form;
 		}
@@ -28,12 +28,12 @@ namespace ODF.API.FormFactories
 			string lastName ="")
 		{
 			var form = new Form();
-			form.AddMember(new(userNameTranslation, nameof(userName), userName.GetType().Name, userName, true));
-			form.AddMember(new(passwordTranslation, nameof(password), password.GetType().Name, password, true));
-			form.AddMember(new(password2Translation, nameof(password2), password2.GetType().Name, password2, true));
-			form.AddMember(new(emailTranslation, nameof(email), email.GetType().Name, email, true));
-			form.AddMember(new(firstNameTranslation, nameof(firstName), firstName.GetType().Name, firstName, true));
-			form.AddMember(new(lastNameTranslation, nameof(lastName), lastName.GetType().Name, lastName, true));
+			form.AddMember(new(userNameTranslation, nameof(userName), "text", userName, true));
+			form.AddMember(new(passwordTranslation, nameof(password), "password", password, true));
+			form.AddMember(new(password2Translation, nameof(password2), "password", password2, true));
+			form.AddMember(new(emailTranslation, nameof(email), "text", email, true));
+			form.AddMember(new(firstNameTranslation, nameof(firstName), "text", firstName, true));
+			form.AddMember(new(lastNameTranslation, nameof(lastName), "text", lastName, true));
 
 			return form;
 		}

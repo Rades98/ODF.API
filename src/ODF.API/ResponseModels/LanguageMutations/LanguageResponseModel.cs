@@ -6,12 +6,12 @@ namespace ODF.API.ResponseModels.LanguageMutations
 	{
 		public LanguageResponseModel(string baseUrl, IEnumerable<LanguageModel> languages, string title, string countryCode) : base(baseUrl, "/supportedLanguages", HttpMethods.Get, countryCode)
 		{
-			Titile = title;
+			Title = title;
 			Languages = languages;
 		}
 
 		[JsonProperty("title", Required = Required.Always)]
-		public string Titile { get; }
+		public string Title { get; }
 
 		[JsonProperty("languages", Required = Required.Always)]
 		public IEnumerable<LanguageModel> Languages { get; }

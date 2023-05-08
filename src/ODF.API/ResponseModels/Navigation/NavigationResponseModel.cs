@@ -18,5 +18,11 @@ namespace ODF.API.ResponseModels.Navigation
 
 		[JsonProperty("languageMutations", Required = Required.Always)]
 		public NamedAction? LanguageMutations { get; set; }
+
+		[JsonProperty("userName", Required = Required.AllowNull)]
+		public string UserName { get; set; }
+
+		[JsonProperty("logout", Required = Required.AllowNull)]
+		public NamedAction? LogoutAction { get; set; }
 	}
 }

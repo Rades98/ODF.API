@@ -7,15 +7,15 @@ namespace ODF.API.FormFactories
 		public static Form GetAddArticleForm(string title, string titleTranslationCode, string text, string textTranslationCode, int pageId,  string imageUrl = "https://placehold.co/600x400")
 		{
 			var form = new Form();
-			form.AddMember(new("Nadpis", nameof(title), title.GetType().Name, title, true));
-			form.AddMember(new("Kód nadpisu", nameof(titleTranslationCode), titleTranslationCode.GetType().Name, titleTranslationCode, true));
+			form.AddMember(new("Nadpis", nameof(title), "text", title, true));
+			form.AddMember(new("Kód nadpisu", nameof(titleTranslationCode), "text", titleTranslationCode, true));
 
-			form.AddMember(new("Text", nameof(text), text.GetType().Name, text, true));
-			form.AddMember(new("Kód textu", nameof(textTranslationCode), textTranslationCode.GetType().Name, textTranslationCode, true));
+			form.AddMember(new("Text", nameof(text), "text", text, true));
+			form.AddMember(new("Kód textu", nameof(textTranslationCode), "text", textTranslationCode, true));
 
-			form.AddMember(new("Stránka", nameof(pageId), pageId.GetType().Name, pageId));
+			form.AddMember(new("Stránka", nameof(pageId), "number", pageId));
 			
-			form.AddMember(new("Obrázek", nameof(imageUrl), imageUrl.GetType().Name, imageUrl, true));
+			form.AddMember(new("Obrázek", nameof(imageUrl), "image", imageUrl, true));
 
 			return form;
 		}

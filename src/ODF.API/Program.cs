@@ -31,6 +31,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(x => x
+	.AllowAnyOrigin()
+	.AllowAnyMethod()
+	.AllowAnyHeader()
+	.AllowCredentials()
+		.WithOrigins("http://localhost:4200")
+		.WithOrigins("http://folklorova.cz"));
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -41,11 +49,6 @@ app.MapApiEndpoints();
 app.UseMiddleware<CountryCodeMiddleWare>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<RateLimitMiddleware>();
-
-app.UseCors(x => x
-	.AllowAnyOrigin()
-	.AllowAnyMethod()
-	.AllowAnyHeader());
 
 app.UseResponseCompression();
 

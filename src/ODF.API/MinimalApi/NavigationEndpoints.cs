@@ -50,6 +50,12 @@ namespace ODF.API.MinimalApi
 
 					responseModel.LoginAction = new NamedAction(link, loginActionName, "login", HttpMethods.Post, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
 				}
+				else
+				{
+					var logoutActionName = await mediator.Send(new GetTranslationQuery("Odhlásit se", "logout", countryCode), default);
+					responseModel.UserName = "Admin"; //mock
+					responseModel.LogoutAction = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/user/logout", logoutActionName, "logout", HttpMethods.Post);
+				}
 
 				if (countryCode.ToUpper() == Languages.Czech.GetCountryCode().ToUpper() && context.IsAdmin())
 				{

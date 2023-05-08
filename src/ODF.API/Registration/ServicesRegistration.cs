@@ -29,6 +29,9 @@ namespace ODF.API.Registration
 					.AddCookie(options =>
 					{
 						options.ExpireTimeSpan = TimeSpan.FromDays(1);
+						options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+						options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+						options.Cookie.HttpOnly = false;
 					})
 					.AddJwtBearer(options =>
 					{
