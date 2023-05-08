@@ -1,11 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Nest;
+using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms;
@@ -58,7 +61,7 @@ namespace ODF.API.MinimalApi
 						{
 							IsPersistent = true,
 							AllowRefresh = true,
-							ExpiresUtc = DateTime.UtcNow.AddDays(1)
+							ExpiresUtc = DateTime.UtcNow.AddDays(1),
 						});
 
 					var tokenHandler = new JwtSecurityTokenHandler();
@@ -91,7 +94,17 @@ namespace ODF.API.MinimalApi
 			//register
 			app.MapPut("/{countryCode}/user", (HttpContext context) =>
 			{
+			});
 
+			app.MapPost("/{countryCode}/user/logout", async ([FromRoute] string countryCode, HttpContext context, IConfiguration conf, CancellationToken cancellationToken) =>
+			{
+				if(context.IsLoggedIn())
+				{
+					await context.SignOutAsync();
+					return Results.Accepted();
+				}
+
+				return Results.UnprocessableEntity();
 			});
 
 			return app;

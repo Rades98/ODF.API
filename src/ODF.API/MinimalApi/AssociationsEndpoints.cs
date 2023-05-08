@@ -17,7 +17,7 @@ namespace ODF.API.MinimalApi
 				var header = await mediator.Send(new GetTranslationQuery("O nás", "association_header", countryCode), ct);
 				var responseModel = new AssociationResponseModel(apiSettings.ApiUrl, aboutText, header, countryCode);
 
-				responseModel.AddAction($"/{countryCode}/articles?size=10&offset=0&pageId=1", "about_articles", HttpMethods.Get);
+				responseModel.AddAction($"/{countryCode}/articles?size=10&offset=0&pageId=1", "association_articles", HttpMethods.Get);
 
 				return Results.Ok(responseModel);
 			})

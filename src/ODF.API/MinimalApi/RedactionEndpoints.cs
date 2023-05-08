@@ -27,10 +27,10 @@ namespace ODF.API.MinimalApi
 				var responseModel = new RedactionResponseModel(apiSettings.ApiUrl, countryCode, "Redakce");
 
 				var aboutTransaltion = await mediator.Send(new GetTranslationQuery("O nás", "nav_about", countryCode), cancellationToken);
-				responseModel.AddAboutArticle = GetAddArticleAction(apiSettings.ApiUrl, aboutTransaltion, 0);
+				responseModel.AddAboutArticle = GetAddArticleAction(apiSettings.ApiUrl, aboutTransaltion, 0, countryCode);
 
 				var associationTranslation = await mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);
-				responseModel.AddAssociationArticle = GetAddArticleAction(apiSettings.ApiUrl, associationTranslation, 1);
+				responseModel.AddAssociationArticle = GetAddArticleAction(apiSettings.ApiUrl, associationTranslation, 1, countryCode);
 
 				responseModel.AddLineupItem = GetAddLineupAction(apiSettings.ApiUrl, countryCode);
 
@@ -45,9 +45,9 @@ namespace ODF.API.MinimalApi
 			return app;
 		}
 
-		private static NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum)
-			=> new ($"{baseUrl}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
-					ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{pridej_svuj_identifikator}}", "", $"page{pageNum}_text_{{pridej_svuj_identifikator}}", 1));
+		private static NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
+			=> new ($"{baseUrl}/{countryCode}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
+					ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{pridej_svuj_identifikator}}", "", $"page{pageNum}_text_{{pridej_svuj_identifikator}}", pageNum));
 
 		private static NamedAction GetAddLineupAction(string baseUrl, string countryCode)
 			=> new ($"{baseUrl}/{countryCode}/lineup", $"Přidat item do programu", "add_lineup_item", HttpMethods.Put,

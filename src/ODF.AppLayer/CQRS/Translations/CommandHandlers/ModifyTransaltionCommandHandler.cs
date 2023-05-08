@@ -17,7 +17,6 @@ namespace ODF.AppLayer.CQRS.Translations.CommandHandlers
 			_repo = repo ?? throw new ArgumentNullException(nameof(repo));
 		}
 
-
 		public async Task<bool> Handle(ModifyTransaltionCommand request, CancellationToken cancellationToken)
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))

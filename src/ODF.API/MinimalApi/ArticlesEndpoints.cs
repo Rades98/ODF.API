@@ -47,7 +47,7 @@ namespace ODF.API.MinimalApi
 			app.MapGet("/{countryCode}/articles/{articleId}", async ([FromRoute] int articleId, [FromRoute] string countryCode, CancellationToken cancellationToken) =>
 			{
 				var result = await mediator.Send(new GetArticleQuery(articleId, countryCode), cancellationToken);
-				
+
 				if (result is not null)
 				{
 					var responseModel = new GetArticleResponseModel(apiSettings.ApiUrl, articleId, countryCode, result.Title, result.Text, result.ImageUri);
@@ -59,7 +59,7 @@ namespace ODF.API.MinimalApi
 				var notFoundArticle = await mediator.Send(new GetTranslationQuery("Článek, který se pokoušíte zobrazit, byl nejspíše smazán.", "app_article_notfound", countryCode), cancellationToken);
 
 				return CustomApiResponses.NotFound(new NotFoundExceptionResponseModel(notFoundTitle, notFoundArticle));
-				
+
 			})
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(GetArticleResponseModel), StatusCodes.Status200OK))
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(NotFoundExceptionResponseModel), StatusCodes.Status404NotFound))
@@ -71,9 +71,11 @@ namespace ODF.API.MinimalApi
 
 				var responseModel = new GetArticlesResponseModel(apiSettings.ApiUrl, size, offset, pageId, countryCode);
 
-				if(articles.Any())
+				if (articles.Any())
 				{
-					responseModel.Articles = articles.Select(art => new GetArticleResponseModel(apiSettings.ApiUrl, art.Id, countryCode, art.Title, art.Text, art.ImageUri));
+					responseModel.Articles = articles
+												.Where(art => !string.IsNullOrEmpty(art.Text) && !string.IsNullOrEmpty(art.Title))
+												.Select(art => new GetArticleResponseModel(apiSettings.ApiUrl, art.Id, countryCode, art.Title, art.Text, art.ImageUri));
 				}
 
 				return responseModel;
