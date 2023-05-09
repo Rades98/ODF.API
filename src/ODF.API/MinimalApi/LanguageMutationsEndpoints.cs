@@ -53,7 +53,7 @@ namespace ODF.API.MinimalApi
 
 				var translations = await mediator.Send(new GetTranslationsQuery(countryCode, size, offset), cancellationToken);
 
-				var responseModel = new GetTranslationsResponseModel(apiSettings.ApiUrl, countryCode, "Správa překladů");
+				var responseModel = new GetTranslationsResponseModel(apiSettings.ApiUrl, countryCode, "Správa překladů", $"/translations?size={size}&offset={offset}");
 				responseModel.Translations = translations.Translations.Select(tr =>
 				{
 					var model = new GetTranslationResponseModel(apiSettings.ApiUrl, countryCode, tr.TranslationCode, tr.Text);

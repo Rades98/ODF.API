@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
-using Nest;
 using Newtonsoft.Json;
 using ODF.Data.Contracts.Entities;
 using ODF.Data.Contracts.Interfaces;
@@ -25,32 +24,10 @@ namespace ODF.Data.Elastic.Repos.Articles
 
 		public Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, string imageUrl, CancellationToken cancellationToken)
 			=> _repo.AddArticleAsync(titleTranslationCode, textTransaltionCode, pageId, imageUrl, cancellationToken);
-		
-		public async Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)
-		{
-			var cacheKey = $"{nameof(Article)}_{id}";
 
-			var cachedResponse = _cache.Get(cacheKey);
+		public Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)
+			=> _repo.GetArticleAsync(id, cancellationToken);
 
-			if (cachedResponse != null)
-			{
-				var res = JsonConvert.DeserializeObject<Article>(Encoding.Default.GetString((byte[])cachedResponse));
-				if (res is not null)
-				{
-					return res;
-				}
-			}
-
-			var response = await _repo.GetArticleAsync(id, cancellationToken);
-
-			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), new MemoryCacheEntryOptions()
-			{
-				AbsoluteExpiration = DateTime.Now.AddMinutes(60)
-			});
-
-			return response;
-		}
-		
 		public async Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken)
 		{
 			var cacheKey = $"{nameof(Article)}s_{pageId}_paged{size}_{offset}";

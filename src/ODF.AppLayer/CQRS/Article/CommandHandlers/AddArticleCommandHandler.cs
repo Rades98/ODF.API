@@ -24,14 +24,14 @@ namespace ODF.AppLayer.CQRS.Article.CommandHandlers
 
 		public async Task<bool> Handle(AddArticleCommand request, CancellationToken cancellationToken)
 		{
-			if(Languages.TryParse(request.CountryCode, out var lang))
+			if (Languages.TryParse(request.CountryCode, out var lang))
 			{
 				var title = await _translationRepo.GetTranslationOrDefaultTextAsync(request.TitleTransaltionCode, request.Title, lang.Id, cancellationToken);
 				var text = await _translationRepo.GetTranslationOrDefaultTextAsync(request.TextTransaltionCode, request.Text, lang.Id, cancellationToken);
 
 				_logger.LogInformation("Creating article with {titleTransCode} and {textTransCode}", request.TitleTransaltionCode, request.TextTransaltionCode);
 
-				if(title is not null && text is not null)
+				if (title is not null && text is not null)
 				{
 					return await _repo.AddArticleAsync(request.TitleTransaltionCode, request.TextTransaltionCode, request.PageId, request.ImageUri, cancellationToken);
 				}

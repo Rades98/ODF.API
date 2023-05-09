@@ -15,7 +15,7 @@ namespace ODF.API.FormFactories
 
 			form.AddMember(new("Stránka", nameof(pageId), "number", pageId));
 			
-			form.AddMember(new("Obrázek", nameof(imageUrl), "image", imageUrl, true));
+			form.AddMember(new("Obrázek", nameof(imageUrl), "string", imageUrl, true));
 
 			return form;
 		}

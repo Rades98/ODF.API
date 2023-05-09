@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Common;
@@ -26,7 +27,7 @@ namespace ODF.API.MinimalApi
 
 				var responseModel = new RedactionResponseModel(apiSettings.ApiUrl, countryCode, "Redakce");
 
-				var aboutTransaltion = await mediator.Send(new GetTranslationQuery("O nás", "nav_about", countryCode), cancellationToken);
+				var aboutTransaltion = await mediator.Send(new GetTranslationQuery("O festivalu", "nav_about", countryCode), cancellationToken);
 				responseModel.AddAboutArticle = GetAddArticleAction(apiSettings.ApiUrl, aboutTransaltion, 0, countryCode);
 
 				var associationTranslation = await mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);

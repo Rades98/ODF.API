@@ -24,5 +24,8 @@ namespace ODF.API.ResponseModels.Navigation
 
 		[JsonProperty("logout", Required = Required.AllowNull)]
 		public NamedAction? LogoutAction { get; set; }
+
+		[JsonProperty("register", Required = Required.AllowNull)]
+		public NamedAction? RegisterAction { get; set; }
 	}
 }

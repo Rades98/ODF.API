@@ -13,7 +13,7 @@ namespace ODF.API.FormFactories
 			form.AddMember(new("Překladová proměnná názvu", nameof(performanceNameTranslationCode), "text", performanceNameTranslationCode, true));
 			form.AddMember(new("Popis", nameof(description), "text", description, true));
 			form.AddMember(new("Překladová proměnná popisu", nameof(DescriptionTranslationCode), "text", DescriptionTranslationCode, true));
-			form.AddMember(new("Datum a čas", nameof(dateTime), "text", dateTime, true));
+			form.AddMember(new("Datum a čas", nameof(dateTime), "datetime-local", dateTime, true));
 
 			return form;
 		}

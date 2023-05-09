@@ -30,6 +30,14 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))
 			{
+				var perfNameTest = await _translationRepo.GetTranslationAsync(request.PerformanceNameTranslationCode, lang.Id, cancellationToken);
+				var descTest = await _translationRepo.GetTranslationAsync(request.DescriptionTranslationCode, lang.Id, cancellationToken);
+
+				if(perfNameTest is not null || descTest is not null)
+				{
+					return false;
+				}
+
 				var perfName = await _translationRepo.GetTranslationOrDefaultTextAsync(request.PerformanceNameTranslationCode, request.PerformanceName, lang.Id, cancellationToken);
 				var desc = await _translationRepo.GetTranslationOrDefaultTextAsync(request.DescriptionTranslationCode, request.Description, lang.Id, cancellationToken);
 

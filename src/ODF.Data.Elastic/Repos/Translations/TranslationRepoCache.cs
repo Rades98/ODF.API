@@ -78,51 +78,10 @@ namespace ODF.Data.Elastic.Repos.Translations
 			return response;
 		}
 
-		public async Task<string> GetTranslationOrDefaultTextAsync(string translationIdentifier, string defaultTranslation, int languageId, CancellationToken cancellationToken)
-		{
-			var cacheKey = $"{nameof(Translation)}_{translationIdentifier}_{languageId}_{defaultTranslation}";
+		public Task<string> GetTranslationOrDefaultTextAsync(string translationIdentifier, string defaultTranslation, int languageId, CancellationToken cancellationToken)
+			=> _repo.GetTranslationOrDefaultTextAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken);
 
-			var cachedResponse = _cache.Get(cacheKey);
-
-			if (cachedResponse != null)
-			{
-				var res = JsonConvert.DeserializeObject<string>(Encoding.Default.GetString((byte[])cachedResponse));
-				if (res is not null)
-				{
-					return res;
-				}
-			}
-
-			var response = await _repo.GetTranslationOrDefaultTextAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken);
-
-			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), new MemoryCacheEntryOptions()
-			{
-				AbsoluteExpiration = DateTime.Now.AddMinutes(60)
-			});
-
-			return response;
-		}
-
-		public async Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
-		{
-			var cacheKey = $"{nameof(Translation)}_count_{languageId}";
-
-			var cachedResponse = _cache.Get(cacheKey);
-
-			if (cachedResponse != null)
-			{
-				var res = JsonConvert.DeserializeObject<long>(Encoding.Default.GetString((byte[])cachedResponse));
-				return res;
-			}
-
-			var response = await _repo.GetTranslationsCountAsync(languageId, cancellationToken);
-
-			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), new MemoryCacheEntryOptions()
-			{
-				AbsoluteExpiration = DateTime.Now.AddMinutes(60)
-			});
-
-			return response;
-		}
+		public Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
+			=> _repo.GetTranslationsCountAsync(languageId, cancellationToken);
 	}
 }

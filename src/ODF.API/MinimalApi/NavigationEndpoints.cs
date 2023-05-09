@@ -49,6 +49,16 @@ namespace ODF.API.MinimalApi
 					var link = $"{apiSettings.ApiUrl}/{countryCode}/user";
 
 					responseModel.LoginAction = new NamedAction(link, loginActionName, "login", HttpMethods.Post, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+
+					var password2Translation = await mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), default);
+					var emailTranslation = await mediator.Send(new GetTranslationQuery("e-mail", "login_email", countryCode), default);
+					var firstNameTranslation = await mediator.Send(new GetTranslationQuery("Jméno", "login_first_name", countryCode), default);
+					var lastNameTranslation = await mediator.Send(new GetTranslationQuery("Příjmení", "login_last_name", countryCode), default);
+
+					string registrationActionName = await mediator.Send(new GetTranslationQuery("Nemáte registraci? Klikněte zde!", "register_action_name", countryCode), default);
+
+					responseModel.RegisterAction = new NamedAction(apiSettings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
+						UserFormFactory.GetRegisterForm(loginTranslation, passwordTranslation, password2Translation, emailTranslation, firstNameTranslation, lastNameTranslation));
 				}
 				else
 				{
