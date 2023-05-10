@@ -40,7 +40,7 @@ namespace ODF.Data.Elastic.Repos.Translations
 								)
 							)
 							.Size(size)
-							.From(offset), cancellationToken)).Documents;
+							.From(offset*size), cancellationToken)).Documents;
 
 		public async Task<string> GetTranslationAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
 		{

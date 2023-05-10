@@ -30,28 +30,26 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))
 			{
-				var perfNameTest = await _translationRepo.GetTranslationAsync(request.PerformanceNameTranslationCode, lang.Id, cancellationToken);
 				var descTest = await _translationRepo.GetTranslationAsync(request.DescriptionTranslationCode, lang.Id, cancellationToken);
 
-				if(perfNameTest is not null || descTest is not null)
+				if(!string.IsNullOrEmpty(descTest))
 				{
 					return false;
 				}
 
-				var perfName = await _translationRepo.GetTranslationOrDefaultTextAsync(request.PerformanceNameTranslationCode, request.PerformanceName, lang.Id, cancellationToken);
 				var desc = await _translationRepo.GetTranslationOrDefaultTextAsync(request.DescriptionTranslationCode, request.Description, lang.Id, cancellationToken);
 
-				_logger.LogInformation("Creating lineup item with {perfName} and {desc}", request.PerformanceNameTranslationCode, request.DescriptionTranslationCode);
+				_logger.LogInformation("Creating lineup item with {perfName} and {desc}", request.PerformanceName, request.DescriptionTranslationCode);
 
-				if (desc is not null && perfName is not null)
+				if (desc is not null)
 				{
 					var lineupItem = new LineupItem()
 					{
 						DateTime = request.DateTime,
 						DescriptionTranslation = request.DescriptionTranslationCode,
 						Interpret = request.Interpret,
-						PerformanceNameTranslation = request.PerformanceNameTranslationCode,
-						Place = request.Place,
+						PerformanceName = request.PerformanceName,
+						Place = request.Place.Trim(),
 					};
 
 					return await _repo.AddLineupItemAsync(lineupItem, cancellationToken);

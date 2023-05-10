@@ -42,7 +42,7 @@ namespace ODF.API.MinimalApi
 			app.MapPut("/{countryCode}/lineup", [Authorize(Roles = UserRoles.Admin)] async ([FromRoute] string countryCode, [FromBody] AddLineupItemForm model, CancellationToken cancellationToken) =>
 			{
 				var result = await mediator.Send(new AddLineupItemCommand(
-					model.Place, model.Interpret, model.PerformanceName, model.PerformanceNameTranslationCode,
+					model.Place, model.Interpret, model.PerformanceName,
 					model.Description, model.DescriptionTranslationCode, model.DateTime, countryCode), cancellationToken);
 
 				if (result)

@@ -10,7 +10,7 @@ namespace ODF.Data.Contracts.Entities
 
 		public string Interpret { get; set; } = string.Empty;
 
-		public string PerformanceNameTranslation { get; set; } = string.Empty;
+		public string PerformanceName { get; set; } = string.Empty;
 
 		public string DescriptionTranslation { get; set; } = string.Empty;
 	}

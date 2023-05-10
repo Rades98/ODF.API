@@ -21,9 +21,9 @@ namespace ODF.API.MinimalApi
 		{
 			app.MapGet("/{countryCode}/supportedLanguages", async ([FromRoute] string countryCode, CancellationToken cancellationToken) =>
 			{
-				var languages = Languages.GetAll().Select(async lang =>
+				var actionParttext = await mediator.Send(new GetTranslationQuery("Přepnout do {0}", "app_language_switch", countryCode), cancellationToken);
+				var languages = Languages.GetAll().Select(lang =>
 				{
-					var actionParttext = await mediator.Send(new GetTranslationQuery("Přepnout do {0}", "app_language_switch", countryCode), cancellationToken);
 					var actionName = string.Format(actionParttext, lang.GetCountryCode());
 					var languageModel = new LanguageModel(lang.Name, lang.GetCountryCode());
 
@@ -33,8 +33,7 @@ namespace ODF.API.MinimalApi
 					}
 
 					return languageModel;
-				})
-				.Select(task => task.Result);
+				});
 
 				var title = await mediator.Send(new GetTranslationQuery("Jazyk", "app_language", countryCode), cancellationToken);
 				var responseModel = new LanguageResponseModel(apiSettings.ApiUrl, languages, title, countryCode);
@@ -52,19 +51,21 @@ namespace ODF.API.MinimalApi
 				}
 
 				var translations = await mediator.Send(new GetTranslationsQuery(countryCode, size, offset), cancellationToken);
+				var deTranslations = await mediator.Send(new GetTranslationsQuery(Languages.Deutsch.GetCountryCode(), size, offset), cancellationToken);
+				var enTranslations = await mediator.Send(new GetTranslationsQuery(Languages.English.GetCountryCode(), size, offset), cancellationToken);
 
 				var responseModel = new GetTranslationsResponseModel(apiSettings.ApiUrl, countryCode, "Správa překladů", $"/translations?size={size}&offset={offset}");
 				responseModel.Translations = translations.Translations.Select(tr =>
 				{
 					var model = new GetTranslationResponseModel(apiSettings.ApiUrl, countryCode, tr.TranslationCode, tr.Text);
 
-					model.ChangeEnTranslation = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "AJ překlad", "transalation_en_submit", HttpMethods.Post,
-						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, model.Text, Languages.English.GetCountryCode()));
+					model.ChangeEnTranslation = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit AJ překlad", "transalation_en_submit", HttpMethods.Post,
+						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, enTranslations.Translations.FirstOrDefault(tr => tr.TranslationCode == model.TranslationCode)?.Text ?? "", Languages.English.GetCountryCode()));
 
-					model.ChangeDeTransaltion = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "DE překlad", "transalation_de_submit", HttpMethods.Post,
-						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, model.Text, Languages.Deutsch.GetCountryCode()));
+					model.ChangeDeTransaltion = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit DE překlad", "transalation_de_submit", HttpMethods.Post,
+						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, deTranslations.Translations.FirstOrDefault(tr => tr.TranslationCode == model.TranslationCode)?.Text ?? "", Languages.Deutsch.GetCountryCode()));
 
-					model.ChangeTransaltion = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "CZ hodnota", "transalation_cz_submit", HttpMethods.Post,
+					model.ChangeTransaltion = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit CZ překlad", "transalation_cz_submit", HttpMethods.Post,
 						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, model.Text, Languages.Deutsch.GetCountryCode()));
 
 					return model;

@@ -36,7 +36,11 @@ namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 
 			foreach (var item in lineupItems)
 			{
-				result.Add(await MapLineupItem(item, request.CountryCode, cancellationToken));
+				var mapped = await MapLineupItem(item, request.CountryCode, cancellationToken);
+				if(mapped is not null)
+				{
+					result.Add(mapped);
+				}
 			}
 
 			return result;
@@ -46,17 +50,16 @@ namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 		{
 			if (lineupItem is not null && Languages.TryParse(countryCode, out var lang))
 			{
-				var performanceName = await _translationRepo.GetTranslationAsync(lineupItem.PerformanceNameTranslation, lang.Id, cancellationToken);
 				var description = await _translationRepo.GetTranslationAsync(lineupItem.DescriptionTranslation, lang.Id, cancellationToken);
 
-				if(performanceName is not null && description is not null)
+				if(!string.IsNullOrEmpty(description))
 				{
 					return new()
 					{
 						DateTime = lineupItem.DateTime,
 						Description = description,
 						Interpret = lineupItem.Interpret,
-						PerformanceName = performanceName,
+						PerformanceName = lineupItem.PerformanceName,
 						Place = lineupItem.Place,
 					};
 				}

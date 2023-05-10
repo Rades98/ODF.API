@@ -42,7 +42,6 @@ services:
       - elastic-odf
     volumes:
        - ./var/lib/elastic:/elastic
-      
 
   kibana-odf:
     image: docker.elastic.co/kibana/kibana:7.16.3
@@ -90,6 +89,7 @@ volumes:
     driver: local
 
 # RTFM
+# IN POWERSHELL
 # cd .\ODF.API\
 # dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\ODF.API.pfx -p kjkszpj
 # dotnet dev-certs https --trust

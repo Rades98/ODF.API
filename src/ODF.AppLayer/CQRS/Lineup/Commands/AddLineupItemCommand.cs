@@ -5,11 +5,10 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 {
 	public class AddLineupItemCommand : IRequest<bool>
 	{
-		public AddLineupItemCommand(string place, string interpret, string perfName, string perfNameTranslationCode, string description, string descriptionTranslationCode, DateTime dateTime, string countryCode)
+		public AddLineupItemCommand(string place, string interpret, string perfName, string description, string descriptionTranslationCode, DateTime dateTime, string countryCode)
 		{
 			Place = place;
 			Interpret = interpret;
-			PerformanceNameTranslationCode = perfNameTranslationCode;
 			PerformanceName = perfName;
 			DescriptionTranslationCode = descriptionTranslationCode;
 			Description = description;
@@ -22,8 +21,6 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 		public string Interpret { get; }
 
 		public string PerformanceName { get; }
-
-		public string PerformanceNameTranslationCode { get; }
 
 		public string Description { get; }
 

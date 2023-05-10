@@ -13,9 +13,6 @@ namespace ODF.API.RequestModels.Forms
 		[JsonProperty("performanceName", Required = Required.Always)]
 		public string PerformanceName { get; set; } = string.Empty;
 
-		[JsonProperty("performanceNameTranslationCode", Required = Required.Always)]
-		public string PerformanceNameTranslationCode { get; set; } = string.Empty;
-
 		[JsonProperty("description", Required = Required.Always)]
 		public string Description { get; set; } = string.Empty;
 

@@ -48,10 +48,10 @@ namespace ODF.API.MinimalApi
 
 		private static NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
 			=> new ($"{baseUrl}/{countryCode}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
-					ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{pridej_svuj_identifikator}}", "", $"page{pageNum}_text_{{pridej_svuj_identifikator}}", pageNum));
+					ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{id}}", "", $"page{pageNum}_text_{{id}}", pageNum));
 
 		private static NamedAction GetAddLineupAction(string baseUrl, string countryCode)
 			=> new ($"{baseUrl}/{countryCode}/lineup", $"Přidat item do programu", "add_lineup_item", HttpMethods.Put,
-					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "{mesto}_{interpret}_name", "popis vystoupení", "{mesto}_{interpret}_{vystoupeni}_desc", DateTime.Now));
+					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
 	}
 }
