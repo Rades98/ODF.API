@@ -11,12 +11,12 @@ builder.Configuration
 			.AddEnvironmentVariables()
 			.Build();
 
-// Add services to the container.
-builder.Services.RegisterAppServices(builder.Configuration)
+builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 				.AddDistributedMemoryCache()
 				.AddMemoryCache()
 				.AddEndpointsApiExplorer()
 				.AddSwaggerGen()
+				.AddCors()
 				.AddControllers();
 
 builder.Host.UseSerilog();
@@ -31,13 +31,23 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(x => x
+if (app.Environment.IsDevelopment())
+{
+	app.UseCors(x => x
+	.AllowAnyMethod()
+	.AllowAnyHeader()
+	.SetIsOriginAllowed(origin => true)
+	.AllowCredentials());
+}
+else
+{
+	app.UseCors(x => x
 	.AllowAnyOrigin()
 	.AllowAnyMethod()
 	.AllowAnyHeader()
 	.AllowCredentials()
-		.WithOrigins("http://localhost:4200")
-		.WithOrigins("http://folklorova.cz"));
+	.WithOrigins("https://mycooldomain.lol"));
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -46,9 +56,10 @@ app.MapControllers();
 
 app.MapApiEndpoints();
 
-app.UseMiddleware<CountryCodeMiddleWare>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<CountryCodeMiddleWare>();
 app.UseMiddleware<RateLimitMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 
 app.UseResponseCompression();
 

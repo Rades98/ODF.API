@@ -71,7 +71,6 @@ services:
       ElasticsearchSettings__DefaultIndex: "odf-articles"
       ElasticsearchSettings__Nodes__0: http://elasticsearch:9200
       ElasticsearchSettings__Password: "kjKSzpjAeyakMiHesoyAm"
-      Jwt__Key: "E9B22F7125BFDC355B2149B2A42C28918E862E69BBAFC32FC174ADE6FF"
      
     volumes:
       - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets

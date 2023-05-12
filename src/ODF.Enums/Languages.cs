@@ -52,9 +52,17 @@ namespace ODF.Enums
 		public static bool TryParse(string countryCode, out Language? language)
 		{
 			string code = countryCode.ToUpper();
-			language = GetAll().FirstOrDefault(language => language.GetCountryCode() == code);
+			var lang = GetAll().FirstOrDefault(language => language.GetCountryCode() == code);
 
-			return language is not null;
+			if(lang is not null)
+			{
+				language = lang;
+				return true;
+			}
+
+			language = null;
+
+			return false;
 		}
 	}
 }

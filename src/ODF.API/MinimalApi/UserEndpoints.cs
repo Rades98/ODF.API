@@ -28,46 +28,30 @@ namespace ODF.API.MinimalApi
 			//login
 			app.MapPost("/{countryCode}/user", async ([FromBody] UserRequestForm user, [FromRoute] string countryCode, HttpContext context, IConfiguration conf, CancellationToken cancellationToken) =>
 			{
+				await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 				var loginTranslation = await mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), default);
 				var passwordTranslation = await mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), default);
 
 				// MOCK
 				if (user.UserName == "admin" && user.Password == "heslopyco")
 				{
-					var userResult = await mediator.Send(new LoginUserCommand("", ""), cancellationToken);
+					var userResult = await mediator.Send(new LoginUserCommand("admin", "adminPW"), cancellationToken); //work with mock
 
-					var key = Encoding.ASCII.GetBytes(conf["Jwt:Key"]!);
-					var tokenDescriptor = new SecurityTokenDescriptor
+					var claimsIdentity = new ClaimsIdentity(userResult.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+					var authProperties = new AuthenticationProperties
 					{
-						Subject = new ClaimsIdentity(new[]
-						{
-							new Claim(JwtRegisteredClaimNames.Sub, userResult.UserName),
-							new Claim(JwtRegisteredClaimNames.Email, userResult.Email),
-							new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-						}),
-						Expires = DateTime.UtcNow.AddHours(2),
-						SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+						AllowRefresh = true,
+						ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
+						IsPersistent = true,
 					};
 
-					tokenDescriptor.Subject.AddClaims(userResult.Claims);
-
-					var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
-					identity.AddClaims(tokenDescriptor.Subject.Claims);
-					var principal = new ClaimsPrincipal(identity);
 					await context.SignInAsync(
 						CookieAuthenticationDefaults.AuthenticationScheme,
-						principal,
-						new AuthenticationProperties
-						{
-							IsPersistent = true,
-							AllowRefresh = true,
-							ExpiresUtc = DateTime.UtcNow.AddDays(1),
-						});
+						new ClaimsPrincipal(claimsIdentity),
+						authProperties);
 
-					var tokenHandler = new JwtSecurityTokenHandler();
-					var token = tokenHandler.CreateToken(tokenDescriptor);
-
-					var responseModel = new UserResponseModel(apiSettings.ApiUrl, userResult.UserName, tokenHandler.WriteToken(token), countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+					var responseModel = new UserResponseModel(apiSettings.ApiUrl, userResult.UserName, countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
 					responseModel.AddAction($"/{countryCode}/navigation", "nav", HttpMethods.Get);
 
 					return Results.Ok(responseModel);
@@ -100,7 +84,7 @@ namespace ODF.API.MinimalApi
 			{
 				if(context.IsLoggedIn())
 				{
-					await context.SignOutAsync();
+					await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 					return Results.Accepted();
 				}
 

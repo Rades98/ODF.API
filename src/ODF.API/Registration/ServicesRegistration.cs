@@ -1,13 +1,9 @@
-﻿using System.IO.Compression;
-using System.Text;
+﻿using System;
+using System.IO.Compression;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using ODF.API.Middleware;
 using ODF.API.Registration.SettingModels;
 using ODF.AppLayer.Settings;
@@ -17,43 +13,24 @@ namespace ODF.API.Registration
 {
 	internal static class ServicesRegistration
 	{
-		internal static IServiceCollection RegisterAppServices(this IServiceCollection services, IConfiguration conf)
+		internal static IServiceCollection RegisterAppServices(this IServiceCollection services, IConfiguration conf, IWebHostEnvironment env)
 		{
 			services.ConfigureElasticsearch(conf)
-					.AddAppLayerServices()
-					.AddAuthentication(options =>
-					{
-						options.DefaultScheme = "JWT_OR_COOKIE";
-						options.DefaultChallengeScheme = "JWT_OR_COOKIE";
-					})
+					.AddAppLayerServices();
+
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 					.AddCookie(options =>
 					{
 						options.ExpireTimeSpan = TimeSpan.FromDays(1);
-						options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
-						options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+						options.SlidingExpiration = true;
 						options.Cookie.HttpOnly = false;
-					})
-					.AddJwtBearer(options =>
-					{
-						options.TokenValidationParameters = new TokenValidationParameters
-						{
-							ValidateIssuer = false,
-							ValidateAudience = false,
-							ValidateIssuerSigningKey = true,
-							IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf["Jwt:Key"]!))
-						};
-					})
-					.AddPolicyScheme("JWT_OR_COOKIE", "JWT_OR_COOKIE", options =>
-					{
-						options.ForwardDefaultSelector = context =>
-						{
-							string authorization = context.Request.Headers[HeaderNames.Authorization]!;
-							if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
-								return JwtBearerDefaults.AuthenticationScheme;
+						options.Cookie.Name = "folklorova-auth_cookie";
+						options.Cookie.SameSite = SameSiteMode.None;
 
-							return CookieAuthenticationDefaults.AuthenticationScheme;
-						};
 					});
+			services.AddDataProtection()
+					.SetApplicationName($"folklor-ova-{env.EnvironmentName}")
+					.PersistKeysToFileSystem(new DirectoryInfo($@"{env.ContentRootPath}\keys"));
 
 			services.Configure<GzipCompressionProviderOptions>(opt =>
 			{

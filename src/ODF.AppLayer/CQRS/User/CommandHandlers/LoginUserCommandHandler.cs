@@ -20,6 +20,7 @@ namespace ODF.AppLayer.CQRS.User.CommandHandlers
 				Email = "admin@folklorova.cz",
 				Claims = new List<Claim>()
 				{
+					new Claim(ClaimTypes.Name, "Admin"),
 					new Claim("Id", Guid.NewGuid().ToString()),
 					new Claim(ClaimTypes.Role, UserRoles.Admin),
 				}
