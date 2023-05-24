@@ -1,13 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading;
+﻿using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Nest;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
@@ -67,7 +62,7 @@ namespace ODF.API.MinimalApi
 
 				string registrationActionName = await mediator.Send(new GetTranslationQuery("Nemáte registraci? Klikněte zde!", "register_action_name", countryCode), default);
 
-				var registerAction = new NamedAction(apiSettings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put, 
+				var registerAction = new NamedAction(apiSettings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
 					UserFormFactory.GetRegisterForm(loginTranslation, passwordTranslation, password2Translation, emailTranslation, firstNameTranslation, lastNameTranslation));
 
 				return CustomApiResponses.Unauthorized(new(title, message, registerAction));
@@ -82,7 +77,7 @@ namespace ODF.API.MinimalApi
 
 			app.MapPost("/{countryCode}/user/logout", async ([FromRoute] string countryCode, HttpContext context, IConfiguration conf, CancellationToken cancellationToken) =>
 			{
-				if(context.IsLoggedIn())
+				if (context.IsLoggedIn())
 				{
 					await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 					return Results.Accepted();

@@ -4,9 +4,9 @@ using ODF.API.ResponseModels.Common.Forms;
 
 namespace ODF.API.ResponseModels.Articles
 {
-	public class PutArticleResponseModel : BaseResponseModel
+	public class CreateArticleResponseModel : BaseResponseModel
 	{
-		public PutArticleResponseModel(string baseUrl, string message, Form form) : base(baseUrl, "/articles", HttpMethods.Put, "cz")
+		public CreateArticleResponseModel(string baseUrl, string message, Form form) : base(baseUrl, "/articles", HttpMethods.Put, "cz")
 		{
 			Message = message;
 			_self.Curl.Form = form;

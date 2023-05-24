@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ namespace ODF.AppLayer.Settings
 		public static IServiceCollection AddAppLayerServices(this IServiceCollection services)
 		{
 			services.AddMediatR(Assembly.GetExecutingAssembly())
+				.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), lifetime: ServiceLifetime.Transient)
+				.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipeline<,>))
 				.AddTransient(typeof(IRequestPostProcessor<,>), typeof(ResourceNotFoundPostProcessor<,>));
 
 			return services;

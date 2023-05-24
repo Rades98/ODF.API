@@ -1,8 +1,6 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Common;
@@ -34,6 +32,7 @@ namespace ODF.API.MinimalApi
 				responseModel.AddAssociationArticle = GetAddArticleAction(apiSettings.ApiUrl, associationTranslation, 1, countryCode);
 
 				responseModel.AddLineupItem = GetAddLineupAction(apiSettings.ApiUrl, countryCode);
+				responseModel.UpdateContacts = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/contacts/redaction", "Upravit kontakty", "updateContacts", HttpMethods.Get);
 
 				responseModel.AddAction($"/{countryCode}/translations?size=20&offset=0", "translations_change", HttpMethods.Get);
 
@@ -47,11 +46,11 @@ namespace ODF.API.MinimalApi
 		}
 
 		private static NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
-			=> new ($"{baseUrl}/{countryCode}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
+			=> new($"{baseUrl}/{countryCode}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
 					ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{id}}", "", $"page{pageNum}_text_{{id}}", pageNum));
 
 		private static NamedAction GetAddLineupAction(string baseUrl, string countryCode)
-			=> new ($"{baseUrl}/{countryCode}/lineup", $"Přidat item do programu", "add_lineup_item", HttpMethods.Put,
+			=> new($"{baseUrl}/{countryCode}/lineup", $"Přidat item do programu", "add_lineup_item", HttpMethods.Put,
 					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
 	}
 }

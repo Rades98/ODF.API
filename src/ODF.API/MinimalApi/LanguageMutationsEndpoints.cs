@@ -71,16 +71,16 @@ namespace ODF.API.MinimalApi
 					return model;
 				});
 
-				if(offset > 0)
+				if (offset > 0)
 				{
 					responseModel.AddAction($"/{countryCode}/translations?size={size}&offset={offset - 1}", "translations_previous", HttpMethods.Get);
 				}
 
-				if(translations.Count > offset * size + size)
+				if (translations.Count > offset * size + size)
 				{
 					responseModel.AddAction($"/{countryCode}/translations?size={size}&offset={offset + 1}", "translations_next", HttpMethods.Get);
 				}
-				
+
 				return Results.Ok(responseModel);
 			})
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(GetTranslationsResponseModel), StatusCodes.Status200OK))
@@ -98,7 +98,7 @@ namespace ODF.API.MinimalApi
 
 				if (result)
 				{
-					var responseModel = new PostTranslationResponseModel(apiSettings.ApiUrl, countryCode,
+					var responseModel = new UpdateTranslationResponseModel(apiSettings.ApiUrl, countryCode,
 						TranslationFormFactory.GetChangeTranslationForm(form.TranslationCode, form.Text, Languages.Deutsch.GetCountryCode()),
 						$"Proměnná {form.TranslationCode} byla úspěšně přeložena pro {form.CountryCode}: {form.Text}.");
 
@@ -107,7 +107,7 @@ namespace ODF.API.MinimalApi
 
 				return CustomApiResponses.InternalServerError(new ExceptionResponseModel($"Při překladu {form.TranslationCode} pro {form.CountryCode} na hodnotu {form.Text} došlo k chybě."));
 			})
-			.WithMetadata(new ProducesResponseTypeAttribute(typeof(PostTranslationResponseModel), StatusCodes.Status200OK))
+			.WithMetadata(new ProducesResponseTypeAttribute(typeof(UpdateTranslationResponseModel), StatusCodes.Status200OK))
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError))
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(BadRequestExceptionResponseModel), StatusCodes.Status400BadRequest))
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized));

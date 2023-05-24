@@ -20,7 +20,8 @@ namespace ODF.API.Registration
 				.MapTicketsEndpoints(mediator, settings.Value)
 				.MapArticlesEndpoints(mediator, settings.Value)
 				.MapRedactionEndpoints(mediator, settings.Value)
-				.MapUserEndpoints(mediator, settings.Value);
+				.MapUserEndpoints(mediator, settings.Value)
+				.MapContactsEndpoints(mediator, settings.Value);
 
 			return app;
 		}

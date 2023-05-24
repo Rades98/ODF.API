@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using FluentValidation;
 using MediatR;
+using Microsoft.VisualBasic;
 using ODF.API.Extensions;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.CQRS.Translations.Queries;
@@ -33,6 +35,10 @@ namespace ODF.API.Middleware
 				if (e is TranslationNotFoundException)
 				{
 					resultMsg = await _mediator.Send(new GetTranslationQuery("Nepodporovaný jazyk", "server_error_wrong_language", countryCode ?? "CZ"), default);
+				}
+				else if( e is ValidationException validationException)
+				{
+					resultMsg = string.Join(",", validationException.Errors);
 				}
 				else
 				{
