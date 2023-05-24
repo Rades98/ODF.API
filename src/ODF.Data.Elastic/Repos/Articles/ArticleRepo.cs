@@ -41,25 +41,13 @@ namespace ODF.Data.Elastic.Repos.Articles
 
 		public async Task<Article?> GetArticleAsync(int id, CancellationToken cancellationToken)
 			=> (await _elasticClient.SearchAsync<Article>(s => s
-							.Query(q => q
-								.Bool(bq => bq
-									.Filter(
-										fq => fq.Terms(t => t.Field(f => f.Id).Terms(id))
-									)
-								)
-							)
+							.Query(fq => fq.Terms(t => t.Field(f => f.Id).Terms(id)))
 							.Size(1), cancellationToken)).Documents.FirstOrDefault();
 
 		public async Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken)
 		{
 			var res = (await _elasticClient.SearchAsync<Article>(s => s
-							.Query(q => q
-								.Bool(bq => bq
-									.Filter(
-										fq => fq.Terms(t => t.Field(f => f.PageId).Terms(pageId))
-									)
-								)
-							)
+							.Query(fq => fq.Terms(t => t.Field(f => f.PageId).Terms(pageId)))
 							.Sort(s => s.Descending(f => f.Id))
 							.From(offset)
 							.Size(size), cancellationToken))
