@@ -29,7 +29,7 @@ namespace ODF.API.MinimalApi
 					return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
 				}
 
-				var responseModel = new PutArticleResponseModel(apiSettings.ApiUrl, "Článek byl úspěšně přidán.",
+				var responseModel = new CreateArticleResponseModel(apiSettings.ApiUrl, "Článek byl úspěšně přidán.",
 					ArticleFormFactory.GetAddArticleForm(model.Title, model.TitleTranslationCode, model.Text, model.TitleTranslationCode, model.PageId, model.ImageUrl));
 
 				responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(apiSettings.ApiUrl, model.Title, Languages.Deutsch.GetCountryCode());
@@ -40,7 +40,7 @@ namespace ODF.API.MinimalApi
 
 				return Results.Ok(responseModel);
 			})
-			.WithMetadata(new ProducesResponseTypeAttribute(typeof(PutArticleResponseModel), StatusCodes.Status200OK))
+			.WithMetadata(new ProducesResponseTypeAttribute(typeof(CreateArticleResponseModel), StatusCodes.Status200OK))
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError))
 			.WithMetadata(new ProducesResponseTypeAttribute(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized));
 

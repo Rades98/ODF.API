@@ -3,9 +3,9 @@ using ODF.API.ResponseModels.Common.Forms;
 
 namespace ODF.API.ResponseModels.LanguageMutations
 {
-	public class PostTranslationResponseModel : BaseResponseModel
+	public class UpdateTranslationResponseModel : BaseResponseModel
 	{
-		public PostTranslationResponseModel(string baseUrl, string countryCode, Form form, string message) : base(baseUrl, "/translations", HttpMethods.Post, countryCode)
+		public UpdateTranslationResponseModel(string baseUrl, string countryCode, Form form, string message) : base(baseUrl, "/translations", HttpMethods.Post, countryCode)
 		{
 			_self.Curl.Form = form;
 			Message = message;

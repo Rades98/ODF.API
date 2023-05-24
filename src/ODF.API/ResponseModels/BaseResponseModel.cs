@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ODF.API.ResponseModels.Common;
+using ODF.API.ResponseModels.Common.Forms;
 
 namespace ODF.API.ResponseModels
 {
@@ -9,10 +10,10 @@ namespace ODF.API.ResponseModels
 
 		private readonly List<AppAction> _actions = new();
 
-		public BaseResponseModel(string baseUrl, string relativeUrl, string method, string countryCode)
+		public BaseResponseModel(string baseUrl, string relativeUrl, string method, string countryCode, Form? form = null)
 		{
 			_baseUrl = baseUrl;
-			_self = new(_baseUrl + (string.IsNullOrEmpty(countryCode) ? "" : "/" + countryCode) + relativeUrl, "_self", "self", method);
+			_self = new(_baseUrl + (string.IsNullOrEmpty(countryCode) ? "" : "/" + countryCode) + relativeUrl, "_self", "self", method, form);
 		}
 
 		[JsonProperty("_self", Required = Required.Always)]

@@ -21,5 +21,8 @@ namespace ODF.API.ResponseModels.Redaction
 
 		[JsonProperty("addLineupItem", Required = Required.Always)]
 		public NamedAction? AddLineupItem { get; set; }
+
+		[JsonProperty("updateContacts", Required = Required.Always)]
+		public NamedAction? UpdateContacts { get; set; }
 	}
 }

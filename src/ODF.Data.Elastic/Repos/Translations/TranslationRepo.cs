@@ -99,8 +99,9 @@ namespace ODF.Data.Elastic.Repos.Translations
 					)
 					.Size(1)
 					.Script(s => s
-						.Source("ctx._source.propertyName = params.paramName;")
+						.Source("ctx._source.text = params.Text;")
 						.Params(scriptParams))
+						.Refresh(true)
 					)).IsValid;
 			}
 
