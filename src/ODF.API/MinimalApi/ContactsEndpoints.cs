@@ -22,14 +22,14 @@ namespace ODF.API.MinimalApi
 		{
 			app.MapGet("/{countryCode}/contacts", async ([FromRoute] string countryCode, CancellationToken cancellationToken) =>
 			{
-				var contact = await mediator.Send(new GetContactQeury(countryCode), cancellationToken);
+				var contact = await mediator.Send(new GetContactQuery(countryCode), cancellationToken);
 
 				return Results.Ok(ContactsResponseComposer.GetContactResponse(countryCode, apiSettings.ApiUrl, contact));
 			});
 
 			app.MapGet("/{countryCode}/contacts/redaction", [Authorize(Roles = UserRoles.Admin)] async ([FromRoute] string countryCode, CancellationToken cancellationToken) =>
 			{
-				var contact = await mediator.Send(new GetContactQeury(countryCode), cancellationToken);
+				var contact = await mediator.Send(new GetContactQuery(countryCode), cancellationToken);
 
 				return Results.Ok(ContactsResponseComposer.GetRedactionResponse(countryCode, apiSettings.ApiUrl, contact));
 			});

@@ -11,7 +11,7 @@ using ODF.Enums;
 
 namespace ODF.AppLayer.CQRS.Contact.QueryHandlers
 {
-	internal class GetContactQeuryHandler : IRequestHandler<GetContactQeury, ContactDto>
+	internal class GetContactQeuryHandler : IRequestHandler<GetContactQuery, ContactDto>
 	{
 		private readonly ITranslationRepo _translationRepo;
 		private readonly IContactRepo _contactRepo;
@@ -22,7 +22,7 @@ namespace ODF.AppLayer.CQRS.Contact.QueryHandlers
 			_translationRepo = translationRepo ?? throw new ArgumentNullException(nameof(translationRepo));
 		}
 
-		public async Task<ContactDto> Handle(GetContactQeury request, CancellationToken cancellationToken)
+		public async Task<ContactDto> Handle(GetContactQuery request, CancellationToken cancellationToken)
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))
 			{

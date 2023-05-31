@@ -62,10 +62,10 @@ namespace ODF.API.MinimalApi
 					model.ChangeEnTranslation = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit AJ překlad", "transalation_en_submit", HttpMethods.Post,
 						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, enTranslations.Translations.FirstOrDefault(tr => tr.TranslationCode == model.TranslationCode)?.Text ?? "", Languages.English.GetCountryCode()));
 
-					model.ChangeDeTransaltion = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit DE překlad", "transalation_de_submit", HttpMethods.Post,
+					model.ChangeDeTranslation = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit DE překlad", "transalation_de_submit", HttpMethods.Post,
 						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, deTranslations.Translations.FirstOrDefault(tr => tr.TranslationCode == model.TranslationCode)?.Text ?? "", Languages.Deutsch.GetCountryCode()));
 
-					model.ChangeTransaltion = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit CZ překlad", "transalation_cz_submit", HttpMethods.Post,
+					model.ChangeTranslation = new NamedAction($"{apiSettings.ApiUrl}/{countryCode}/translations", "změnit CZ překlad", "transalation_cz_submit", HttpMethods.Post,
 						TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, model.Text, Languages.Deutsch.GetCountryCode()));
 
 					return model;

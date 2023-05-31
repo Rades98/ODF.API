@@ -12,16 +12,16 @@ namespace ODF.API.Registration
 			var mediator = app.Services.GetService<IMediator>() ?? throw new ArgumentNullException(nameof(IMediator));
 			var settings = app.Services.GetService<IOptions<ApiSettings>>() ?? throw new ArgumentNullException(nameof(IOptions<ApiSettings>));
 
-			app.MapNavigationEndpoints(mediator, settings.Value)
-				.MapAboutEndpoints(mediator, settings.Value)
-				.MapLanguageMutationsEndpoints(mediator, settings.Value)
-				.MapAssociationsEndpoints(mediator, settings.Value)
-				.MapLineupEndpoints(mediator, settings.Value)
-				.MapTicketsEndpoints(mediator, settings.Value)
-				.MapArticlesEndpoints(mediator, settings.Value)
-				.MapRedactionEndpoints(mediator, settings.Value)
-				.MapUserEndpoints(mediator, settings.Value)
-				.MapContactsEndpoints(mediator, settings.Value);
+			app//.MapNavigationEndpoints(mediator, settings.Value)
+				//	.MapAboutEndpoints(mediator, settings.Value)
+				//.MapLanguageMutationsEndpoints(mediator, settings.Value)
+				//	.MapAssociationsEndpoints(mediator, settings.Value)
+				//.MapLineupEndpoints(mediator, settings.Value)
+				//.MapTicketsEndpoints(mediator, settings.Value)
+				//	.MapArticlesEndpoints(mediator, settings.Value)
+				// .MapRedactionEndpoints(mediator, settings.Value)
+				.MapUserEndpoints(mediator, settings.Value);
+			//	.MapContactsEndpoints(mediator, settings.Value);
 
 			return app;
 		}
