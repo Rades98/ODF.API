@@ -53,8 +53,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-//app.MapApiEndpoints();
-
 app.MapControllers();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
