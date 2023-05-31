@@ -18,10 +18,10 @@ namespace ODF.API.ResponseModels.LanguageMutations
 		public string Text { get; }
 
 		[JsonProperty("changeDeTranslation", Required = Required.Always)]
-		public NamedAction? ChangeDeTransaltion { get; set; }
+		public NamedAction? ChangeDeTranslation { get; set; }
 
 		[JsonProperty("changeTranslation", Required = Required.Always)]
-		public NamedAction? ChangeTransaltion { get; set; }
+		public NamedAction? ChangeTranslation { get; set; }
 
 		[JsonProperty("changeEnTranslation", Required = Required.Always)]
 		public NamedAction? ChangeEnTranslation { get; set; }

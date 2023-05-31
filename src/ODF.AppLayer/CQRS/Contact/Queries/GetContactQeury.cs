@@ -3,9 +3,9 @@ using ODF.AppLayer.Dtos.ContactDtos;
 
 namespace ODF.AppLayer.CQRS.Contact.Queries
 {
-	public class GetContactQeury : IRequest<ContactDto>
+	public class GetContactQuery : IRequest<ContactDto>
 	{
-		public GetContactQeury(string countryCode)
+		public GetContactQuery(string countryCode)
 		{
 			CountryCode = countryCode;
 		}

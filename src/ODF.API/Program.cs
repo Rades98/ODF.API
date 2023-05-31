@@ -52,9 +52,10 @@ else
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
 
-app.MapApiEndpoints();
+//app.MapApiEndpoints();
+
+app.MapControllers();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<CountryCodeMiddleWare>();
