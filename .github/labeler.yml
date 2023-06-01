@@ -1,5 +1,6 @@
 Database:
   - any: */ODF.Data.Contracts/*
   - any: */ODF.Data.Elastic/*
+  - any: */ODF.Data.*/*
 BE:
  - any: *
