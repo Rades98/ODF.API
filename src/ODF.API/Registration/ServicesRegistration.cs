@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -8,6 +7,7 @@ using ODF.API.Middleware;
 using ODF.API.Registration.SettingModels;
 using ODF.AppLayer.Settings;
 using ODF.Data.Elastic.Settings;
+using ODF.Data.Redis.Settings;
 
 namespace ODF.API.Registration
 {
@@ -16,6 +16,7 @@ namespace ODF.API.Registration
 		internal static IServiceCollection RegisterAppServices(this IServiceCollection services, IConfiguration conf, IWebHostEnvironment env)
 		{
 			services.ConfigureElasticsearch(conf)
+					.ConfigureRedis(conf)
 					.AddAppLayerServices();
 
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

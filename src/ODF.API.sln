@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.AppLayer", "ODF.AppLaye
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Enums", "ODF.Enums\ODF.Enums.csproj", "{D2F18917-CB02-465B-B7A9-15586A0C4F22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODF.Data.Elastic", "ODF.Data.Elastic\ODF.Data.Elastic.csproj", "{806D5157-984A-4786-AF9A-09A6C6467877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Data.Elastic", "ODF.Data.Elastic\ODF.Data.Elastic.csproj", "{806D5157-984A-4786-AF9A-09A6C6467877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODF.Data.Redis", "ODF.Data.Redis\ODF.Data.Redis.csproj", "{AD0978C3-C23A-41ED-A714-C7CA23A0A488}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{806D5157-984A-4786-AF9A-09A6C6467877}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{806D5157-984A-4786-AF9A-09A6C6467877}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{806D5157-984A-4786-AF9A-09A6C6467877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD0978C3-C23A-41ED-A714-C7CA23A0A488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0978C3-C23A-41ED-A714-C7CA23A0A488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0978C3-C23A-41ED-A714-C7CA23A0A488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0978C3-C23A-41ED-A714-C7CA23A0A488}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

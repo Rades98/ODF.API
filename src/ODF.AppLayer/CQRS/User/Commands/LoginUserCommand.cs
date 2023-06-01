@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using ODF.AppLayer.Dtos;
+using ODF.AppLayer.Dtos.User;
 
 namespace ODF.AppLayer.CQRS.User.Commands
 {
-	public class LoginUserCommand : IRequest<UserDto>
+	public class LoginUserCommand : IRequest<UserValidationDto>
 	{
 		public LoginUserCommand(string userName, string password)
 		{

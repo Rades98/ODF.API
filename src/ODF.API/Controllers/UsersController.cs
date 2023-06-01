@@ -34,12 +34,12 @@ namespace ODF.API.Controllers
 			string loginTranslation = await Mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), cancellationToken);
 			string passwordTranslation = await Mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), cancellationToken);
 
-			// MOCK
-			if (user.UserName == "admin" && user.Password == "heslopyco")
-			{
-				var userResult = await Mediator.Send(new LoginUserCommand("admin", "adminPW"), cancellationToken); //work with mock
+			//Tohle je treba doresit protoze UserValidationDto se nechytne v ValidationDto based pipeline
+			var userResult = await Mediator.Send(new LoginUserCommand(user.UserName, user.Password), cancellationToken); //work with mock
 
-				var claimsIdentity = new ClaimsIdentity(userResult.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+			if (userResult.IsOk)
+			{
+				var claimsIdentity = new ClaimsIdentity(userResult.User.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
 				var authProperties = new AuthenticationProperties
 				{
@@ -50,11 +50,16 @@ namespace ODF.API.Controllers
 
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-				var responseModel = new UserResponseModel(ApiSettings.ApiUrl, userResult.UserName, countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+				var responseModel = new UserResponseModel(ApiSettings.ApiUrl, userResult.User.UserName, countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
 				responseModel.AddAction($"/{countryCode}/navigation", "nav", HttpMethods.Get);
 
 				return Ok(responseModel);
 			}
+
+			string loginActionName = await Mediator.Send(new GetTranslationQuery("Přihlásit se", "login", countryCode), cancellationToken);
+			string link = $"{ApiSettings.ApiUrl}/{countryCode}/user";
+
+			var loginAction = new NamedAction(link, loginActionName, "login", HttpMethods.Post, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation, errors: userResult.Errors));
 
 			string password2Translation = await Mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), cancellationToken);
 			string emailTranslation = await Mediator.Send(new GetTranslationQuery("e-mail", "login_email", countryCode), cancellationToken);
