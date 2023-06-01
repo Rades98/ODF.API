@@ -1,4 +1,6 @@
+repo:
+  - '*'
 Database:
-  - any: ['*/ODF.Data.Contracts/*', '*/ODF.Data.Elastic/*', '*/ODF.Data.*/*']
+  - any: ['src/ODF.Data.Contracts/*', 'src/ODF.Data.Elastic/*', 'src/ODF.Data.*/*']
 BE:
- - *
+  - src/*
