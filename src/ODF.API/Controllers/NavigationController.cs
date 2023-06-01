@@ -5,97 +5,95 @@ using Microsoft.Extensions.Options;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
-using ODF.API.ResponseModels.About;
 using ODF.API.ResponseModels.Common;
-using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Navigation;
 using ODF.AppLayer.CQRS.Translations.Queries;
 using ODF.Enums;
 
 namespace ODF.API.Controllers
 {
-    public class NavigationController : Controller
-    {
-        private readonly IMediator _mediator;
-        private readonly ApiSettings _settings;
+	public class NavigationController : Controller
+	{
+		private readonly IMediator _mediator;
+		private readonly ApiSettings _settings;
 
-        public NavigationController(IMediator mediator, IOptions<ApiSettings> apiSettings)
-        {
-            _mediator = mediator;
-            _settings = apiSettings.Value;
-        }
+		public NavigationController(IMediator mediator, IOptions<ApiSettings> apiSettings)
+		{
+			_mediator = mediator;
+			_settings = apiSettings.Value;
+		}
 
 
-        [HttpGet("")]
-        [Authorize]
-        [AllowAnonymous]
-        public IActionResult RedirectToDefaultNavigation()
-        {
-            return Redirect("/cz/navigation");
-        }
+		[HttpGet("")]
+		[Authorize]
+		[AllowAnonymous]
+		public IActionResult RedirectToDefaultNavigation()
+		{
+			return Redirect("/cz/navigation");
+		}
 
-        [HttpGet("/{countryCode}/navigations")]
-        [Authorize]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(NavigationResponseModel), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetNavigation([FromRoute] string countryCode, CancellationToken cancellationToken)
-        {
-            var responseModel = new NavigationResponseModel(_settings.ApiUrl, countryCode);
-            responseModel.AddAction($"/{countryCode}/about", "menu_about", HttpMethods.Get);
-            
-           var langActionName = await _mediator.Send(new GetTranslationQuery("Jazyk", "menu_lang", countryCode), cancellationToken);
-           responseModel.LanguageMutations = new NamedAction($"{_settings.ApiUrl}/{countryCode}/supportedLanguages", langActionName, "languageSelection", HttpMethods.Get);
+		[HttpGet("/{countryCode}/navigations")]
+		[Authorize]
+		[AllowAnonymous]
+		[ProducesResponseType(typeof(NavigationResponseModel), StatusCodes.Status200OK)]
+		public async Task<IActionResult> GetNavigation([FromRoute] string countryCode, CancellationToken cancellationToken)
+		{
+			var responseModel = new NavigationResponseModel(_settings.ApiUrl, countryCode);
+			responseModel.AddAction($"/{countryCode}/about", "menu_about", HttpMethods.Get);
 
-           var aboutActionName = await _mediator.Send(new GetTranslationQuery("O festivalu", "menu_about", countryCode), cancellationToken);
-           responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/about", aboutActionName, "aboutMenuItem", HttpMethods.Get));
+			string langActionName = await _mediator.Send(new GetTranslationQuery("Jazyk", "menu_lang", countryCode), cancellationToken);
+			responseModel.LanguageMutations = new NamedAction($"{_settings.ApiUrl}/{countryCode}/supportedLanguages", langActionName, "languageSelection", HttpMethods.Get);
 
-           var associationActionName = await _mediator.Send(new GetTranslationQuery("FolklorOVA", "menu_association", countryCode), cancellationToken);
-           responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/association", associationActionName, "associationMenuItem", HttpMethods.Get));
+			string aboutActionName = await _mediator.Send(new GetTranslationQuery("O festivalu", "menu_about", countryCode), cancellationToken);
+			responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/about", aboutActionName, "aboutMenuItem", HttpMethods.Get));
 
-           var lineupActionName = await _mediator.Send(new GetTranslationQuery("Program", "menu_lineup", countryCode), cancellationToken);
-           responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/lineup", lineupActionName, "lineupMenuItem", HttpMethods.Get));
+			string associationActionName = await _mediator.Send(new GetTranslationQuery("FolklorOVA", "menu_association", countryCode), cancellationToken);
+			responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/association", associationActionName, "associationMenuItem", HttpMethods.Get));
 
-           var ticketsActionName = await _mediator.Send(new GetTranslationQuery("Vstupenky", "menu_tickets", countryCode), cancellationToken);
-           responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/tickets", ticketsActionName, "ticketsMenuItem", HttpMethods.Get));
+			string lineupActionName = await _mediator.Send(new GetTranslationQuery("Program", "menu_lineup", countryCode), cancellationToken);
+			responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/lineup", lineupActionName, "lineupMenuItem", HttpMethods.Get));
 
-           var contactsActionName = await _mediator.Send(new GetTranslationQuery("Kontakt", "menu_contacts", countryCode), cancellationToken);
-           responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/contacts", contactsActionName, "contactMenuItem", HttpMethods.Get));
-  
+			string ticketsActionName = await _mediator.Send(new GetTranslationQuery("Vstupenky", "menu_tickets", countryCode), cancellationToken);
+			responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/tickets", ticketsActionName, "ticketsMenuItem", HttpMethods.Get));
 
-          if (!HttpContext.IsLoggedIn())
-           {
-               var loginActionName = await _mediator.Send(new GetTranslationQuery("Přihlásit se", "login", countryCode), cancellationToken);
-               var loginTranslation = await _mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), cancellationToken);
-               var passwordTranslation = await _mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), cancellationToken);
+			string contactsActionName = await _mediator.Send(new GetTranslationQuery("Kontakt", "menu_contacts", countryCode), cancellationToken);
+			responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/contacts", contactsActionName, "contactMenuItem", HttpMethods.Get));
 
-               var link = $"{_settings.ApiUrl}/{countryCode}/user";
 
-               responseModel.LoginAction = new NamedAction(link, loginActionName, "login", HttpMethods.Post, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+			if (!HttpContext.IsLoggedIn())
+			{
+				string loginActionName = await _mediator.Send(new GetTranslationQuery("Přihlásit se", "login", countryCode), cancellationToken);
+				string loginTranslation = await _mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), cancellationToken);
+				string passwordTranslation = await _mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), cancellationToken);
 
-               var password2Translation = await _mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), cancellationToken);
-               var emailTranslation = await _mediator.Send(new GetTranslationQuery("e-mail", "login_email", countryCode), cancellationToken);
-               var firstNameTranslation = await _mediator.Send(new GetTranslationQuery("Jméno", "login_first_name", countryCode), cancellationToken);
-               var lastNameTranslation = await _mediator.Send(new GetTranslationQuery("Příjmení", "login_last_name", countryCode), cancellationToken);
+				string link = $"{_settings.ApiUrl}/{countryCode}/user";
 
-               string registrationActionName = await _mediator.Send(new GetTranslationQuery("Nemáte registraci? Klikněte zde!", "register_action_name", countryCode), cancellationToken);
+				responseModel.LoginAction = new NamedAction(link, loginActionName, "login", HttpMethods.Post, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
 
-               responseModel.RegisterAction = new NamedAction(_settings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
-                   UserFormFactory.GetRegisterForm(loginTranslation, passwordTranslation, password2Translation, emailTranslation, firstNameTranslation, lastNameTranslation));
-           }
-           else
-           {
-               var logoutActionName = await _mediator.Send(new GetTranslationQuery("Odhlásit se", "logout", countryCode), cancellationToken);
-               responseModel.UserName = "Admin"; //mock
-               responseModel.LogoutAction = new NamedAction($"{_settings.ApiUrl}/{countryCode}/user/logout", logoutActionName, "logout", HttpMethods.Post);
-           }
+				string password2Translation = await _mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), cancellationToken);
+				string emailTranslation = await _mediator.Send(new GetTranslationQuery("e-mail", "login_email", countryCode), cancellationToken);
+				string firstNameTranslation = await _mediator.Send(new GetTranslationQuery("Jméno", "login_first_name", countryCode), cancellationToken);
+				string lastNameTranslation = await _mediator.Send(new GetTranslationQuery("Příjmení", "login_last_name", countryCode), cancellationToken);
 
-           if (countryCode.ToUpper() == Languages.Czech.GetCountryCode().ToUpper() && HttpContext.IsAdmin())
-           {
-               var redactionActionName = await _mediator.Send(new GetTranslationQuery("Redakce", "menu_redaction", countryCode), cancellationToken);
-               responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/redaction", redactionActionName, "redactionMenuItem", HttpMethods.Get));
-           }
+				string registrationActionName = await _mediator.Send(new GetTranslationQuery("Nemáte registraci? Klikněte zde!", "register_action_name", countryCode), cancellationToken);
 
-            return Ok(responseModel);
-        }
-    }
+				responseModel.RegisterAction = new NamedAction(_settings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
+					UserFormFactory.GetRegisterForm(loginTranslation, passwordTranslation, password2Translation, emailTranslation, firstNameTranslation, lastNameTranslation));
+			}
+			else
+			{
+				string logoutActionName = await _mediator.Send(new GetTranslationQuery("Odhlásit se", "logout", countryCode), cancellationToken);
+				responseModel.UserName = "Admin"; //mock
+				responseModel.LogoutAction = new NamedAction($"{_settings.ApiUrl}/{countryCode}/user/logout", logoutActionName, "logout", HttpMethods.Post);
+			}
+
+			if (countryCode.ToUpper() == Languages.Czech.GetCountryCode().ToUpper() && HttpContext.IsAdmin())
+			{
+				string redactionActionName = await _mediator.Send(new GetTranslationQuery("Redakce", "menu_redaction", countryCode), cancellationToken);
+				responseModel.MenuItems.Add(new NamedAction($"{_settings.ApiUrl}/{countryCode}/redaction", redactionActionName, "redactionMenuItem", HttpMethods.Get));
+			}
+
+			return Ok(responseModel);
+		}
+	}
 }
