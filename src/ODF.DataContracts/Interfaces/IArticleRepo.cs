@@ -12,6 +12,6 @@ namespace ODF.Data.Contracts.Interfaces
 
 		Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken);
 
-		Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, string imageUrl, CancellationToken cancellationToken);
+		Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, Uri? imageUrl, CancellationToken cancellationToken);
 	}
 }

@@ -4,11 +4,11 @@ namespace ODF.API.ResponseModels.Articles
 {
 	public class GetArticleResponseModel : BaseResponseModel
 	{
-		public GetArticleResponseModel(string baseUrl, int articleId, string countryCode, string title, string body, string imageUrl) : base(baseUrl, $"/articles/{articleId}", HttpMethods.Get, countryCode)
+		public GetArticleResponseModel(string baseUrl, int articleId, string countryCode, string title, string body, Uri? imageUrl) : base(baseUrl, $"/articles/{articleId}", HttpMethods.Get, countryCode)
 		{
 			Title = title;
 			Body = body;
-			ImageUrl = !string.IsNullOrEmpty(imageUrl) ? new(imageUrl) : null;
+			ImageUrl = imageUrl;
 		}
 
 		[JsonProperty("title", Required = Required.Always)]

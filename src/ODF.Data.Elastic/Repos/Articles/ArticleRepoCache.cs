@@ -22,7 +22,7 @@ namespace ODF.Data.Elastic.Repos.Articles
 			_repo = repo ?? throw new ArgumentNullException(nameof(repo));
 		}
 
-		public Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, string imageUrl, CancellationToken cancellationToken)
+		public Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, Uri? imageUrl, CancellationToken cancellationToken)
 			=> _repo.AddArticleAsync(titleTranslationCode, textTransaltionCode, pageId, imageUrl, cancellationToken);
 
 		public Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)
@@ -30,9 +30,9 @@ namespace ODF.Data.Elastic.Repos.Articles
 
 		public async Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken)
 		{
-			var cacheKey = $"{nameof(Article)}s_{pageId}_paged{size}_{offset}";
+			string cacheKey = $"{nameof(Article)}s_{pageId}_paged{size}_{offset}";
 
-			var cachedResponse = _cache.Get(cacheKey);
+			object cachedResponse = _cache.Get(cacheKey);
 
 			if (cachedResponse != null)
 			{

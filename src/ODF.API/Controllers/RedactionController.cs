@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Common;
@@ -13,15 +14,10 @@ using ODF.Enums;
 
 namespace ODF.API.Controllers
 {
-	public class RedactionController : Controller
+	public class RedactionController : BaseController
 	{
-		private readonly IMediator _mediator;
-		private readonly ApiSettings _settings;
-
-		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings)
+		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
 		{
-			_mediator = mediator;
-			_settings = apiSettings.Value;
 		}
 
 		[HttpGet("/{countryCode}/redaction")]
@@ -36,16 +32,16 @@ namespace ODF.API.Controllers
 				return UnprocessableEntity("This action is supported for CZ language only");
 			}
 
-			var responseModel = new RedactionResponseModel(_settings.ApiUrl, countryCode, "Redakce");
+			var responseModel = new RedactionResponseModel(ApiSettings.ApiUrl, countryCode, "Redakce");
 
-			string aboutTranslation = await _mediator.Send(new GetTranslationQuery("O festivalu", "nav_about", countryCode), cancellationToken);
-			responseModel.AddAboutArticle = GetAddArticleAction(_settings.ApiUrl, aboutTranslation, 0, countryCode);
+			string aboutTranslation = await Mediator.Send(new GetTranslationQuery("O festivalu", "nav_about", countryCode), cancellationToken);
+			responseModel.AddAboutArticle = GetAddArticleAction(ApiSettings.ApiUrl, aboutTranslation, 0, countryCode);
 
-			string associationTranslation = await _mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);
-			responseModel.AddAssociationArticle = GetAddArticleAction(_settings.ApiUrl, associationTranslation, 1, countryCode);
+			string associationTranslation = await Mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);
+			responseModel.AddAssociationArticle = GetAddArticleAction(ApiSettings.ApiUrl, associationTranslation, 1, countryCode);
 
-			responseModel.AddLineupItem = GetAddLineupAction(_settings.ApiUrl, countryCode);
-			responseModel.UpdateContacts = new NamedAction($"{_settings.ApiUrl}/{countryCode}/contacts/redaction", "Upravit kontakty", "updateContacts", HttpMethods.Get);
+			responseModel.AddLineupItem = GetAddLineupAction(ApiSettings.ApiUrl, countryCode);
+			responseModel.UpdateContacts = new NamedAction($"{ApiSettings.ApiUrl}/{countryCode}/contacts/redaction", "Upravit kontakty", "updateContacts", HttpMethods.Get);
 
 			responseModel.AddAction($"/{countryCode}/translations?size=20&offset=0", "translations_change", HttpMethods.Get);
 

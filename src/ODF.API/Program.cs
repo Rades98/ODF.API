@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using ODF.API.Middleware;
 using ODF.API.Registration;
 using Serilog;
@@ -22,6 +23,8 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+ServiceLocator.Instance = app.Services;
 
 if (app.Environment.IsDevelopment())
 {
@@ -52,8 +55,9 @@ else
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapControllers();
+
+app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigation", true, true));
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<CountryCodeMiddleWare>();

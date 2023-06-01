@@ -20,6 +20,6 @@ namespace ODF.API.RequestModels.Forms
 		public int PageId { get; set; }
 
 		[JsonProperty("imageUrl", Required = Required.AllowNull)]
-		public string ImageUrl { get; set; } = string.Empty;
+		public Uri? ImageUrl { get; set; }
 	}
 }

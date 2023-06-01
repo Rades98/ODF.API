@@ -18,7 +18,7 @@ namespace ODF.Data.Elastic.Repos.Articles
 			_elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
 		}
 
-		public async Task<bool> AddArticleAsync(string titleTranslationCode, string textTranslationCode, int pageId, string imageUrl, CancellationToken cancellationToken)
+		public async Task<bool> AddArticleAsync(string titleTranslationCode, string textTranslationCode, int pageId, Uri? imageUrl, CancellationToken cancellationToken)
 		{
 			var last = await GetLast(cancellationToken);
 			int id = 0;
