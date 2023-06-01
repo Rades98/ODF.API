@@ -4,62 +4,60 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
-using ODF.API.ResponseModels.About;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Redaction;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Translations.Queries;
 using ODF.Enums;
-using System.Data;
 
 namespace ODF.API.Controllers
 {
-    public class RedactionController : Controller
-    {
-        private readonly IMediator _mediator;
-        private readonly ApiSettings _settings;
+	public class RedactionController : Controller
+	{
+		private readonly IMediator _mediator;
+		private readonly ApiSettings _settings;
 
-        public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings)
-        {
-            _mediator = mediator;
-            _settings = apiSettings.Value;
-        }
+		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings)
+		{
+			_mediator = mediator;
+			_settings = apiSettings.Value;
+		}
 
-        [HttpGet("/{countryCode}/redaction")]
-        [Authorize(Roles = UserRoles.Admin)]
-        [ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetRedaction([FromRoute] string countryCode, CancellationToken cancellationToken)
-        {
-            if (countryCode.ToUpper() != Languages.Czech.GetCountryCode())
-            {
-                return UnprocessableEntity("This action is supported for CZ language only");
-            }
+		[HttpGet("/{countryCode}/redaction")]
+		[Authorize(Roles = UserRoles.Admin)]
+		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
+		public async Task<IActionResult> GetRedaction([FromRoute] string countryCode, CancellationToken cancellationToken)
+		{
+			if (countryCode.ToUpper() != Languages.Czech.GetCountryCode())
+			{
+				return UnprocessableEntity("This action is supported for CZ language only");
+			}
 
-            var responseModel = new RedactionResponseModel(_settings.ApiUrl, countryCode, "Redakce");
+			var responseModel = new RedactionResponseModel(_settings.ApiUrl, countryCode, "Redakce");
 
-            var aboutTranslation = await _mediator.Send(new GetTranslationQuery("O festivalu", "nav_about", countryCode), cancellationToken);
-            responseModel.AddAboutArticle = GetAddArticleAction(_settings.ApiUrl, aboutTranslation, 0, countryCode);
+			string aboutTranslation = await _mediator.Send(new GetTranslationQuery("O festivalu", "nav_about", countryCode), cancellationToken);
+			responseModel.AddAboutArticle = GetAddArticleAction(_settings.ApiUrl, aboutTranslation, 0, countryCode);
 
-            var associationTranslation = await _mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);
-            responseModel.AddAssociationArticle = GetAddArticleAction(_settings.ApiUrl, associationTranslation, 1, countryCode);
+			string associationTranslation = await _mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);
+			responseModel.AddAssociationArticle = GetAddArticleAction(_settings.ApiUrl, associationTranslation, 1, countryCode);
 
-            responseModel.AddLineupItem = GetAddLineupAction(_settings.ApiUrl, countryCode);
-            responseModel.UpdateContacts = new NamedAction($"{_settings.ApiUrl}/{countryCode}/contacts/redaction", "Upravit kontakty", "updateContacts", HttpMethods.Get);
+			responseModel.AddLineupItem = GetAddLineupAction(_settings.ApiUrl, countryCode);
+			responseModel.UpdateContacts = new NamedAction($"{_settings.ApiUrl}/{countryCode}/contacts/redaction", "Upravit kontakty", "updateContacts", HttpMethods.Get);
 
-            responseModel.AddAction($"/{countryCode}/translations?size=20&offset=0", "translations_change", HttpMethods.Get);
+			responseModel.AddAction($"/{countryCode}/translations?size=20&offset=0", "translations_change", HttpMethods.Get);
 
-            return Ok(responseModel);
-        }
+			return Ok(responseModel);
+		}
 
-        private static NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
-                => new($"{baseUrl}/{countryCode}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
-                        ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{id}}", "", $"page{pageNum}_text_{{id}}", pageNum));
+		private static NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
+				=> new($"{baseUrl}/{countryCode}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
+						ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{id}}", "", $"page{pageNum}_text_{{id}}", pageNum));
 
-        private static NamedAction GetAddLineupAction(string baseUrl, string countryCode)
-            => new($"{baseUrl}/{countryCode}/lineup", $"Přidat item do programu", "add_lineup_item", HttpMethods.Put,
-                    LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
-    }
+		private static NamedAction GetAddLineupAction(string baseUrl, string countryCode)
+			=> new($"{baseUrl}/{countryCode}/lineup", $"Přidat item do programu", "add_lineup_item", HttpMethods.Put,
+					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
+	}
 }
