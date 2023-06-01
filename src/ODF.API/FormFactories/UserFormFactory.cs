@@ -1,31 +1,32 @@
-﻿using ODF.API.ResponseModels.Common.Forms;
+﻿using FluentValidation.Results;
+using ODF.API.ResponseModels.Common.Forms;
 
 namespace ODF.API.FormFactories
 {
 	public static class UserFormFactory
 	{
-		public static Form GetLoginForm(string userNameTranslation, string passwordTranslation, string userName = "", string password = "")
+		public static Form GetLoginForm(string userNameTranslation, string passwordTranslation, string userName = "", string password = "", IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new(userNameTranslation, nameof(userName), "text", userName, true));
-			form.AddMember(new(passwordTranslation, nameof(password), "password", password, true));
+			form.AddMember(new(userNameTranslation, nameof(userName), "text", userName, true, errors?.FirstOrDefault(p => p.PropertyName == "UserName")?.ErrorMessage));
+			form.AddMember(new(passwordTranslation, nameof(password), "password", password, true, errors?.FirstOrDefault(p => p.PropertyName == "Password")?.ErrorMessage));
 
 			return form;
 		}
 
 		public static Form GetRegisterForm(
-			string userNameTranslation, 
-			string passwordTranslation, 
-			string password2Translation, 
+			string userNameTranslation,
+			string passwordTranslation,
+			string password2Translation,
 			string emailTranslation,
 			string firstNameTranslation,
 			string lastNameTranslation,
-			string userName = "", 
-			string password = "", 
-			string password2 = "", 
-			string email = "", 
-			string firstName = "", 
-			string lastName ="")
+			string userName = "",
+			string password = "",
+			string password2 = "",
+			string email = "",
+			string firstName = "",
+			string lastName = "")
 		{
 			var form = new Form();
 			form.AddMember(new(userNameTranslation, nameof(userName), "text", userName, true));

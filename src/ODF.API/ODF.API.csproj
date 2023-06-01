@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ODF.AppLayer\ODF.AppLayer.csproj" />
     <ProjectReference Include="..\ODF.Data.Elastic\ODF.Data.Elastic.csproj" />
+    <ProjectReference Include="..\ODF.Data.Redis\ODF.Data.Redis.csproj" />
   </ItemGroup>
 
   <ItemGroup>

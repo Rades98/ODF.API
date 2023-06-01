@@ -46,7 +46,7 @@ namespace ODF.API.Controllers
 			string contactsActionName = await Mediator.Send(new GetTranslationQuery("Kontakt", "menu_contacts", requestModel.CountryCode), cancellationToken);
 			responseModel.MenuItems.Add(new NamedAction($"{ApiSettings.ApiUrl}/{requestModel.CountryCode}/contacts", contactsActionName, "contactMenuItem", HttpMethods.Get));
 
-			if (requestModel.IsLoggedIn)
+			if (!requestModel.IsLoggedIn)
 			{
 				string loginActionName = await Mediator.Send(new GetTranslationQuery("Přihlásit se", "login", requestModel.CountryCode), cancellationToken);
 				string loginTranslation = await Mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", requestModel.CountryCode), cancellationToken);
