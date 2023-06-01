@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using ODF.API.Controllers.Base;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
@@ -17,17 +18,11 @@ using ODF.AppLayer.CQRS.User.Commands;
 
 namespace ODF.API.Controllers
 {
-	public class UsersController : Controller
+	public class UsersController : BaseController
 	{
-		private readonly IMediator _mediator;
-		private readonly ApiSettings _settings;
-
-		public UsersController(IMediator mediator, IOptions<ApiSettings> apiSettings)
+		public UsersController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
 		{
-			_mediator = mediator;
-			_settings = apiSettings.Value;
 		}
-
 
 		[HttpPost("/{countryCode}/user/login")]
 		[ProducesResponseType(typeof(UserResponseModel), StatusCodes.Status200OK)]
@@ -36,13 +31,13 @@ namespace ODF.API.Controllers
 		{
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-			string loginTranslation = await _mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), cancellationToken);
-			string passwordTranslation = await _mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), cancellationToken);
+			string loginTranslation = await Mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), cancellationToken);
+			string passwordTranslation = await Mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), cancellationToken);
 
 			// MOCK
 			if (user.UserName == "admin" && user.Password == "heslopyco")
 			{
-				var userResult = await _mediator.Send(new LoginUserCommand("admin", "adminPW"), cancellationToken); //work with mock
+				var userResult = await Mediator.Send(new LoginUserCommand("admin", "adminPW"), cancellationToken); //work with mock
 
 				var claimsIdentity = new ClaimsIdentity(userResult.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -55,26 +50,26 @@ namespace ODF.API.Controllers
 
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-				var responseModel = new UserResponseModel(_settings.ApiUrl, userResult.UserName, countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+				var responseModel = new UserResponseModel(ApiSettings.ApiUrl, userResult.UserName, countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
 				responseModel.AddAction($"/{countryCode}/navigation", "nav", HttpMethods.Get);
 
 				return Ok(responseModel);
 			}
 
-			string password2Translation = await _mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), cancellationToken);
-			string emailTranslation = await _mediator.Send(new GetTranslationQuery("e-mail", "login_email", countryCode), cancellationToken);
-			string firstNameTranslation = await _mediator.Send(new GetTranslationQuery("Jméno", "login_first_name", countryCode), cancellationToken);
-			string lastNameTranslation = await _mediator.Send(new GetTranslationQuery("Příjmení", "login_last_name", countryCode), cancellationToken);
+			string password2Translation = await Mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), cancellationToken);
+			string emailTranslation = await Mediator.Send(new GetTranslationQuery("e-mail", "login_email", countryCode), cancellationToken);
+			string firstNameTranslation = await Mediator.Send(new GetTranslationQuery("Jméno", "login_first_name", countryCode), cancellationToken);
+			string lastNameTranslation = await Mediator.Send(new GetTranslationQuery("Příjmení", "login_last_name", countryCode), cancellationToken);
 
-			string title = await _mediator.Send(new GetTranslationQuery("Přihlášení se nezdařilo", "login_failed_title", countryCode), cancellationToken);
-			string message = await _mediator.Send(new GetTranslationQuery("Zkontrolujte, že jste zadali správné údaje k účtu", "login_failed_msg", countryCode), cancellationToken);
+			string title = await Mediator.Send(new GetTranslationQuery("Přihlášení se nezdařilo", "login_failed_title", countryCode), cancellationToken);
+			string message = await Mediator.Send(new GetTranslationQuery("Zkontrolujte, že jste zadali správné údaje k účtu", "login_failed_msg", countryCode), cancellationToken);
 
-			string registrationActionName = await _mediator.Send(new GetTranslationQuery("Nemáte registraci? Klikněte zde!", "register_action_name", countryCode), cancellationToken);
+			string registrationActionName = await Mediator.Send(new GetTranslationQuery("Nemáte registraci? Klikněte zde!", "register_action_name", countryCode), cancellationToken);
 
-			var registerAction = new NamedAction(_settings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
+			var registerAction = new NamedAction(ApiSettings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
 				UserFormFactory.GetRegisterForm(loginTranslation, passwordTranslation, password2Translation, emailTranslation, firstNameTranslation, lastNameTranslation));
 
-			return (IActionResult)CustomApiResponses.Unauthorized(new UnauthorizedExceptionResponseModel(title, message, registerAction));
+			return CustomApiResponses.Unauthorized(new UnauthorizedExceptionResponseModel(title, message, registerAction));
 		}
 
 		[HttpPut("/{countryCode}/user/register")]

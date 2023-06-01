@@ -21,7 +21,7 @@ namespace ODF.AppLayer.CQRS.User.CommandHandlers
 				Claims = new List<Claim>()
 				{
 					new Claim(ClaimTypes.Name, "Admin"),
-					new Claim("Id", Guid.NewGuid().ToString()),
+					new Claim(ClaimTypes.Actor, Guid.NewGuid().ToString()),
 					new Claim(ClaimTypes.Role, UserRoles.Admin),
 				}
 			});

@@ -9,6 +9,17 @@ namespace ODF.API.Extensions
 		public static bool IsAdmin(this HttpContext context)
 			=> context.User.FindFirstValue(ClaimTypes.Role) == UserRoles.Admin;
 
+		public static Guid? GetUserId(this HttpContext context)
+		{
+			string id = context.User.FindFirstValue(ClaimTypes.Actor);
+			if (!string.IsNullOrEmpty(id))
+			{
+				return Guid.Parse(id);
+			}
+
+			return null;
+		}
+
 		public static bool IsLoggedIn(this HttpContext context)
 			=> context.User.Identity?.IsAuthenticated ?? false;
 

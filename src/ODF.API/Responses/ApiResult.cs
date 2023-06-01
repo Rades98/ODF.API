@@ -1,10 +1,11 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace ODF.API.Responses
 {
 	[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
-	public class ApiResult : IResult
+	public class ApiResult : IActionResult
 	{
 		public ApiResult(HttpStatusCode statusCode, object responseModel)
 		{
@@ -16,11 +17,11 @@ namespace ODF.API.Responses
 
 		public object ResponseModel { get; }
 
-		public async Task ExecuteAsync(HttpContext httpContext)
+		public async Task ExecuteResultAsync(ActionContext context)
 		{
-			httpContext.Response.StatusCode = (int)StatusCode;
-			httpContext.Response.ContentType = "application/json";
-			await httpContext.Response.WriteAsync(ResponseModel.ToString()!);
+			context.HttpContext.Response.StatusCode = (int)StatusCode;
+			context.HttpContext.Response.ContentType = "application/json";
+			await context.HttpContext.Response.WriteAsync(ResponseModel.ToString()!);
 		}
 	}
 }

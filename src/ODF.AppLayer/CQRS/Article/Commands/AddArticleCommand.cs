@@ -5,7 +5,7 @@ namespace ODF.AppLayer.CQRS.Article.Commands
 {
 	public class AddArticleCommand : IRequest<bool>
 	{
-		public AddArticleCommand(string titleTransaltionCode, string title, string textTranslationCode, string text, int pageId, string countryCode, string imageUri = null)
+		public AddArticleCommand(string titleTransaltionCode, string title, string textTranslationCode, string text, int pageId, string countryCode, Uri? imageUri = null)
 		{
 			TitleTransaltionCode = titleTransaltionCode;
 			Title = title;
@@ -28,6 +28,6 @@ namespace ODF.AppLayer.CQRS.Article.Commands
 
 		public string CountryCode { get; }
 
-		public string ImageUri { get; }
+		public Uri? ImageUri { get; }
 	}
 }

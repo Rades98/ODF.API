@@ -12,6 +12,6 @@ namespace ODF.Data.Contracts.Entities
 
 		public int PageId { get; set; }
 
-		public string ImageUri { get; set; }
+		public Uri? ImageUri { get; set; }
 	}
 }
