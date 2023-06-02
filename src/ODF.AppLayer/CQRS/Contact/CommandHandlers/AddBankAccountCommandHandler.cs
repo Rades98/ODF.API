@@ -18,6 +18,6 @@ namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 		}
 
 		public async Task<ValidationDto> Handle(AddBankAccountCommand request, CancellationToken cancellationToken)
-			=> new(await _contactRepo.AddBankAccountAsync(request.Bank, request.AccountId, request.IBAN, cancellationToken));
+			=> new() { IsOk = await _contactRepo.AddBankAccountAsync(request.Bank, request.AccountId, request.IBAN, cancellationToken) };
 	}
 }

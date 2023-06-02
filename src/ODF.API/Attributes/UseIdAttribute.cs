@@ -7,6 +7,7 @@ namespace ODF.API.Attributes
 	/// <summary>
 	/// User id attribute is bindable to nullable Guid
 	/// </summary
+	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
 	public class UseIdAttribute : BindingAttribute
 	{
 		public override void Bind(PropertyInfo propInfo, object obj)

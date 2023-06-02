@@ -4,6 +4,7 @@ using ODF.API.Registration;
 
 namespace ODF.API.Attributes
 {
+	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
 	public class CountryAttribute : BindingAttribute
 	{
 		public override void Bind(PropertyInfo propInfo, object obj)

@@ -17,7 +17,7 @@ namespace ODF.API.Middleware
 		{
 			if (!Languages.TryParse(httpContext.GetCountryCode(), out var lang))
 			{
-				httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
+				httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 				return;
 			}
 

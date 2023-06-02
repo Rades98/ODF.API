@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using ODF.API.Filters;
 using ODF.API.Middleware;
 using ODF.API.Registration;
 using Serilog;
@@ -18,7 +19,8 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 				.AddEndpointsApiExplorer()
 				.AddSwaggerGen()
 				.AddCors()
-				.AddControllers();
+				.AddHttpContextAccessor()
+				.AddControllers(opts => opts.Filters.Add<PropertyBIndingActionFilterAttribute>());
 
 builder.Host.UseSerilog();
 

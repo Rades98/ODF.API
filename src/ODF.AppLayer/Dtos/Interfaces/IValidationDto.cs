@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Results;
-using ODF.AppLayer.Dtos.Interfaces;
 
-namespace ODF.AppLayer.Dtos.Validation
+namespace ODF.AppLayer.Dtos.Interfaces
 {
-	public class ValidationDto : IValidationDto
+	public interface IValidationDto
 	{
 		public bool IsOk { get; set; }
 
