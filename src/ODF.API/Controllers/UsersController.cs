@@ -35,7 +35,7 @@ namespace ODF.API.Controllers
 			string passwordTranslation = await Mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), cancellationToken);
 
 			//Tohle je treba doresit protoze UserValidationDto se nechytne v ValidationDto based pipeline
-			var userResult = await Mediator.Send(new LoginUserCommand(user.UserName, user.Password), cancellationToken); //work with mock
+			var userResult = await Mediator.Send(new LoginUserCommand(user.UserName, user.Password), cancellationToken);
 
 			if (userResult.IsOk)
 			{
@@ -74,7 +74,7 @@ namespace ODF.API.Controllers
 			var registerAction = new NamedAction(ApiSettings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
 				UserFormFactory.GetRegisterForm(loginTranslation, passwordTranslation, password2Translation, emailTranslation, firstNameTranslation, lastNameTranslation));
 
-			return CustomApiResponses.Unauthorized(new UnauthorizedExceptionResponseModel(title, message, registerAction));
+			return CustomApiResponses.Unauthorized(new UnauthorizedExceptionResponseModel(title, message, loginAction, registerAction));
 		}
 
 		[HttpPut("/{countryCode}/user/register")]

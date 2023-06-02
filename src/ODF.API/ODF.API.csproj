@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="RequestModels\Articles\**" />
+    <Content Remove="RequestModels\Articles\**" />
+    <EmbeddedResource Remove="RequestModels\Articles\**" />
+    <None Remove="RequestModels\Articles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
@@ -28,10 +35,6 @@
     <ProjectReference Include="..\ODF.AppLayer\ODF.AppLayer.csproj" />
     <ProjectReference Include="..\ODF.Data.Elastic\ODF.Data.Elastic.csproj" />
     <ProjectReference Include="..\ODF.Data.Redis\ODF.Data.Redis.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="RequestModels\Articles\" />
   </ItemGroup>
 
 </Project>

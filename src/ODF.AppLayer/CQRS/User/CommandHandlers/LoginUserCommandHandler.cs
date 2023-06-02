@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,29 +26,35 @@ namespace ODF.AppLayer.CQRS.User.CommandHandlers
 
 			if (user is not null)
 			{
-				var result = new UserValidationDto(true)
+				var claims = new List<Claim>()
 				{
+					new Claim(ClaimTypes.Name, user.UserName),
+					new Claim(ClaimTypes.Actor, user.Id.ToString())
+				};
+
+				var result = new UserValidationDto()
+				{
+					IsOk = true,
 					User = new UserDto()
 					{
-						UserName = "Admin",
-						Email = "admin@folklorova.cz",
-						Claims = new List<Claim>()
-						{
-							new Claim(ClaimTypes.Name, "Admin"),
-							new Claim(ClaimTypes.Actor, user.Id.ToString()),
-						}
+						UserName = user.UserName,
+						FirstName = user.FirstName,
+						LastName = user.LastName,
+						Email = user.Email,
 					}
 				};
 
 				if (user.IsAdmin)
 				{
-					result.User.Claims.ToList().Add(new Claim(ClaimTypes.Role, UserRoles.Admin));
+					claims.Add(new Claim(ClaimTypes.Role, UserRoles.Admin));
 				}
+
+				result.User.Claims = claims;
 
 				return result;
 			}
 
-			return new(false);
+			return new() { IsOk = false };
 		}
 	}
 }

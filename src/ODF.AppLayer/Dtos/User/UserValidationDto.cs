@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Results;
-using ODF.AppLayer.Dtos.Validation;
+using ODF.AppLayer.Dtos.Interfaces;
 
 namespace ODF.AppLayer.Dtos.User
 {
-	public class UserValidationDto : ValidationDto
+	public class UserValidationDto : IValidationDto
 	{
-		public UserValidationDto(bool isOk, IEnumerable<ValidationFailure> errors = null) : base(isOk, errors)
-		{
-		}
+		public UserDto User { get; set; } = new();
 
-		public UserDto User { get; set; }
+		public bool IsOk { get; set; }
+
+		public IEnumerable<ValidationFailure> Errors { get; set; }
 	}
 }

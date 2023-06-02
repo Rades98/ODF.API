@@ -6,6 +6,8 @@ namespace ODF.API.Extensions
 {
 	public static class HttpContextExtensions
 	{
+		private const string CountryParam = "countryCode";
+
 		public static bool IsAdmin(this HttpContext context)
 			=> context.User.FindFirstValue(ClaimTypes.Role) == UserRoles.Admin;
 
@@ -25,8 +27,6 @@ namespace ODF.API.Extensions
 
 		public static string? GetCountryCode(this HttpContext httpContext)
 		{
-			string CountryParam = "countryCode";
-
 			if (httpContext.Request.Query.ContainsKey(CountryParam))
 			{
 				return httpContext.Request.Query[CountryParam];

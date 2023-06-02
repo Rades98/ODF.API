@@ -25,8 +25,8 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[Authorize(Roles = UserRoles.Admin)]
 		[HttpPut("/{countryCode}/articles")]
+		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(CreateArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]

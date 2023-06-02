@@ -19,6 +19,6 @@ namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 		}
 
 		public async Task<ValidationDto> Handle(AddContactPersonCommand request, CancellationToken cancellationToken)
-			=> new(await _contactRepo.AddContactPersonAsync(request.MapToEntity(), cancellationToken));
+			=> new() { IsOk = await _contactRepo.AddContactPersonAsync(request.MapToEntity(), cancellationToken) };
 	}
 }

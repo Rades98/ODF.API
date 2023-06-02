@@ -1,15 +1,16 @@
-﻿using FluentValidation;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
-using ODF.AppLayer.Dtos.Validation;
+using ODF.AppLayer.Dtos.Interfaces;
 
 namespace ODF.AppLayer.Pipelines
 {
-	public class ValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<ValidationDto> where TResponse : ValidationDto
+	public class ValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TResponse : class, IValidationDto where TRequest : IRequest<TResponse>
 	{
 		private readonly IEnumerable<IValidator<TRequest>> _validators;
 		private readonly ILogger<TRequest> _logger;
@@ -29,7 +30,10 @@ namespace ODF.AppLayer.Pipelines
 			if (failures.Count != 0)
 			{
 				failures.ForEach(f => _logger.LogError("{errorCode} : {errorMessage}", f.ErrorMessage, f.ErrorCode));
-				return new ValidationDto(false, failures) as TResponse;
+				var response = (IValidationDto)Activator.CreateInstance(typeof(TResponse));
+				response.IsOk = false;
+				response.Errors = failures;
+				return (TResponse)response;
 			}
 
 			return await next();

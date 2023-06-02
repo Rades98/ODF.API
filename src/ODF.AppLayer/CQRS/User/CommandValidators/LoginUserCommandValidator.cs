@@ -10,7 +10,7 @@ using ODF.Data.Contracts.Interfaces;
 
 namespace ODF.AppLayer.CQRS.User.CommandValidators
 {
-	internal class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
+	public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 	{
 		private readonly IUserRepo _userRepo;
 

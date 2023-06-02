@@ -22,15 +22,15 @@ namespace ODF.API.Middleware
 
 		public async Task HandleAsync(RequestDelegate next, HttpContext httpContext, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
 		{
-			if (authorizeResult.Challenged && !authorizeResult.Succeeded)
+			if (!authorizeResult.Succeeded)
 			{
 				string? countryCode = httpContext.GetCountryCode();
 
-				var title = await _mediator.Send(new GetTranslationQuery("Neoprávněná akce", "unauthorized_title", countryCode), default);
+				string title = await _mediator.Send(new GetTranslationQuery("Neoprávněná akce", "unauthorized_title", countryCode), default);
 
 				string message;
 
-				var isLogged = httpContext!.IsLoggedIn();
+				bool isLogged = httpContext!.IsLoggedIn();
 
 				if (isLogged)
 				{
@@ -41,16 +41,16 @@ namespace ODF.API.Middleware
 					message = await _mediator.Send(new GetTranslationQuery("Pro vykonání této akce je třeba se přihlásit.", "unauthorized_msg_annonymous", countryCode), default);
 				}
 
-				var loginActionName = await _mediator.Send(new GetTranslationQuery("Přihlásit se", "login", countryCode), default);
-				var loginTranslation = await _mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), default);
-				var passwordTranslation = await _mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), default);
+				string loginActionName = await _mediator.Send(new GetTranslationQuery("Přihlásit se", "login", countryCode), default);
+				string loginTranslation = await _mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), default);
+				string passwordTranslation = await _mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), default);
 
-				var link = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/{countryCode}/user";
+				string link = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/{countryCode}/user";
 				var loginAction = new NamedAction(link, loginActionName, "login", HttpMethods.Post, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
 
-				var responseModel = new UnauthorizedExceptionResponseModel(title, message, !isLogged ? loginAction : null);
+				var responseModel = new UnauthorizedExceptionResponseModel(title, message, null, !isLogged ? loginAction : null);
 
-				var bytes = Encoding.UTF8.GetBytes(responseModel.ToString());
+				byte[] bytes = Encoding.UTF8.GetBytes(responseModel.ToString());
 				httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 				httpContext.Response.ContentType = "application/json";
 				await httpContext.Response.Body.WriteAsync(bytes, 0, bytes.Length);
