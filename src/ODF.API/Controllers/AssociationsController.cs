@@ -16,7 +16,7 @@ namespace ODF.API.Controllers
 		}
 
 
-		[HttpGet("/{countryCode}/associations")]
+		[HttpGet(Name = nameof(GetAssociation))]
 		[ProducesResponseType(typeof(AssociationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> GetAssociation([FromRoute] string countryCode)

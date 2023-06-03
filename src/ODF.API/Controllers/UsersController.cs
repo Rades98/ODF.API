@@ -24,17 +24,16 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpPost("/{countryCode}/user/login")]
+		[HttpPost(Name = nameof(LoginUser))]
 		[ProducesResponseType(typeof(UserResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> Login([FromBody] UserRequestForm user, [FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> LoginUser([FromBody] UserRequestForm user, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
 			string loginTranslation = await Mediator.Send(new GetTranslationQuery("Uživatelské jméno", "login_username", countryCode), cancellationToken);
 			string passwordTranslation = await Mediator.Send(new GetTranslationQuery("Heslo", "login_pw", countryCode), cancellationToken);
 
-			//Tohle je treba doresit protoze UserValidationDto se nechytne v ValidationDto based pipeline
 			var userResult = await Mediator.Send(new LoginUserCommand(user.UserName, user.Password), cancellationToken);
 
 			if (userResult.IsOk)
@@ -77,13 +76,13 @@ namespace ODF.API.Controllers
 			return CustomApiResponses.Unauthorized(new UnauthorizedExceptionResponseModel(title, message, loginAction, registerAction));
 		}
 
-		[HttpPut("/{countryCode}/user/register")]
+		[HttpPut(Name = nameof(RegisterUser))]
 		public IActionResult RegisterUser([FromRoute] string countryCode)
 		{
 			return Ok();
 		}
 
-		[HttpPost("/{countryCode}/user/logout")]
+		[HttpDelete(Name = nameof(LogoutUser))]
 		public async Task<IActionResult> LogoutUser([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			if (HttpContext.IsLoggedIn())

@@ -10,7 +10,7 @@ namespace ODF.AppLayer.Dtos
 
 		public string Text { get; set; } = string.Empty;
 
-		public Uri? ImageUri { get; set; }
+		public Uri ImageUri { get; set; } = null;
 
 	}
 }

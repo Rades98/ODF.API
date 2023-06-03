@@ -20,7 +20,7 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpGet("/{countryCode}/redaction")]
+		[HttpGet(Name = nameof(GetRedaction))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]

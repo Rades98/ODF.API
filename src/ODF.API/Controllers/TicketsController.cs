@@ -12,8 +12,8 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpGet("/{countryCode}/tickets")]
-		public IActionResult GetTickets([FromRoute] string countryCode, CancellationToken ct)
+		[HttpGet(Name = nameof(GetTickets))]
+		public IActionResult GetTickets([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			return Ok();
 		}
