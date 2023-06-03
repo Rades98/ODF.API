@@ -25,7 +25,7 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 				.AddControllers(opts =>
 				{
 					opts.Filters.Add<PropertyBIndingActionFilterAttribute>();
-					opts.Conventions.Add(new RouteTokenTransformerConvention(new PascalCaseRouteTransformer()));
+					opts.Conventions.Add(new RouteTokenTransformerConvention(new CamelCaseRouteTransformer()));
 				});
 
 builder.Host.UseSerilog();

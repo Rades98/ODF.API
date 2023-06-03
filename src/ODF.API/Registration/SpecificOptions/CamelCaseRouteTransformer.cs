@@ -1,6 +1,6 @@
 ﻿namespace ODF.API.Registration.SpecificOptions
 {
-	public class PascalCaseRouteTransformer : IOutboundParameterTransformer
+	public class CamelCaseRouteTransformer : IOutboundParameterTransformer
 	{
 		public string? TransformOutbound(object? value)
 		{
