@@ -15,13 +15,13 @@ using ODF.AppLayer.CQRS.Contact.Commands;
 
 namespace ODF.API.Controllers.Contacts
 {
-	public class ContactsBankAccountController : BaseController
+	public class ContactBankAccountsController : BaseController
 	{
-		public ContactsBankAccountController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public ContactBankAccountsController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
 		{
 		}
 
-		[HttpPut("/{countryCode}/contacts/bankAcc")]
+		[HttpPut(Name = nameof(AddBankAccount))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(CreateContactBankAccResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(CreateContactBankAccResponseModel), StatusCodes.Status422UnprocessableEntity)]
@@ -44,7 +44,7 @@ namespace ODF.API.Controllers.Contacts
 			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při přidávání bankovního účtu"));
 		}
 
-		[HttpDelete("/{countryCode}/contacts/bankAcc")]
+		[HttpDelete(Name = nameof(RemoveBankAccount))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(DeleteContactBankAccResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]

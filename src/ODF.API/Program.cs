@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using ODF.API.Filters;
 using ODF.API.Middleware;
 using ODF.API.Registration;
+using ODF.API.Registration.SpecificOptions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +22,11 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 				.AddSwaggerGen()
 				.AddCors()
 				.AddHttpContextAccessor()
-				.AddControllers(opts => opts.Filters.Add<PropertyBIndingActionFilterAttribute>());
+				.AddControllers(opts =>
+				{
+					opts.Filters.Add<PropertyBIndingActionFilterAttribute>();
+					opts.Conventions.Add(new RouteTokenTransformerConvention(new CamelCaseRouteTransformer()));
+				});
 
 builder.Host.UseSerilog();
 

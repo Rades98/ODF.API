@@ -16,13 +16,13 @@ using ODF.AppLayer.CQRS.Contact.Commands;
 
 namespace ODF.API.Controllers.Contacts
 {
-	public class ContactsPersonController : BaseController
+	public class ContactPersonsController : BaseController
 	{
-		public ContactsPersonController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public ContactPersonsController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
 		{
 		}
 
-		[HttpPost("/{countryCode}/contacts/person")]
+		[HttpPost(Name = nameof(UpdateContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(UpdateContactPersonResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
@@ -36,7 +36,7 @@ namespace ODF.API.Controllers.Contacts
 			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby"));
 		}
 
-		[HttpPut("/{countryCode}/contacts/person")]
+		[HttpPut(Name = nameof(AddContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(CreateContactPersonResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(CreateContactPersonResponseModel), StatusCodes.Status422UnprocessableEntity)]
@@ -60,7 +60,7 @@ namespace ODF.API.Controllers.Contacts
 			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě kontaktní osoby"));
 		}
 
-		[HttpDelete("/{countryCode}/contacts/person")]
+		[HttpDelete(Name = nameof(RemoveContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(DeleteContactPersonResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]

@@ -9,7 +9,6 @@ using ODF.API.ResponseComposers.Contacts;
 using ODF.API.ResponseModels.Contacts.GetContacts;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.API.ResponseModels.Redaction;
 using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
@@ -23,7 +22,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 		}
 
-		[HttpGet("/{countryCode}/contacts")]
+		[HttpGet(Name = nameof(GetContacts))]
 		[ProducesResponseType(typeof(ContactResponseModel), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetContacts([FromRoute] string countryCode)
 		{
@@ -32,17 +31,7 @@ namespace ODF.API.Controllers.Contacts
 			return Ok(ContactsResponseComposer.GetContactResponse(countryCode, ApiSettings.ApiUrl, contact));
 		}
 
-		[HttpGet("/{countryCode}/contacts/redaction")]
-		[Authorize(Roles = UserRoles.Admin)]
-		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetRedactionContacts([FromRoute] string countryCode)
-		{
-			var contact = await Mediator.Send(new GetContactQuery(countryCode));
-
-			return Ok(ContactsResponseComposer.GetRedactionResponse(countryCode, ApiSettings.ApiUrl, contact));
-		}
-
-		[HttpPost("/{countryCode}/contacts")]
+		[HttpPost(Name = nameof(UpdateContact))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(UpdateContactResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
@@ -54,20 +43,6 @@ namespace ODF.API.Controllers.Contacts
 			}
 
 			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktu"));
-		}
-
-		[HttpPost("/{countryCode}/contacts/address")]
-		[Authorize(Roles = UserRoles.Admin)]
-		[ProducesResponseType(typeof(UpdateContactAddressResponseModel), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> UpdateAddress([FromRoute] string countryCode, [FromBody] UpdateAddressForm form)
-		{
-			if (await Mediator.Send(new UpdateContactAddressCommand(form.Street, form.City, form.PostalCode, form.Country)))
-			{
-				return Ok(new UpdateContactAddressResponseModel(ApiSettings.ApiUrl, countryCode));
-			}
-
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci adresy"));
 		}
 	}
 }

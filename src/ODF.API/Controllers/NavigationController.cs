@@ -19,7 +19,7 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpGet("/{countryCode}/navigation")]
+		[HttpGet(Name = nameof(GetNavigation))]
 		[Authorize]
 		[AllowAnonymous]
 		[ProducesResponseType(typeof(NavigationResponseModel), StatusCodes.Status200OK)]

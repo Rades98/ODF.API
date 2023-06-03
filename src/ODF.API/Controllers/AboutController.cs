@@ -15,7 +15,7 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpGet("/{countryCode}/about")]
+		[HttpGet(Name = nameof(GetAbout))]
 		[ProducesResponseType(typeof(AboutResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> GetAbout([FromRoute] string countryCode, CancellationToken cancellationToken)

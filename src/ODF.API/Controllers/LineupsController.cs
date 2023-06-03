@@ -21,10 +21,10 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpGet("/{countryCode}/lineups")]
+		[HttpGet(Name = nameof(GetLineup))]
 		[ProducesResponseType(typeof(LineupResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetLineups([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetLineup([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var result = await Mediator.Send(new GetLineupQuery(countryCode), cancellationToken);
 
@@ -44,11 +44,11 @@ namespace ODF.API.Controllers
 			return Ok(responseModel);
 		}
 
-		[HttpPut("/{countryCode}/lineup")]
+		[HttpPut(Name = nameof(AddItemToLineup))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(StatusCodes.Status202Accepted)]
-		public async Task<IActionResult> AddLineup([FromRoute] string countryCode, [FromBody] AddLineupItemForm model, CancellationToken cancellationToken)
+		public async Task<IActionResult> AddItemToLineup([FromRoute] string countryCode, [FromBody] AddLineupItemForm model, CancellationToken cancellationToken)
 		{
 			bool result = await Mediator.Send(new AddLineupItemCommand(
 				model.Place, model.Interpret, model.PerformanceName,

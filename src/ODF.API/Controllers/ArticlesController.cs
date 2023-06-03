@@ -25,7 +25,7 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpPut("/{countryCode}/articles")]
+		[HttpPut(Name = nameof(AddArticle))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(CreateArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
@@ -51,7 +51,7 @@ namespace ODF.API.Controllers
 			return Ok(responseModel);
 		}
 
-		[HttpGet("/{countryCode}/articles/{articleId}")]
+		[HttpGet("{articleId}", Name = nameof(GetArticle))]
 		[ProducesResponseType(typeof(GetArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(NotFoundExceptionResponseModel), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
@@ -72,7 +72,7 @@ namespace ODF.API.Controllers
 			return NotFound(new NotFoundExceptionResponseModel(notFoundTitle, notFoundArticle));
 		}
 
-		[HttpGet("/{countryCode}/articles")]
+		[HttpGet(Name = nameof(GetArticles))]
 		[ProducesResponseType(typeof(GetArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> GetArticles(int size, int offset, int pageId, [FromRoute] string countryCode)

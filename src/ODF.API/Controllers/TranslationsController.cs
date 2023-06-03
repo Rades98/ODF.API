@@ -1,5 +1,4 @@
-﻿using System.Data;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -18,41 +17,14 @@ using ODF.Enums;
 
 namespace ODF.API.Controllers
 {
-	public class LanguagesController : BaseController
+	public class TranslationsController : BaseController
 	{
-		public LanguagesController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public TranslationsController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
 		{
 		}
 
-		[HttpGet("/{countryCode}/supportedLanguages")]
-		[ProducesResponseType(typeof(LanguageResponseModel), StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetSupportedLanguages([FromRoute] string countryCode, CancellationToken cancellationToken)
-		{
-			string actionParttext = await Mediator.Send(new GetTranslationQuery("Přepnout do {0}", "app_language_switch", countryCode), cancellationToken);
-			var languages = Languages.GetAll().Select(lang =>
-			{
-				string actionName = string.Format(actionParttext, lang.GetCountryCode());
-				var languageModel = new LanguageModel(lang.Name, lang.GetCountryCode());
-
-				if (lang.GetCountryCode().ToLower() != countryCode.ToLower())
-				{
-					languageModel.ChangeLanguage = new(ApiSettings.ApiUrl + $"/{lang.GetCountryCode()}/navigation", actionName, "nav", HttpMethods.Get);
-				}
-
-				return languageModel;
-			});
-
-			string title = await Mediator.Send(new GetTranslationQuery("Jazyk", "app_language", countryCode), cancellationToken);
-			var responseModel = new LanguageResponseModel(ApiSettings.ApiUrl, languages, title, countryCode);
-
-			return Ok(responseModel);
-		}
-
-		/* 2RADEK: Tejto metode nerozumiem. K comu bude vlastne sluzit? Napevno sa tu riesia tri jazyky. 
-		 * --Jak si muzes vsimnout, je tu authorize na admina.. tohle je cast do redakce, tzn hateoas response obsahujue akce pro upravu prekladu per jazyk */
-		[HttpGet("{countryCode}/translations")]
-		[Authorize(Roles = UserRoles.Admin)] //AUTHORIZE HEEEEEEEEEEEEEEEEEEEEEEEEERE
+		[HttpGet(Name = nameof(GetTranslations))]
+		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(GetTranslationsResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> GetTranslations([FromRoute] string countryCode, int size, int offset, CancellationToken cancellationToken)
@@ -96,13 +68,13 @@ namespace ODF.API.Controllers
 			return Ok(responseModel);
 		}
 
-		[HttpPost("{countryCode}/translations")]
+		[HttpPost(Name = nameof(ChangeTranslation))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[ProducesResponseType(typeof(UpdateTranslationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(BadRequestExceptionResponseModel), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> PostTranslations(string countryCode, [FromBody] ChangeTranslationForm form, CancellationToken cancellationToken)
+		public async Task<IActionResult> ChangeTranslation(string countryCode, [FromBody] ChangeTranslationForm form, CancellationToken cancellationToken)
 		{
 			if (countryCode.ToUpper() != Languages.Czech.GetCountryCode())
 			{
