@@ -4,6 +4,7 @@ using ODF.API.Filters;
 using ODF.API.Middleware;
 using ODF.API.Registration;
 using ODF.API.Registration.SpecificOptions;
+using ODF.ServiceLayer.Registrations;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,7 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 				.AddEndpointsApiExplorer()
 				.AddSwaggerGen()
 				.AddCors()
+				.AddProjectServices()
 				.AddHttpContextAccessor()
 				.AddControllers(opts =>
 				{

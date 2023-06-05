@@ -9,14 +9,20 @@ using ODF.API.RequestModels.Navigation;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Navigation;
 using ODF.AppLayer.CQRS.Translations.Queries;
+using ODF.AppLayer.Services;
 using ODF.Enums;
 
 namespace ODF.API.Controllers
 {
 	public class NavigationController : BaseController
 	{
-		public NavigationController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		private readonly ITranslationService _translationService;
+
+		public NavigationController(IMediator mediator, IOptions<ApiSettings> apiSettings, ITranslationService translationService) : base(mediator, apiSettings)
 		{
+			_translationService = translationService;
+
+			var x = _translationService.GetTest();
 		}
 
 		[HttpGet(Name = nameof(GetNavigation))]
