@@ -12,6 +12,7 @@ COPY ["ODF.DataContracts/ODF.Data.Contracts.csproj", "ODF.DataContracts/"]
 COPY ["ODF.Enums/ODF.Enums.csproj", "ODF.Enums/"]
 COPY ["ODF.Data.Elastic/ODF.Data.Elastic.csproj", "ODF.Data.Elastic/"]
 COPY ["ODF.Data.Redis/ODF.Data.Redis.csproj", "ODF.Data.Redis/"]
+COPY ["ODF.ServiceLayer/ODF.ServiceLayer.csproj", "ODF.ServiceLayer/"]
 RUN dotnet restore "ODF.API/ODF.API.csproj"
 
 COPY . .
