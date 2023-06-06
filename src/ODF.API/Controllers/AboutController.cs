@@ -6,13 +6,14 @@ using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.About;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.AppLayer.CQRS.Translations.Queries;
+using ODF.AppLayer.Extensions;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.API.Controllers
 {
 	public class AboutController : BaseController
 	{
-		public AboutController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public AboutController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -21,10 +22,9 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> GetAbout([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
-			string aboutText = await Mediator.Send(new GetTranslationQuery("Metropole Moravskoslezského kraje a její přilehlé okolí se mohou v listopadu těšit na 1. ročník festivalu Ostravské folklorní dny, které organizuje spolek FolklorOva. Akce, která se bude v centru Ostravy a městských částech konat od středy 8. do neděle 12. listopadu, má obyvatelům představit tradiční lidovou kulturu.", "about_info", countryCode), cancellationToken);
-			string header = await Mediator.Send(new GetTranslationQuery("Ostravo, těš se na Ostravské dny folkloru!", "about_header", countryCode), cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 
-			var responseModel = new AboutResponseModel(aboutText, header);
+			var responseModel = new AboutResponseModel(translations.Get("about_info"), translations.Get("about_header"));
 
 			responseModel.AddAction(GetQueriedAppAction(nameof(ArticlesController.GetArticles), "about_articles",
 				new Dictionary<string, string> {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Nest;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities;
 
 namespace ODF.Data.Elastic.Repos.Lineups
 {

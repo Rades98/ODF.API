@@ -10,12 +10,13 @@ using ODF.API.ResponseModels.Contacts.Redaction;
 using ODF.API.ResponseModels.Redaction;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Queries;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.API.Controllers.Contacts
 {
 	public class ContactsRedactionController : BaseController
 	{
-		public ContactsRedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public ContactsRedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 

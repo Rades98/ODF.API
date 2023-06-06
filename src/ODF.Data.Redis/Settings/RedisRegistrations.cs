@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
 using ODF.Data.Redis.Repos;
+using ODF.Domain.Entities;
 using StackExchange.Redis;
 
 namespace ODF.Data.Redis.Settings

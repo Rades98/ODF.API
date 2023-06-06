@@ -20,7 +20,7 @@ namespace ODF.API.Extensions
 
 		public async static Task SetCachedValueAsync<T>(this IDistributedCache cache, string key, T value, DistributedCacheEntryOptions? opts = null, CancellationToken cancellationToken = default)
 		{
-			if(opts == null)
+			if (opts == null)
 			{
 				opts = new()
 				{
@@ -28,14 +28,14 @@ namespace ODF.API.Extensions
 				};
 			}
 
-			byte[] cacheVal;
+			byte[]? cacheVal;
 
 			if (value == null)
 			{
 				cacheVal = null;
 			}
 
-			cacheVal =  Encoding.Default.GetBytes(JsonConvert.SerializeObject(value));
+			cacheVal = Encoding.Default.GetBytes(JsonConvert.SerializeObject(value));
 
 			await cache.SetAsync(key, cacheVal, opts, cancellationToken);
 		}

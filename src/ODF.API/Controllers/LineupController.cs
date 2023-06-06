@@ -13,12 +13,13 @@ using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Lineup.Commands;
 using ODF.AppLayer.CQRS.Lineup.Queries;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.API.Controllers
 {
 	public class LineupController : BaseController
 	{
-		public LineupController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public LineupController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 

@@ -24,7 +24,7 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 				.AddHttpContextAccessor()
 				.AddControllers(opts =>
 				{
-					opts.Filters.Add<PropertyBIndingActionFilterAttribute>();
+					opts.Filters.Add<PropertyBindingActionFilterAttribute>();
 					opts.Conventions.Add(new RouteTokenTransformerConvention(new CamelCaseRouteTransformer()));
 				});
 

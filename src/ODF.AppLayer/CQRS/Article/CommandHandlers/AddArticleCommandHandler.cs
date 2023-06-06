@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using ODF.AppLayer.CQRS.Article.Commands;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Enums;
+using ODF.AppLayer.Repos;
+using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Article.CommandHandlers
 {

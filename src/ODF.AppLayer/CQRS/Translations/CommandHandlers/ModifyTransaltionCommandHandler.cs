@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using ODF.AppLayer.CQRS.Translations.Commands;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Enums;
+using ODF.AppLayer.Repos;
+using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Translations.CommandHandlers
 {

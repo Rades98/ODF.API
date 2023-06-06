@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ODF.AppLayer.Dtos;
-using ODF.Data.Contracts.Entities;
+using ODF.Domain.Entities;
 
 namespace ODF.AppLayer.Mapping
 {

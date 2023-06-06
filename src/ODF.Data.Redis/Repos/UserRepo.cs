@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities;
 using StackExchange.Redis;
 
 namespace ODF.Data.Redis.Repos

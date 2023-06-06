@@ -15,14 +15,15 @@ using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Article.Commands;
 using ODF.AppLayer.CQRS.Article.Queries;
-using ODF.AppLayer.CQRS.Translations.Queries;
-using ODF.Enums;
+using ODF.AppLayer.Extensions;
+using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain;
 
 namespace ODF.API.Controllers
 {
 	public class ArticlesController : BaseController
 	{
-		public ArticlesController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public ArticlesController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -57,8 +58,9 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(GetArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(NotFoundExceptionResponseModel), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetArticle([FromRoute] int articleId, [FromRoute] string countryCode)
+		public async Task<IActionResult> GetArticle([FromRoute] int articleId, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
+			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 			var result = await Mediator.Send(new GetArticleQuery(articleId, countryCode));
 
 			if (result != null)
@@ -68,10 +70,7 @@ namespace ODF.API.Controllers
 				return Ok(responseModel);
 			}
 
-			string notFoundTitle = await Mediator.Send(new GetTranslationQuery("Zdroj nenalezen.", "app_base_notfound", countryCode));
-			string notFoundArticle = await Mediator.Send(new GetTranslationQuery("Článek, který se pokoušíte zobrazit, byl nejspíše smazán.", "app_article_notfound", countryCode));
-
-			return NotFound(new NotFoundExceptionResponseModel(notFoundTitle, notFoundArticle));
+			return NotFound(new NotFoundExceptionResponseModel(translations.Get("app_base_notfound"), translations.Get("app_article_notfound")));
 		}
 
 		[HttpGet(Name = nameof(GetArticles))]

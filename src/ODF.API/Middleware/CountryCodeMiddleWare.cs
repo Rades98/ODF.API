@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using ODF.API.Extensions;
-using ODF.Enums;
+using ODF.Domain;
 
 namespace ODF.API.Middleware
 {
@@ -15,7 +15,7 @@ namespace ODF.API.Middleware
 
 		public async Task Invoke(HttpContext httpContext)
 		{
-			if (!Languages.TryParse(httpContext.GetCountryCode(), out var lang))
+			if (!Languages.TryParse(httpContext.GetCountryCode()!, out var lang))
 			{
 				httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 				return;

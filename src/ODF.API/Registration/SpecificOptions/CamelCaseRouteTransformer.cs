@@ -1,4 +1,6 @@
-﻿namespace ODF.API.Registration.SpecificOptions
+﻿using ODF.API.Extensions;
+
+namespace ODF.API.Registration.SpecificOptions
 {
 	public class CamelCaseRouteTransformer : IOutboundParameterTransformer
 	{
@@ -11,7 +13,7 @@
 
 			string input = value.ToString()!;
 
-			return string.Concat(input[0].ToString().ToLower(), input.AsSpan(1));
+			return input.ToCamelCase();
 		}
 	}
 }

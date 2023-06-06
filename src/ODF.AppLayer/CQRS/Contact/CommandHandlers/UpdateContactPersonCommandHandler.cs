@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Mapping;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 {

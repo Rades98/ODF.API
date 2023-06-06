@@ -15,11 +15,11 @@
     <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ODF.DataContracts\ODF.Data.Contracts.csproj" />
-    <ProjectReference Include="..\ODF.Enums\ODF.Enums.csproj" />
+    <ProjectReference Include="..\ODF.Domain\ODF.Domain.csproj" />
   </ItemGroup>
 
 </Project>

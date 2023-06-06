@@ -4,6 +4,8 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using ODF.AppLayer.Pipelines;
+using ODF.AppLayer.Services;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.AppLayer.Settings
 {
@@ -15,6 +17,8 @@ namespace ODF.AppLayer.Settings
 				.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), lifetime: ServiceLifetime.Transient)
 				.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipeline<,>))
 				.AddTransient(typeof(IRequestPostProcessor<,>), typeof(ResourceNotFoundPostProcessor<,>));
+
+			services.AddTransient<ITranslationsProvider, TranslationsProvider>();
 
 			return services;
 		}

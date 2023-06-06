@@ -9,9 +9,9 @@ using Microsoft.Extensions.Logging;
 using ODF.AppLayer.CQRS.Article.QueryHandlers;
 using ODF.AppLayer.CQRS.Lineup.Queries;
 using ODF.AppLayer.Dtos;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Enums;
+using ODF.AppLayer.Repos;
+using ODF.Domain;
+using ODF.Domain.Entities;
 
 namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 {

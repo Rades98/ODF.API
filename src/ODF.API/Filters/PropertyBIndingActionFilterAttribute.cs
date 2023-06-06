@@ -4,7 +4,7 @@ using ODF.API.Attributes;
 
 namespace ODF.API.Filters
 {
-	public class PropertyBIndingActionFilterAttribute : ActionFilterAttribute
+	public class PropertyBindingActionFilterAttribute : ActionFilterAttribute
 	{
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
 		{
@@ -24,7 +24,7 @@ namespace ODF.API.Filters
 						foreach (var property in parameterType.GetProperties())
 						{
 							var binderAttributes = property.GetCustomAttributes<BindingAttribute>(true).ToList();
-							binderAttributes.FirstOrDefault()?.Bind(property, parameterValue);
+							binderAttributes.FirstOrDefault()?.Bind(property, parameterValue!);
 						}
 					}
 				}

@@ -4,10 +4,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Nest;
 using Newtonsoft.Json;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities;
 
 namespace ODF.Data.Elastic.Repos.Translations
 {
@@ -28,9 +27,21 @@ namespace ODF.Data.Elastic.Repos.Translations
 		public Task<bool> UpdateOrInsertTransaltionAsync(string translationIdentifier, string text, int languageId, CancellationToken cancellationToken)
 			=> _repo.UpdateOrInsertTransaltionAsync(translationIdentifier, text, languageId, cancellationToken);
 
-		public async Task<IEnumerable<Translation>> GetPagedAsync(int size, int offset, int languageId, CancellationToken cancellationToken)
+		public Task<IEnumerable<Translation>> GetPagedAsync(int size, int offset, int languageId, CancellationToken cancellationToken)
+			=> _repo.GetPagedAsync(size, offset, languageId, cancellationToken);
+
+		public Task<string> GetTranslationAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
+			=> _repo.GetTranslationAsync(translationIdentifier, languageId, cancellationToken);
+
+		public Task<string> GetTranslationOrDefaultTextAsync(string translationIdentifier, string defaultTranslation, int languageId, CancellationToken cancellationToken)
+			=> _repo.GetTranslationOrDefaultTextAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken);
+
+		public Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
+			=> _repo.GetTranslationsCountAsync(languageId, cancellationToken);
+
+		public async Task<IEnumerable<Translation>> GetAllAsync(int languageId, CancellationToken cancellationToken)
 		{
-			var cacheKey = $"{nameof(Translation)}s_paged{size}_{offset}_lan{languageId}";
+			var cacheKey = $"{nameof(Translation)}s_{languageId}";
 
 			var cachedResponse = _cache.Get(cacheKey);
 
@@ -43,7 +54,7 @@ namespace ODF.Data.Elastic.Repos.Translations
 				}
 			}
 
-			var response = await _repo.GetPagedAsync(size, offset, languageId, cancellationToken);
+			var response = await _repo.GetAllAsync(languageId, cancellationToken).ConfigureAwait(false);
 
 			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), new MemoryCacheEntryOptions()
 			{
@@ -52,36 +63,5 @@ namespace ODF.Data.Elastic.Repos.Translations
 
 			return response;
 		}
-
-		public async Task<string> GetTranslationAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
-		{
-			var cacheKey = $"{nameof(Translation)}_{translationIdentifier}_{languageId}";
-
-			var cachedResponse = _cache.Get(cacheKey);
-
-			if (cachedResponse != null)
-			{
-				var res = JsonConvert.DeserializeObject<string>(Encoding.Default.GetString((byte[])cachedResponse));
-				if (res is not null)
-				{
-					return res;
-				}
-			}
-
-			var response = await _repo.GetTranslationAsync(translationIdentifier, languageId, cancellationToken);
-
-			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), new MemoryCacheEntryOptions()
-			{
-				AbsoluteExpiration = DateTime.Now.AddMinutes(60)
-			});
-
-			return response;
-		}
-
-		public Task<string> GetTranslationOrDefaultTextAsync(string translationIdentifier, string defaultTranslation, int languageId, CancellationToken cancellationToken)
-			=> _repo.GetTranslationOrDefaultTextAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken);
-
-		public Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
-			=> _repo.GetTranslationsCountAsync(languageId, cancellationToken);
 	}
 }

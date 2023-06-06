@@ -13,12 +13,13 @@ using ODF.API.ResponseModels.Exceptions;
 using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.API.Controllers.Contacts
 {
 	public class ContactBankAccountsController : BaseController
 	{
-		public ContactBankAccountsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public ContactBankAccountsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 

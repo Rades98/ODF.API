@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.API.Controllers
 {
 	public class TicketsController : BaseController
 	{
-		public TicketsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public TicketsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 

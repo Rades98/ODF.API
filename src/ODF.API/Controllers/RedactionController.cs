@@ -11,14 +11,15 @@ using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Redaction;
 using ODF.AppLayer.Consts;
-using ODF.AppLayer.CQRS.Translations.Queries;
-using ODF.Enums;
+using ODF.AppLayer.Extensions;
+using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain;
 
 namespace ODF.API.Controllers
 {
 	public class RedactionController : BaseController
 	{
-		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -29,6 +30,8 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> GetRedaction([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
+			var transaltions = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+
 			if (countryCode.ToUpper() != Languages.Czech.GetCountryCode())
 			{
 				return UnprocessableEntity("This action is supported for CZ language only");
@@ -36,11 +39,9 @@ namespace ODF.API.Controllers
 
 			var responseModel = new RedactionResponseModel("Redakce");
 
-			string aboutTranslation = await Mediator.Send(new GetTranslationQuery("O festivalu", "nav_about", countryCode), cancellationToken);
-			responseModel.AddAboutArticle = GetAddArticleAction(ApiBaseUrl, aboutTranslation, 0, countryCode); // TODO ADD FORM
+			responseModel.AddAboutArticle = GetAddArticleAction(ApiBaseUrl, transaltions.Get("nav_about"), 0, countryCode); // TODO ADD FORM
 
-			string associationTranslation = await Mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);
-			responseModel.AddAssociationArticle = GetAddArticleAction(ApiBaseUrl, associationTranslation, 1, countryCode); // TODO ADD FORM
+			responseModel.AddAssociationArticle = GetAddArticleAction(ApiBaseUrl, transaltions.Get("nav_association"), 1, countryCode); // TODO ADD FORM
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
 					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));

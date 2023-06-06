@@ -7,7 +7,7 @@ using MediatR;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.User.Commands;
 using ODF.AppLayer.Dtos.User;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.User.CommandHandlers
 {
