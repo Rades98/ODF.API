@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Data.Elastic", "ODF.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Data.Redis", "ODF.Data.Redis\ODF.Data.Redis.csproj", "{AD0978C3-C23A-41ED-A714-C7CA23A0A488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODF.ServiceLayer", "ODF.ServiceLayer\ODF.ServiceLayer.csproj", "{CCB2E27C-99F2-4AF5-9E69-36AAC9D128C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.ServiceLayer", "ODF.ServiceLayer\ODF.ServiceLayer.csproj", "{CCB2E27C-99F2-4AF5-9E69-36AAC9D128C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODF.ServiceLayer.Contracts", "ODF.ServiceLayer.Contracts\ODF.ServiceLayer.Contracts.csproj", "{FC7B4281-A77E-4913-A488-2E2A34F12CC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{CCB2E27C-99F2-4AF5-9E69-36AAC9D128C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCB2E27C-99F2-4AF5-9E69-36AAC9D128C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCB2E27C-99F2-4AF5-9E69-36AAC9D128C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC7B4281-A77E-4913-A488-2E2A34F12CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC7B4281-A77E-4913-A488-2E2A34F12CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC7B4281-A77E-4913-A488-2E2A34F12CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC7B4281-A77E-4913-A488-2E2A34F12CC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

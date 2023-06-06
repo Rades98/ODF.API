@@ -4,7 +4,7 @@ using ODF.AppLayer.Dtos;
 
 namespace ODF.AppLayer.CQRS.Translations.Queries
 {
-	public class GetTranslationsQuery : IRequest<TranslationsDto>
+	/*public class GetTranslationsQuery : IRequest<TranslationsDto>
 	{
 		public GetTranslationsQuery(string countryCode, int size, int offset)
 		{
@@ -18,5 +18,5 @@ namespace ODF.AppLayer.CQRS.Translations.Queries
 		public int Size { get; }
 
 		public int Offset { get; }
-	}
+	}*/
 }

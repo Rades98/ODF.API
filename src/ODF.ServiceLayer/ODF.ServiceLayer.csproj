@@ -3,10 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
+	<LangVersion>latest</LangVersion>	  
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ODF.AppLayer\ODF.AppLayer.csproj" />
+    <ProjectReference Include="..\ODF.ServiceLayer.Contracts\ODF.ServiceLayer.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

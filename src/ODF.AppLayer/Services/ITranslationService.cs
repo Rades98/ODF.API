@@ -1,15 +1,22 @@
-﻿namespace ODF.AppLayer.Services
+﻿using ODF.AppLayer.CQRS.Translations.Queries;
+using System.Threading.Tasks;
+using System.Threading;
+using ODF.ServiceLayer.Contracts.Models;
+
+namespace ODF.AppLayer.Services
 {
 	public interface ITranslationService
 	{
-		public string GetTest();
+        public Task<string> GetTranslation(TranslationRequestModel request,  CancellationToken cancellationToken);
 
-		//Get translation
+        public Task<TranslationsModel> GetTranslations(TranslationsRequestModel request, CancellationToken cancellationToken);
+        
+        //Get translation
 
-		//Get list of all translations
+        //Get list of all translations
 
-		//Add transaltion
+        //Add transaltion
 
-		//Remove translation
-	}
+        //Remove translation
+    }
 }

@@ -12,7 +12,7 @@ using ODF.Enums;
 
 namespace ODF.AppLayer.CQRS.Translations.QueryHandlers
 {
-	internal class GetTranslationsQueryHandler : IRequestHandler<GetTranslationsQuery, TranslationsDto>
+	/*internal class GetTranslationsQueryHandler : IRequestHandler<GetTranslationsQuery, TranslationsDto>
 	{
 		private readonly ITranslationRepo _repo;
 
@@ -34,5 +34,5 @@ namespace ODF.AppLayer.CQRS.Translations.QueryHandlers
 
 			return new() { Translations = Enumerable.Empty<TranslationDto>(), Count = 0 };
 		}
-	}
+	}*/
 }

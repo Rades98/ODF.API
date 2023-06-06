@@ -22,7 +22,7 @@ namespace ODF.API.Controllers
 		{
 			_translationService = translationService;
 
-			var x = _translationService.GetTest();
+			//var x = _translationService.GetTest();
 		}
 
 		[HttpGet(Name = nameof(GetNavigation))]

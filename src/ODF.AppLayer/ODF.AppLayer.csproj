@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ODF.DataContracts\ODF.Data.Contracts.csproj" />
     <ProjectReference Include="..\ODF.Enums\ODF.Enums.csproj" />
+    <ProjectReference Include="..\ODF.ServiceLayer.Contracts\ODF.ServiceLayer.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
