@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Common.Forms;
 
@@ -6,10 +7,9 @@ namespace ODF.API.ResponseModels.Articles
 {
 	public class CreateArticleResponseModel : BaseResponseModel
 	{
-		public CreateArticleResponseModel(string baseUrl, string message, Form form) : base(baseUrl, "/articles", HttpMethods.Put, "cz")
+		public CreateArticleResponseModel(string message, Form form) : base(form)
 		{
 			Message = message;
-			_self.Curl.Form = form;
 		}
 
 		[JsonProperty("message", Required = Required.Always)]

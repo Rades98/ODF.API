@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common;
 
 namespace ODF.API.ResponseModels.Redaction
 {
 	public class RedactionResponseModel : BaseResponseModel
 	{
-		public RedactionResponseModel(string baseUrl, string countryCode, string title) : base(baseUrl, "/redaction", HttpMethods.Get, countryCode)
+		public RedactionResponseModel(string title) : base()
 		{
 			Title = title;
 		}

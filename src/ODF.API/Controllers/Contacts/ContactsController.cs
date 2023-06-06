@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
@@ -18,7 +19,7 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactsController : BaseController
 	{
-		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -28,7 +29,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 			var contact = await Mediator.Send(new GetContactQuery(countryCode));
 
-			return Ok(ContactsResponseComposer.GetContactResponse(countryCode, ApiSettings.ApiUrl, contact));
+			return Ok(ContactsResponseComposer.GetContactResponse(countryCode, ApiBaseUrl, contact));
 		}
 
 		[HttpPost(Name = nameof(UpdateContact))]
@@ -39,10 +40,10 @@ namespace ODF.API.Controllers.Contacts
 		{
 			if (await Mediator.Send(new UpdateContactCommand(form.EventName, form.EventManager, form.Email)))
 			{
-				return Ok(new UpdateContactResponseModel(ApiSettings.ApiUrl, countryCode));
+				return Ok(new UpdateContactResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktu"));
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktu"));  // TODO add validation with form
 		}
 	}
 }

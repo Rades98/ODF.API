@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common;
 
 namespace ODF.API.ResponseModels.Contacts.Redaction
 {
 	public class GetContactRedactionNavigationResponseModel : BaseResponseModel
 	{
-		public GetContactRedactionNavigationResponseModel(string baseUrl, string countryCode) : base(baseUrl, "/contacts/redaction", HttpMethods.Get, countryCode)
+		public GetContactRedactionNavigationResponseModel() : base()
 		{
 		}
 

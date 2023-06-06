@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
@@ -18,7 +19,7 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactPersonsController : BaseController
 	{
-		public ContactPersonsController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public ContactPersonsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -30,10 +31,10 @@ namespace ODF.API.Controllers.Contacts
 		{
 			if (await Mediator.Send(new UpdateContactPersonCommand(form.Email, form.Title, form.Name, form.Surname, form.Roles, form.Base64Image, form.Id, form.Order), cancellationToken))
 			{
-				return Ok(new UpdateContactPersonResponseModel(ApiSettings.ApiUrl, countryCode));
+				return Ok(new UpdateContactPersonResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby"));
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby")); // TODO add validation with form
 		}
 
 		[HttpPut(Name = nameof(AddContactPerson))]
@@ -47,14 +48,13 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResponse.IsOk)
 			{
-				return Ok(new CreateContactPersonResponseModel(ApiSettings.ApiUrl, countryCode));
+				return Ok(new CreateContactPersonResponseModel());
 			}
 
-			/* 2RADEK: Toto je ta validacia, ktoru by si chcel vsade??  -- JO :D*/
 			if (validationResponse.Errors.Any())
 			{
 				var responseForm = ContactFormFactory.GetAddContactPersonForm(validationResponse.Errors, form);
-				return UnprocessableEntity(new CreateContactPersonResponseModel(ApiSettings.ApiUrl, countryCode, responseForm));
+				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
 			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě kontaktní osoby"));
@@ -68,10 +68,10 @@ namespace ODF.API.Controllers.Contacts
 		{
 			if (await Mediator.Send(new RemoveContactPersonCommand(form.Id), cancellationToken))
 			{
-				return Ok(new DeleteContactPersonResponseModel(ApiSettings.ApiUrl, countryCode));
+				return Ok(new DeleteContactPersonResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání kontaktní osoby"));
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání kontaktní osoby")); // TODO add validation with form
 		}
 	}
 }

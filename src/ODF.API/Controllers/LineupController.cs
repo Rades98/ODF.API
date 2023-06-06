@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
@@ -15,9 +16,9 @@ using ODF.AppLayer.CQRS.Lineup.Queries;
 
 namespace ODF.API.Controllers
 {
-	public class LineupsController : BaseController
+	public class LineupController : BaseController
 	{
-		public LineupsController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public LineupController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -28,7 +29,7 @@ namespace ODF.API.Controllers
 		{
 			var result = await Mediator.Send(new GetLineupQuery(countryCode), cancellationToken);
 
-			var responseModel = new LineupResponseModel(ApiSettings.ApiUrl, countryCode);
+			var responseModel = new LineupResponseModel();
 
 			responseModel.Lineup = result.OrderBy(ord => ord.DateTime)
 				.GroupBy(o => o.Place)

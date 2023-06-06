@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
@@ -17,7 +18,7 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactBankAccountsController : BaseController
 	{
-		public ContactBankAccountsController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public ContactBankAccountsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -32,13 +33,13 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResponse.IsOk)
 			{
-				return Ok(new CreateContactBankAccResponseModel(ApiSettings.ApiUrl, countryCode));
+				return Ok(new CreateContactBankAccResponseModel());
 			}
 
 			if (validationResponse.Errors.Any())
 			{
 				var responseForm = ContactFormFactory.GetAddBankAcountForm(validationResponse.Errors, form.Bank, form.AccountId, form.IBAN);
-				return UnprocessableEntity(new CreateContactBankAccResponseModel(ApiSettings.ApiUrl, countryCode, responseForm));
+				return UnprocessableEntity(new CreateContactBankAccResponseModel(responseForm));
 			}
 
 			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při přidávání bankovního účtu"));
@@ -52,10 +53,10 @@ namespace ODF.API.Controllers.Contacts
 		{
 			if (await Mediator.Send(new RemoveBankAccountCommand(form.IBAN), cancellationToken))
 			{
-				return Ok(new DeleteContactBankAccResponseModel(ApiSettings.ApiUrl, countryCode));
+				return Ok(new DeleteContactBankAccResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání bankovního účtu"));
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání bankovního účtu")); // TODO add validation with form
 		}
 	}
 }

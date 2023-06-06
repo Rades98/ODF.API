@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 
 namespace ODF.API.ResponseModels.Lineup
 {
 	public class LineupResponseModel : BaseResponseModel
 	{
-		public LineupResponseModel(string baseUrl, string countryCode) : base(baseUrl, "/lineup", HttpMethods.Get, countryCode)
+		public LineupResponseModel() : base()
 		{
 		}
 

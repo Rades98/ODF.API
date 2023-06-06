@@ -27,6 +27,11 @@ namespace ODF.API.Extensions
 
 		public static string? GetCountryCode(this HttpContext httpContext)
 		{
+			if (httpContext.Request.Path == new PathString("/"))
+			{
+				return Languages.Czech.GetCountryCode().ToLower();
+			}
+
 			if (httpContext.Request.Query.ContainsKey(CountryParam))
 			{
 				return httpContext.Request.Query[CountryParam];
@@ -38,10 +43,6 @@ namespace ODF.API.Extensions
 			else if (httpContext.Request.RouteValues.ContainsKey(CountryParam))
 			{
 				return httpContext.Request.RouteValues[CountryParam]!.ToString();
-			}
-			else if (httpContext.Request.Path == new PathString("/"))
-			{
-				return Languages.Czech.GetCountryCode().ToLower();
 			}
 
 			return null;

@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Common.Forms;
 
-namespace ODF.API.ResponseModels
+namespace ODF.API.ResponseModels.Base
 {
 	public class BaseDeleteResponseModel : BaseResponseModel
 	{
-		public BaseDeleteResponseModel(string baseUrl, string relativeUrl, string method, string countryCode, string? message = null) : base(baseUrl, relativeUrl, method, countryCode)
+		public BaseDeleteResponseModel(string? message = null, Form? form = null) : base(form)
 		{
 			if (message is not null)
 			{

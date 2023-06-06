@@ -3,13 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms;
-using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.User;
 using ODF.API.Responses;
@@ -20,7 +20,7 @@ namespace ODF.API.Controllers
 {
 	public class UsersController : BaseController
 	{
-		public UsersController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public UsersController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -49,16 +49,15 @@ namespace ODF.API.Controllers
 
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-				var responseModel = new UserResponseModel(ApiSettings.ApiUrl, userResult.User.UserName, countryCode, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
-				responseModel.AddAction($"/{countryCode}/navigation", "nav", HttpMethods.Get);
+				var responseModel = new UserResponseModel(userResult.User.UserName, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation));
+				responseModel.AddAction(GetAppAction(nameof(NavigationController.GetNavigation), "nav"));
 
 				return Ok(responseModel);
 			}
 
 			string loginActionName = await Mediator.Send(new GetTranslationQuery("Přihlásit se", "login", countryCode), cancellationToken);
-			string link = $"{ApiSettings.ApiUrl}/{countryCode}/user";
 
-			var loginAction = new NamedAction(link, loginActionName, "login", HttpMethods.Post, UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation, errors: userResult.Errors));
+			var loginAction = GetNamedAction(nameof(LoginUser), loginActionName, "login", UserFormFactory.GetLoginForm(loginTranslation, passwordTranslation, errors: userResult.Errors));
 
 			string password2Translation = await Mediator.Send(new GetTranslationQuery("Heslo pro kontrolu", "login_pw2", countryCode), cancellationToken);
 			string emailTranslation = await Mediator.Send(new GetTranslationQuery("e-mail", "login_email", countryCode), cancellationToken);
@@ -70,7 +69,7 @@ namespace ODF.API.Controllers
 
 			string registrationActionName = await Mediator.Send(new GetTranslationQuery("Nemáte registraci? Klikněte zde!", "register_action_name", countryCode), cancellationToken);
 
-			var registerAction = new NamedAction(ApiSettings.ApiUrl + $"/{countryCode}/user", registrationActionName, "register", HttpMethods.Put,
+			var registerAction = GetNamedAction(nameof(RegisterUser), registrationActionName, "register",
 				UserFormFactory.GetRegisterForm(loginTranslation, passwordTranslation, password2Translation, emailTranslation, firstNameTranslation, lastNameTranslation));
 
 			return CustomApiResponses.Unauthorized(new UnauthorizedExceptionResponseModel(title, message, loginAction, registerAction));
