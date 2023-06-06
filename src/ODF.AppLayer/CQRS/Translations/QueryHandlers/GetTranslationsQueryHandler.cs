@@ -7,8 +7,8 @@ using MediatR;
 using ODF.AppLayer.CQRS.Translations.Queries;
 using ODF.AppLayer.Dtos;
 using ODF.AppLayer.Mapping;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Enums;
+using ODF.AppLayer.Repos;
+using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Translations.QueryHandlers
 {

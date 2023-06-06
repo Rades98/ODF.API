@@ -7,9 +7,8 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["ODF.API/ODF.API.csproj", "ODF.API/"]
+COPY ["ODF.Domain/ODF.Domain.csproj", "ODF.Domain/"]
 COPY ["ODF.AppLayer/ODF.AppLayer.csproj", "ODF.AppLayer/"]
-COPY ["ODF.DataContracts/ODF.Data.Contracts.csproj", "ODF.DataContracts/"]
-COPY ["ODF.Enums/ODF.Enums.csproj", "ODF.Enums/"]
 COPY ["ODF.Data.Elastic/ODF.Data.Elastic.csproj", "ODF.Data.Elastic/"]
 COPY ["ODF.Data.Redis/ODF.Data.Redis.csproj", "ODF.Data.Redis/"]
 RUN dotnet restore "ODF.API/ODF.API.csproj"

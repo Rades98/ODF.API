@@ -6,8 +6,8 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using ODF.AppLayer.CQRS.Article.Queries;
 using ODF.AppLayer.Dtos;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Enums;
+using ODF.AppLayer.Repos;
+using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Article.QueryHandlers
 {
@@ -38,7 +38,7 @@ namespace ODF.AppLayer.CQRS.Article.QueryHandlers
 			return result;
 		}
 
-		private async Task<ArticleDto> MapArticle(Data.Contracts.Entities.Article article, string countryCode, CancellationToken cancellationToken)
+		private async Task<ArticleDto> MapArticle(Domain.Entities.Article article, string countryCode, CancellationToken cancellationToken)
 		{
 			if (article is not null && Languages.TryParse(countryCode, out var lang))
 			{

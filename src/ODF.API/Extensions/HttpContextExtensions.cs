@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using ODF.AppLayer.Consts;
-using ODF.Enums;
+using ODF.Domain;
 
 namespace ODF.API.Extensions
 {

@@ -1,6 +1,6 @@
 ﻿using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Dtos.ContactDtos;
-using ODF.Data.Contracts.Entities.ContactEntities;
+using ODF.Domain.Entities.ContactEntities;
 
 namespace ODF.AppLayer.Mapping
 {

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities;
 
 namespace ODF.Data.Elastic.Repos.Articles
 {

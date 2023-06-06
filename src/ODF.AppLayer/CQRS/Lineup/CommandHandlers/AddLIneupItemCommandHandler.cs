@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using ODF.AppLayer.CQRS.Article.CommandHandlers;
 using ODF.AppLayer.CQRS.Lineup.Commands;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Enums;
+using ODF.AppLayer.Repos;
+using ODF.Domain;
+using ODF.Domain.Entities;
 
 namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 {
@@ -32,7 +29,7 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 			{
 				var descTest = await _translationRepo.GetTranslationAsync(request.DescriptionTranslationCode, lang.Id, cancellationToken);
 
-				if(!string.IsNullOrEmpty(descTest))
+				if (!string.IsNullOrEmpty(descTest))
 				{
 					return false;
 				}

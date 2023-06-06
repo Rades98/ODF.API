@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Entities.ContactEntities;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
 using ODF.Data.Elastic.Repos.Articles;
 using ODF.Data.Elastic.Repos.Contacts;
 using ODF.Data.Elastic.Repos.Lineups;
 using ODF.Data.Elastic.Repos.Translations;
+using ODF.Domain.Entities;
+using ODF.Domain.Entities.ContactEntities;
 
 namespace ODF.Data.Elastic.Settings
 {
@@ -52,7 +53,7 @@ namespace ODF.Data.Elastic.Settings
 			//services.Decorate<IArticleRepo, ArticleRepoCache>();
 
 			services.AddTransient<ITranslationRepo, TranslationRepo>();
-			//services.Decorate<ITranslationRepo, TranslationRepoCache>();
+			services.Decorate<ITranslationRepo, TranslationRepoCache>();
 
 			services.AddTransient<ILineupRepo, LineupRepo>();
 			//services.Decorate<ILineupRepo, LineupRepoCahce>();
@@ -117,6 +118,163 @@ namespace ODF.Data.Elastic.Settings
 			{
 				client.Index(contact, i => i);
 			}
+
+			client.DeleteByQuery<Translation>(q => q
+				.Query(rq => rq
+					.Match(m => m
+					.Field(f => f.IsSystem)
+					.Query("true"))
+				)
+			);
+
+			List<Translation> sysTrans = new()
+			{
+				new(){ IsSystem = true, LanguageId = 0, Text ="Jazyk", TranslationCode = "menu_lang"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Language", TranslationCode = "menu_lang"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Sprache", TranslationCode = "menu_lang"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="O festivalu", TranslationCode = "menu_about"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="About the festival", TranslationCode = "menu_about"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Über das Festival", TranslationCode = "menu_about"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="FolklorOVA", TranslationCode = "menu_association"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="FolklorOVA", TranslationCode = "menu_association"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="FolklorOVA", TranslationCode = "menu_association"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Program", TranslationCode = "menu_lineup"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Festival program", TranslationCode = "menu_lineup"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Festivalprogramm", TranslationCode = "menu_lineup"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Vstupenky", TranslationCode = "menu_tickets"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Tickets", TranslationCode = "menu_tickets"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Tickets", TranslationCode = "menu_tickets"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Kontakt", TranslationCode = "menu_contacts"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Contact", TranslationCode = "menu_contacts"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Kontakt", TranslationCode = "menu_contacts"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Přihlásit se", TranslationCode = "login_user"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Log in", TranslationCode = "login_user"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Anmeldung", TranslationCode = "login_user"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Uživatelské jméno", TranslationCode = "login_username"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="User name", TranslationCode = "login_username"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Username", TranslationCode = "login_username"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Heslo", TranslationCode = "login_pw"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Password", TranslationCode = "login_pw"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Passwort", TranslationCode = "login_pw"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Heslo pro kontrolu", TranslationCode = "login_pw2"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Password check", TranslationCode = "login_pw2"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Passwortüberprüfung", TranslationCode = "login_pw2"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="e-mail", TranslationCode = "login_email"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="e-mail", TranslationCode = "login_email"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="e-mail", TranslationCode = "login_email"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Jméno", TranslationCode = "login_first_name"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="First name", TranslationCode = "login_first_name"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Vorname", TranslationCode = "login_first_name"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Příjmení", TranslationCode = "login_last_name"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Last name", TranslationCode = "login_last_name"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Nachname", TranslationCode = "login_last_name"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Odhlásit se", TranslationCode = "logout_user"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Log out", TranslationCode = "logout_user"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Ausloggen", TranslationCode = "logout_user"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Nemáte registraci? Klikněte zde!", TranslationCode = "register_user"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Don't have a registration yet? Click here!", TranslationCode = "register_user"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Sie haben keine Registrierung? Klicken Sie hier!", TranslationCode = "register_user"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Přihlášení se nezdařilo", TranslationCode = "login_failed_title"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Login failed", TranslationCode = "login_failed_title"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Fehler bei der Anmeldung", TranslationCode = "login_failed_title"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Zkontrolujte, že jste zadali správné údaje k účtu", TranslationCode = "login_failed_msg"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Check that you have entered the correct account information", TranslationCode = "login_failed_msg"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Überprüfen Sie, ob Sie die richtigen Kontoinformationen eingegeben haben", TranslationCode = "login_failed_msg"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Neoprávněná akce", TranslationCode = "unauthorized_title"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Unauthorized action", TranslationCode = "unauthorized_title"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Unerlaubte Aktion", TranslationCode = "unauthorized_title"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Pro tuto akci nemáte dostatečné oprávnění. Pokud se domníváte, že je máte mít, obraťte se na administrátora.", TranslationCode = "unauthorized_msg_logged"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="You do not have sufficient permissions to perform this action. If you think you should have them, please contact an administrator", TranslationCode = "unauthorized_msg_logged"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Sie verfügen nicht über ausreichende Berechtigungen, um diese Aktion auszuführen. Wenn Sie der Meinung sind, dass Sie sie haben sollten, wenden Sie sich bitte an den Administrator.", TranslationCode = "unauthorized_msg_logged"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Pro vykonání této akce je třeba se přihlásit.", TranslationCode = "unauthorized_msg_annonymous"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="You must be logged in to perform this action.", TranslationCode = "unauthorized_msg_annonymous"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Sie müssen angemeldet sein, um diese Aktion auszuführen.", TranslationCode = "unauthorized_msg_annonymous"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Nepodporovaný jazyk", TranslationCode = "server_error_wrong_language"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Unsupported language", TranslationCode = "server_error_wrong_language"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Nicht unterstützte Sprache", TranslationCode = "server_error_wrong_language"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Oops, něco se nepovedlo", TranslationCode = "internal_server_error" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Oops, something went wrong", TranslationCode = "internal_server_error" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Hoppla! Etwas ist schiefgelaufen", TranslationCode = "internal_server_error" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Metropole Moravskoslezského kraje a její přilehlé okolí se mohou v listopadu těšit na 1. ročník festivalu Ostravské folklorní dny, které organizuje spolek FolklorOva. Akce, která se bude v centru Ostravy a městských částech konat od středy 8. do neděle 12. listopadu, má obyvatelům představit tradiční lidovou kulturu.", TranslationCode = "about_info" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="OIn November, the metropolis of the Moravian-Silesian Region and its surrounding area can look forward to the 1st edition of the Ostrava Folklore Days festival, organized by the FolklorOva association. The event, which will take place in the center of Ostrava and the city districts from Wednesday 8 to Sunday 12 November, is intended to introduce the residents to traditional folk culture.", TranslationCode = "about_info" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Im November kann sich die Metropole der Mährisch-Schlesischen Region und ihre Umgebung auf die 1. Ausgabe des Festivals „Ostrauer Folkloretage“ freuen, das vom Verein FolklorOva organisiert wird. Die Veranstaltung, die vom Mittwoch, 8., bis Sonntag, 12. November, im Zentrum von Ostrava und den Stadtteilen stattfindet, soll den Bewohnern die traditionelle Volkskultur näher bringen.", TranslationCode = "about_info" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Ostravo, těš se na Ostravské dny folkloru!", TranslationCode = "about_header" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Ostrava, look forward to the Ostrava Days of Folklore!", TranslationCode = "about_header" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Ostrava, freuen Sie sich auf die Ostravaer Tage der Folklore!", TranslationCode = "about_header" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Jsme FolklorOVA, spolek nadšenců, kteří chtějí podporovat a dále rozvíjet kulturu v Ostravě a jejím okolí. Skrz akci Ostravské dny folkloru chceme Ostravanům ukázat tradiční lidovou kulturu a věříme, že je nadchne stejně jako nás. Lidová kultura a folklor nezná hranic je tu pro všechny, malé i velké, stejně jako pro staré i mladé.\nFolklor spojuje!", TranslationCode = "association_info" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="We are FolklorOVA, an association of enthusiasts who want to support and further develop culture in Ostrava and its surroundings. Through the Ostrava Folklore Days event, we want to show the people of Ostrava traditional folk culture and we believe that they will be as excited as we are. Folk culture and folklore knows no borders and is here for everyone, young and old, as well as old and young.\nFolklore unites!", TranslationCode = "association_info" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Wir sind FolklorOVA, ein Verein von Enthusiasten, die die Kultur in Ostrava und Umgebung unterstützen und weiterentwickeln wollen. Mit der Veranstaltung „Ostrauer Folkloretage“ möchten wir den Menschen in Ostrava die traditionelle Volkskultur näherbringen und glauben, dass sie genauso begeistert sein werden wie wir. Volkskultur und Folklore kennen keine Grenzen und sind für alle da, Jung und Alt, aber auch Alt und Jung.\nFolklore verbindet!", TranslationCode = "association_info" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="O nás", TranslationCode = "association_header" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="About", TranslationCode = "association_header" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Über uns", TranslationCode = "association_header" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Přepnout do {0}", TranslationCode = "app_language_switch" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Switch to {0}", TranslationCode = "app_language_switch" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Sprache in {0} ändern", TranslationCode = "app_language_switch" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Jazyk", TranslationCode = "app_language" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Language", TranslationCode = "app_language" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Sprache", TranslationCode = "app_language" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Článek, který se pokoušíte zobrazit, byl nejspíše smazán.", TranslationCode = "app_article_notfound" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="The article you are trying to view has probably been deleted.", TranslationCode = "app_article_notfound" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Der Artikel, den Sie anzeigen möchten, wurde wahrscheinlich gelöscht.", TranslationCode = "app_article_notfound" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Zdroj nenalezen.", TranslationCode = "app_base_notfound" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Resource not found.", TranslationCode = "app_base_notfound" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Ressource nicht gefunden.", TranslationCode = "app_base_notfound" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Špatné heslo", TranslationCode = "error_login_wrong_pw" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Wrong password", TranslationCode = "error_login_wrong_pw" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Falsches Passwort", TranslationCode = "error_login_wrong_pw" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Bankovní spojení", TranslationCode = "contact_bank" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Bank account", TranslationCode = "contact_bank" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Bankverbindung", TranslationCode = "contact_bank" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "IBAN", TranslationCode = "contact_iban" },
+				new() { IsSystem = true, LanguageId = 1, Text = "IBAN", TranslationCode = "contact_iban" },
+				new() { IsSystem = true, LanguageId = 2, Text = "IBAN", TranslationCode = "contact_iban" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Kontakt", TranslationCode = "contact_email" },
+				new() { IsSystem = true, LanguageId = 1, Text = "Contact", TranslationCode = "contact_email" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Kontakt", TranslationCode = "contact_email" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Pořadatel", TranslationCode = "contact_event_manager" },
+				new() { IsSystem = true, LanguageId = 1, Text = "Organizer", TranslationCode = "contact_event_manager" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Veranstalter", TranslationCode = "contact_event_manager" },
+			};
+
+			var res = client.IndexMany(sysTrans);
 
 			return client;
 		}

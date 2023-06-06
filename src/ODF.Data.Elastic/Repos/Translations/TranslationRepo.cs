@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Nest;
-using ODF.Data.Contracts.Entities;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities;
 
 namespace ODF.Data.Elastic.Repos.Translations
 {
@@ -40,7 +40,7 @@ namespace ODF.Data.Elastic.Repos.Translations
 								)
 							)
 							.Size(size)
-							.From(offset*size), cancellationToken)).Documents;
+							.From(offset * size), cancellationToken)).Documents;
 
 		public async Task<string> GetTranslationAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
 		{
@@ -79,6 +79,18 @@ namespace ODF.Data.Elastic.Repos.Translations
 								)
 							)
 			)).Count;
+
+		public async Task<IEnumerable<Translation>> GetAllAsync(int languageId, CancellationToken cancellationToken)
+			=> (await _elasticClient.SearchAsync<Translation>(s => s
+							.Query(q => q
+								.Bool(bq => bq
+									.Filter(
+										fq => fq.Terms(t => t.Field(f => f.LanguageId).Terms(languageId))
+									)
+								)
+							)
+							.Size(10000)
+							, cancellationToken)).Documents;
 
 		public async Task<bool> UpdateOrInsertTransaltionAsync(string translationIdentifier, string text, int languageId, CancellationToken cancellationToken)
 		{

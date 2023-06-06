@@ -5,54 +5,45 @@ using System.Threading.Tasks;
 using MediatR;
 using ODF.AppLayer.CQRS.Contact.Queries;
 using ODF.AppLayer.Dtos.ContactDtos;
+using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Mapping;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Enums;
+using ODF.AppLayer.Repos;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.AppLayer.CQRS.Contact.QueryHandlers
 {
 	internal class GetContactQeuryHandler : IRequestHandler<GetContactQuery, ContactDto>
 	{
-		private readonly ITranslationRepo _translationRepo;
+		private readonly ITranslationsProvider _translationProvider;
 		private readonly IContactRepo _contactRepo;
 
-		public GetContactQeuryHandler(IContactRepo contactRepo, ITranslationRepo translationRepo)
+		public GetContactQeuryHandler(IContactRepo contactRepo, ITranslationsProvider translationsProvider)
 		{
 			_contactRepo = contactRepo ?? throw new ArgumentNullException(nameof(contactRepo));
-			_translationRepo = translationRepo ?? throw new ArgumentNullException(nameof(translationRepo));
+			_translationProvider = translationsProvider ?? throw new ArgumentNullException(nameof(translationsProvider));
 		}
 
 		public async Task<ContactDto> Handle(GetContactQuery request, CancellationToken cancellationToken)
 		{
-			if (Languages.TryParse(request.CountryCode, out var lang))
+			var translations = await _translationProvider.GetTranslationsAsync(request.CountryCode, cancellationToken);
+			var contact = await _contactRepo.GetAsync(cancellationToken);
+
+			if (contact is null)
 			{
-				var contact = await _contactRepo.GetAsync(cancellationToken);
-
-				if (contact is null)
-				{
-					return null;
-				}
-
-				var accountIdTranslation = await _translationRepo.GetTranslationOrDefaultTextAsync("acc_id", "Festival Ostravské dny folkloru", lang.Id, cancellationToken);
-				var bankTranslation = await _translationRepo.GetTranslationOrDefaultTextAsync("bank", "Bankovní spojení", lang.Id, cancellationToken);
-				var ibanTranslation = await _translationRepo.GetTranslationOrDefaultTextAsync("iban", "IBAN", lang.Id, cancellationToken);
-				var emailTranslation = await _translationRepo.GetTranslationOrDefaultTextAsync("email_contact", "Kontakt", lang.Id, cancellationToken);
-				var eventManagerTranslation = await _translationRepo.GetTranslationOrDefaultTextAsync("event_manager_contact", "Pořadatel", lang.Id, cancellationToken);
-
-				return new()
-				{
-					Address = contact.Address.MapAddress(),
-					BankAccounts = contact.BankAccounts.Select(ba => ba.MapBankAccount(accountIdTranslation, bankTranslation, ibanTranslation)),
-					ContactPersons = contact.ContactPersons.OrderBy(ord => ord.Order).Select(cp => cp.MapContactPerson()),
-					Email = contact.Email,
-					EmailTranslation = emailTranslation,
-					EventManager = contact.EventManager,
-					EventManagerTranslation = eventManagerTranslation,
-					EventName = contact.EventName
-				};
+				return null;
 			}
 
-			return null;
+			return new()
+			{
+				Address = contact.Address.MapAddress(),
+				BankAccounts = contact.BankAccounts.Select(ba => ba.MapBankAccount(translations.Get("contact_acc_id"), translations.Get("contact_bank"), translations.Get("contact_iban"))),
+				ContactPersons = contact.ContactPersons.OrderBy(ord => ord.Order).Select(cp => cp.MapContactPerson()),
+				Email = contact.Email,
+				EmailTranslation = translations.Get("contact_email"),
+				EventManager = contact.EventManager,
+				EventManagerTranslation = translations.Get("contact_event_manager"),
+				EventName = contact.EventName
+			};
 		}
 	}
 }

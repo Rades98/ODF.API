@@ -14,12 +14,13 @@ using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.CQRS.Contact.Queries;
+using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.API.Controllers.Contacts
 {
 	public class ContactsController : BaseController
 	{
-		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 

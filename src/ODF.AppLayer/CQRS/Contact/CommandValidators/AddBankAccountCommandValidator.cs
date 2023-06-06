@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.Contact.Commands;
-using ODF.Data.Contracts.Interfaces;
+using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 {

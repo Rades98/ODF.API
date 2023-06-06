@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Nest;
-using ODF.Data.Contracts.Entities.ContactEntities;
-using ODF.Data.Contracts.Interfaces;
-using ODF.Data.Elastic;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities.ContactEntities;
 
 namespace ODF.Data.Elastic.Repos.Contacts
 {
@@ -21,7 +20,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			_elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
 		}
 
-	
+
 		public async Task<Contact> GetAsync(CancellationToken cancellationToken)
 		{
 			var response = await _elasticClient.SearchAsync<Contact>(s => s
@@ -29,7 +28,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 
 			return response.Documents.FirstOrDefault();
 		}
-		
+
 		public async Task<bool> UpdateAddressAsync(string street, string city, string postalCode, string country, CancellationToken cancellationToken)
 		{
 			var scriptParams = new Dictionary<string, object>();
@@ -74,7 +73,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 
 				bool streetOk = true, cityOk = true, postalCodeOk = true, countryOk = true;
 
-				if(!string.IsNullOrEmpty(street))
+				if (!string.IsNullOrEmpty(street))
 				{
 					streetOk = actual.Address.Street == street;
 				}
@@ -132,23 +131,23 @@ namespace ODF.Data.Elastic.Repos.Contacts
 					.Refresh(true), cancellationToken
 					);
 
-			if(response.IsValid)
+			if (response.IsValid)
 			{
 				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
 
 				bool eventNameOk = true, eventManagerOk = true, emailOk = true;
 
-				if(!string.IsNullOrEmpty(eventName))
+				if (!string.IsNullOrEmpty(eventName))
 				{
 					eventNameOk = actual.EventName == eventName;
 				}
 
-				if(!string.IsNullOrEmpty(eventManager))
+				if (!string.IsNullOrEmpty(eventManager))
 				{
 					eventManagerOk = actual.EventManager == eventManager;
 				}
 
-				if(!string.IsNullOrEmpty(email))
+				if (!string.IsNullOrEmpty(email))
 				{
 					emailOk = actual.Email == email;
 				}
@@ -378,6 +377,6 @@ namespace ODF.Data.Elastic.Repos.Contacts
 
 		#endregion contact person
 
-		
+
 	}
 }

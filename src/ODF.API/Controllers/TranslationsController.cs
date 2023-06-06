@@ -13,13 +13,14 @@ using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Translations.Commands;
 using ODF.AppLayer.CQRS.Translations.Queries;
-using ODF.Enums;
+using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain;
 
 namespace ODF.API.Controllers
 {
 	public class TranslationsController : BaseController
 	{
-		public TranslationsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
+		public TranslationsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
