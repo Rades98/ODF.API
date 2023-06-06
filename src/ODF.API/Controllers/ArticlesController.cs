@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
@@ -21,7 +22,7 @@ namespace ODF.API.Controllers
 {
 	public class ArticlesController : BaseController
 	{
-		public ArticlesController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public ArticlesController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -32,21 +33,22 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> AddArticle([FromBody] AddArticleRequestForm model, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
-			bool result = await Mediator.Send(new AddArticleCommand(model.TitleTranslationCode, model.Title, model.TextTranslationCode, model.Text, model.PageId, countryCode, model.ImageUrl), cancellationToken);
+			bool result = await Mediator.Send(new AddArticleCommand(model.TitleTranslationCode, model.Title,
+				model.TextTranslationCode, model.Text, model.PageId, countryCode, model.ImageUrl), cancellationToken);
 
 			if (!result)
 			{
 				return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
 			}
 
-			var responseModel = new CreateArticleResponseModel(ApiSettings.ApiUrl, "Článek byl úspěšně přidán.",
+			var responseModel = new CreateArticleResponseModel("Článek byl úspěšně přidán.",
 				ArticleFormFactory.GetAddArticleForm(model.Title, model.TitleTranslationCode, model.Text, model.TitleTranslationCode, model.PageId, model.ImageUrl));
 
-			responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(ApiSettings.ApiUrl, model.Title, Languages.Deutsch.GetCountryCode());
-			responseModel.AddTextDeTranslation = GetTranslateArticleTextAction(ApiSettings.ApiUrl, model.Text, Languages.Deutsch.GetCountryCode());
+			responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(model.Title, Languages.Deutsch.GetCountryCode());
+			responseModel.AddTextDeTranslation = GetTranslateArticleTextAction(model.Text, Languages.Deutsch.GetCountryCode());
 
-			responseModel.AddTitleEnTranslation = GetTranslateArticleTitleAction(ApiSettings.ApiUrl, model.Title, Languages.English.GetCountryCode());
-			responseModel.AddTextEnTranslation = GetTranslateArticleTextAction(ApiSettings.ApiUrl, model.Text, Languages.English.GetCountryCode());
+			responseModel.AddTitleEnTranslation = GetTranslateArticleTitleAction(model.Title, Languages.English.GetCountryCode());
+			responseModel.AddTextEnTranslation = GetTranslateArticleTextAction(model.Text, Languages.English.GetCountryCode());
 
 			return Ok(responseModel);
 		}
@@ -61,7 +63,7 @@ namespace ODF.API.Controllers
 
 			if (result != null)
 			{
-				var responseModel = new GetArticleResponseModel(ApiSettings.ApiUrl, articleId, countryCode, result.Title, result.Text, result.ImageUri);
+				var responseModel = new GetArticleResponseModel(result.Title, result.Text, result.ImageUri);
 
 				return Ok(responseModel);
 			}
@@ -79,24 +81,29 @@ namespace ODF.API.Controllers
 		{
 			var articles = await Mediator.Send(new GetArticlesQuery(offset * size, size, pageId, countryCode));
 
-			var responseModel = new GetArticlesResponseModel(ApiSettings.ApiUrl, size, offset, pageId, countryCode);
+			var responseModel = new GetArticlesResponseModel();
 
 			if (articles.Any())
 			{
 				responseModel.Articles = articles
 					.Where(art => !string.IsNullOrEmpty(art.Text) && !string.IsNullOrEmpty(art.Title))
-					.Select(art => new GetArticleResponseModel(ApiSettings.ApiUrl, art.Id, countryCode, art.Title, art.Text, art.ImageUri));
+					.Select(art =>
+					{
+						var action = GetAppAction(nameof(GetArticle), "");
+						action.Curl.Href = new(action.Curl.Href.ToString().Replace("{articleId}", $"{art.Id}"));
+						return new GetArticleResponseModel(action.Curl.Href.ToString(), "article", action.Curl.Method, art.Title, art.Text, art.ImageUri);
+					});
 			}
 
 			return Ok(responseModel);
 		}
 
-		private static NamedAction GetTranslateArticleTextAction(string baseUrl, string translationCode, string countryCode)
-			=> new($"{baseUrl}/{countryCode}/articles", $"Přeložit text do {countryCode}", "translate_article", HttpMethods.Put,
+		private NamedAction GetTranslateArticleTextAction(string translationCode, string countryCode)
+			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit text do {countryCode}", "translate_article",
 					TranslationFormFactory.GetChangeTranslationForm(translationCode, "", countryCode));
 
-		private static NamedAction GetTranslateArticleTitleAction(string baseUrl, string translationCode, string countryCode)
-			=> new($"{baseUrl}/{countryCode}/articles", $"Přeložit nadpis do {countryCode}", "translate_article", HttpMethods.Put,
+		private NamedAction GetTranslateArticleTitleAction(string translationCode, string countryCode)
+			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit nadpis do {countryCode}", "translate_article",
 					TranslationFormFactory.GetChangeTranslationForm(translationCode, "", countryCode));
 	}
 }

@@ -1,10 +1,11 @@
-﻿using ODF.API.ResponseModels.Common.Forms;
+﻿using ODF.API.ResponseModels.Base;
+using ODF.API.ResponseModels.Common.Forms;
 
 namespace ODF.API.ResponseModels.Contacts.Create
 {
-	public class CreateContactPersonResponseModel : BaseCreateResponseModel
+    public class CreateContactPersonResponseModel : BaseCreateResponseModel
 	{
-		public CreateContactPersonResponseModel(string baseUrl, string countryCode, Form? form = null) : base(baseUrl, "/contacts/person", HttpMethods.Put, countryCode, form: form)
+		public CreateContactPersonResponseModel(Form? responseForm = null) : base(HttpMethods.Put, form: responseForm)
 		{
 		}
 	}

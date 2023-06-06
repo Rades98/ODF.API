@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 
 namespace ODF.API.ResponseModels.About
 {
 	public class AboutResponseModel : BaseResponseModel
 	{
-		public AboutResponseModel(string baseUrl, string aboutText, string header, string countryCode) : base(baseUrl, "/about", HttpMethods.Get, countryCode)
+		public AboutResponseModel(string aboutText, string header) : base()
 		{
 			AboutText = aboutText;
 			Header = header;

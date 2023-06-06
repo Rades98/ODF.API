@@ -1,10 +1,18 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 
 namespace ODF.API.ResponseModels.Articles
 {
 	public class GetArticleResponseModel : BaseResponseModel
 	{
-		public GetArticleResponseModel(string baseUrl, int articleId, string countryCode, string title, string body, Uri? imageUrl) : base(baseUrl, $"/articles/{articleId}", HttpMethods.Get, countryCode)
+		public GetArticleResponseModel(string title, string body, Uri? imageUrl) : base()
+		{
+			Title = title;
+			Body = body;
+			ImageUrl = imageUrl;
+		}
+
+		public GetArticleResponseModel(string url, string rel, string method, string title, string body, Uri? imageUrl) : base(url, method, rel)
 		{
 			Title = title;
 			Body = body;

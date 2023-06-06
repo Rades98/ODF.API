@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 
 namespace ODF.API.ResponseModels.Association
 {
 	public class AssociationResponseModel : BaseResponseModel
 	{
-		public AssociationResponseModel(string baseUrl, string text, string header, string countryCode) : base(baseUrl, "/association", HttpMethods.Get, countryCode)
+		public AssociationResponseModel(string text, string header) : base()
 		{
 			Text = text;
 			Header = header;

@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
@@ -13,7 +14,7 @@ namespace ODF.API.Controllers
 {
 	public class SupportedLanguagesController : BaseController
 	{
-		public SupportedLanguagesController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public SupportedLanguagesController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -30,14 +31,14 @@ namespace ODF.API.Controllers
 
 				if (lang.GetCountryCode().ToLower() != countryCode.ToLower())
 				{
-					languageModel.ChangeLanguage = new(ApiSettings.ApiUrl + $"/{lang.GetCountryCode()}/navigation", actionName, "nav", HttpMethods.Get);
+					languageModel.ChangeLanguage = GetNamedAction(nameof(NavigationController.GetNavigation), actionName, "nav");
 				}
 
 				return languageModel;
 			});
 
 			string title = await Mediator.Send(new GetTranslationQuery("Jazyk", "app_language", countryCode), cancellationToken);
-			var responseModel = new LanguageResponseModel(ApiSettings.ApiUrl, languages, title, countryCode);
+			var responseModel = new LanguageResponseModel(languages, title);
 
 			return Ok(responseModel);
 		}

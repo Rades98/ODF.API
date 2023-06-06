@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
@@ -15,7 +16,7 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactAddressController : BaseController
 	{
-		public ContactAddressController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public ContactAddressController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -27,7 +28,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 			if (await Mediator.Send(new UpdateContactAddressCommand(form.Street, form.City, form.PostalCode, form.Country)))
 			{
-				return Ok(new UpdateContactAddressResponseModel(ApiSettings.ApiUrl, countryCode));
+				return Ok(new UpdateContactAddressResponseModel());
 			}
 
 			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci adresy"));

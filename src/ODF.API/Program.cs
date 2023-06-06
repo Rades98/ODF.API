@@ -67,12 +67,13 @@ app.MapControllers();
 
 app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigation", true, true));
 
+app.UseResponseCompression();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<CountryCodeMiddleWare>();
 app.UseMiddleware<RateLimitMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
-
-app.UseResponseCompression();
+app.UseMiddleware<ResponseSelfMiddleware>();
 
 app.SetupLogging();
 

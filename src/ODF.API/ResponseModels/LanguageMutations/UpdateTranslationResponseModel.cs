@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common.Forms;
 
 namespace ODF.API.ResponseModels.LanguageMutations
 {
 	public class UpdateTranslationResponseModel : BaseResponseModel
 	{
-		public UpdateTranslationResponseModel(string baseUrl, string countryCode, Form form, string message) : base(baseUrl, "/translations", HttpMethods.Post, countryCode)
+		public UpdateTranslationResponseModel(Form form, string message) : base(form)
 		{
-			_self.Curl.Form = form;
 			Message = message;
 		}
 

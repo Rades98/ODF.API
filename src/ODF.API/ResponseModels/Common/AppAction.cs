@@ -8,9 +8,10 @@ namespace ODF.API.ResponseModels.Common
 	{
 		public AppAction(string href, string rel, string method, Form? form = null)
 		{
-			Curl = new Curl(new(href), rel, method, form);
+			Curl ??= new Curl(new(string.IsNullOrEmpty(href) ? "http://api.odf" : href), rel, method, form);
 		}
 
-		public Curl Curl { get; }
+		[JsonProperty("curl")]
+		public Curl Curl { get; set; }
 	}
 }

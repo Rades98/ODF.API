@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
+using ODF.API.Controllers.Contacts;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Common;
@@ -16,7 +18,7 @@ namespace ODF.API.Controllers
 {
 	public class RedactionController : BaseController
 	{
-		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings) : base(mediator, apiSettings)
+		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp) : base(mediator, apiSettings, adcp)
 		{
 		}
 
@@ -32,28 +34,29 @@ namespace ODF.API.Controllers
 				return UnprocessableEntity("This action is supported for CZ language only");
 			}
 
-			var responseModel = new RedactionResponseModel(ApiSettings.ApiUrl, countryCode, "Redakce");
+			var responseModel = new RedactionResponseModel("Redakce");
 
 			string aboutTranslation = await Mediator.Send(new GetTranslationQuery("O festivalu", "nav_about", countryCode), cancellationToken);
-			responseModel.AddAboutArticle = GetAddArticleAction(ApiSettings.ApiUrl, aboutTranslation, 0, countryCode);
+			responseModel.AddAboutArticle = GetAddArticleAction(ApiBaseUrl, aboutTranslation, 0, countryCode); // TODO ADD FORM
 
 			string associationTranslation = await Mediator.Send(new GetTranslationQuery("FolklorOVA", "nav_association", countryCode), cancellationToken);
-			responseModel.AddAssociationArticle = GetAddArticleAction(ApiSettings.ApiUrl, associationTranslation, 1, countryCode);
+			responseModel.AddAssociationArticle = GetAddArticleAction(ApiBaseUrl, associationTranslation, 1, countryCode); // TODO ADD FORM
 
-			responseModel.AddLineupItem = GetAddLineupAction(ApiSettings.ApiUrl, countryCode);
-			responseModel.UpdateContacts = new NamedAction($"{ApiSettings.ApiUrl}/{countryCode}/contacts/redaction", "Upravit kontakty", "updateContacts", HttpMethods.Get);
+			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
+					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
 
-			responseModel.AddAction($"/{countryCode}/translations?size=20&offset=0", "translations_change", HttpMethods.Get);
+			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsRedactionController.GetContactsRedaction), "Upravit kontakty", "updateContacts"); //TODO ADD FORM
+
+			responseModel.AddAction(GetQueriedAppAction(nameof(TranslationsController.GetTranslations), "translations_change",
+				new Dictionary<string, string> {
+					{ "size", "20" },
+					{ "offset", "0" } }));
 
 			return Ok(responseModel);
 		}
 
-		private static NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
-				=> new($"{baseUrl}/{countryCode}/articles", $"Přidat článek do {sectionTranslation}", "add_article", HttpMethods.Put,
+		private NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
+				=> GetNamedAction(nameof(ArticlesController.AddArticle), $"Přidat článek do {sectionTranslation}", "add_article",
 						ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{id}}", "", $"page{pageNum}_text_{{id}}", pageNum));
-
-		private static NamedAction GetAddLineupAction(string baseUrl, string countryCode)
-			=> new($"{baseUrl}/{countryCode}/lineup", $"Přidat item do programu", "add_lineup_item", HttpMethods.Put,
-					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
 	}
 }

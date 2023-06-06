@@ -14,12 +14,16 @@ namespace ODF.API.ResponseModels.Common
 			Form = form;
 		}
 
-		public Uri Href { get; }
+		[JsonProperty("href")]
+		public Uri Href { get; internal set; }
 
-		public string Rel { get; }
+		[JsonProperty("rel")]
+		public string Rel { get; internal set; }
 
-		public string Method { get; }
+		[JsonProperty("method")]
+		public string Method { get; internal set; }
 
-		public Form? Form { get; set; }
+		[JsonProperty("form")]
+		public Form? Form { get; internal set; }
 	}
 }

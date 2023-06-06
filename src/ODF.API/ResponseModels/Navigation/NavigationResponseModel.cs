@@ -1,12 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common;
 
 namespace ODF.API.ResponseModels.Navigation
 {
 	public class NavigationResponseModel : BaseResponseModel
 	{
-		public NavigationResponseModel(string baseUrl, string countryCode) : base(baseUrl, "/navigation", HttpMethods.Get, countryCode)
+		public NavigationResponseModel() : base()
 		{
 		}
 
@@ -20,7 +21,7 @@ namespace ODF.API.ResponseModels.Navigation
 		public NamedAction? LanguageMutations { get; set; }
 
 		[JsonProperty("userName", Required = Required.AllowNull)]
-		public string UserName { get; set; }
+		public string? UserName { get; set; } = null;
 
 		[JsonProperty("logout", Required = Required.AllowNull)]
 		public NamedAction? LogoutAction { get; set; }
