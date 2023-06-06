@@ -1,8 +1,10 @@
-﻿namespace ODF.API.ResponseModels.Contacts.Update
+﻿using ODF.API.ResponseModels.Base;
+
+namespace ODF.API.ResponseModels.Contacts.Update
 {
-	public class UpdateContactPersonResponseModel : BaseUpdateResponseModel
+    public class UpdateContactPersonResponseModel : BaseUpdateResponseModel
 	{
-		public UpdateContactPersonResponseModel(string baseUrl, string countryCode) : base(baseUrl, "updateContactPerson", HttpMethods.Post, countryCode)
+		public UpdateContactPersonResponseModel() : base(HttpMethods.Post)
 		{
 		}
 	}

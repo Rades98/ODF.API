@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 
 namespace ODF.API.ResponseModels.Contacts.GetContacts
 {
 	public class ContactResponseModel : BaseResponseModel
 	{
-		public ContactResponseModel(string baseUrl, string countryCode) : base(baseUrl, "/contacts", HttpMethods.Get, countryCode)
+		public ContactResponseModel() : base()
 		{
 		}
 
