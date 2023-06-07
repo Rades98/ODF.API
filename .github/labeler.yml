@@ -1,6 +1,6 @@
-repo:
-  - '*'
+Domain:
+ - */src/ODF.Domain/*
 Database:
-  - any: ['*/src/ODF.Data.Contracts/*', '*/src/ODF.Data.Elastic/*', '*/src/ODF.Data.*/*']
+  - any: */src/ODF.Data.*/*
 BE:
   - */src/*
