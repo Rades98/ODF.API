@@ -15,11 +15,13 @@ namespace ODF.API.ResponseModels.Base
 		public BaseResponseModel(Form? form = null)
 		{
 			_self.Curl.Form = form;
+			Actions ??= new();
 		}
 
 		public BaseResponseModel(string url, string method, string rel, Form? form = null)
 		{
 			_self = new(url, "_self", rel, method, form);
+			Actions ??= new();
 		}
 
 		[JsonProperty("_self", Required = Required.Always)]

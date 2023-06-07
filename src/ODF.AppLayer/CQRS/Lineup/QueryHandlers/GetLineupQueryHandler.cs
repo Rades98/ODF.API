@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Logging;
-using ODF.AppLayer.CQRS.Article.QueryHandlers;
 using ODF.AppLayer.CQRS.Lineup.Queries;
 using ODF.AppLayer.Dtos;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.Domain;
 using ODF.Domain.Entities;
 
 namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 {
-	internal class GetLineupQueryHandler : IRequestHandler<GetLineupQuery, IEnumerable<LineupItemDto>>
+	internal class GetLineupQueryHandler : IQueryHandler<GetLineupQuery, IEnumerable<LineupItemDto>>
 	{
 		private readonly ITranslationRepo _translationRepo;
 		private readonly ILineupRepo _lineupRepo;
@@ -37,7 +34,7 @@ namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 			foreach (var item in lineupItems)
 			{
 				var mapped = await MapLineupItem(item, request.CountryCode, cancellationToken);
-				if(mapped is not null)
+				if (mapped is not null)
 				{
 					result.Add(mapped);
 				}
@@ -52,7 +49,7 @@ namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 			{
 				var description = await _translationRepo.GetTranslationAsync(lineupItem.DescriptionTranslation, lang.Id, cancellationToken);
 
-				if(!string.IsNullOrEmpty(description))
+				if (!string.IsNullOrEmpty(description))
 				{
 					return new()
 					{

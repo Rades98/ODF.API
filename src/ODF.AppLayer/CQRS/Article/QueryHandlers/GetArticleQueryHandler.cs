@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using ODF.AppLayer.CQRS.Article.Queries;
 using ODF.AppLayer.Dtos;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Article.QueryHandlers
 {
-	internal class GetArticleQueryHandler : IRequestHandler<GetArticleQuery, ArticleDto>
+	internal class GetArticleQueryHandler : IQueryHandler<GetArticleQuery, ArticleDto>
 	{
 		private readonly IArticleRepo _repo;
 		private readonly ITranslationRepo _translationRepo;

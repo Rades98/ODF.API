@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class UpdateContactAddressCommand : IRequest<bool>
+	public class UpdateContactAddressCommand : ICommand<bool>
 	{
 		public UpdateContactAddressCommand(string street, string city, string postalCode, string country)
 		{

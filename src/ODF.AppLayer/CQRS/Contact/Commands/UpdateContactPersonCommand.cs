@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using MediatR;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class UpdateContactPersonCommand : IRequest<bool>
+	public class UpdateContactPersonCommand : ICommand<bool>
 	{
 		public UpdateContactPersonCommand(string email, string title, string name, string surname, IEnumerable<string> roles, string base64Image, Guid id, int order)
 		{

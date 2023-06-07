@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using MediatR;
-using ODF.AppLayer.Dtos;
+﻿using ODF.AppLayer.Dtos;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Translations.Queries
 {
-	public class GetTranslationsQuery : IRequest<TranslationsDto>
+	public class GetTranslationsQuery : IQuery<TranslationsDto>
 	{
 		public GetTranslationsQuery(string countryCode, int size, int offset)
 		{

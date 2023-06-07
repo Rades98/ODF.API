@@ -9,7 +9,7 @@ using ODF.API.Controllers.Base;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
-using ODF.API.RequestModels.Forms;
+using ODF.API.RequestModels.Forms.User;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.User;
 using ODF.API.Responses;
@@ -28,7 +28,7 @@ namespace ODF.API.Controllers
 		[HttpPost(Name = nameof(LoginUser))]
 		[ProducesResponseType(typeof(UserResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> LoginUser([FromBody] UserRequestForm user, [FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> LoginUser([FromBody] LoginUserForm user, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

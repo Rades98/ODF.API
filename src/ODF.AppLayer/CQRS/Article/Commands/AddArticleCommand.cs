@@ -1,9 +1,9 @@
 ﻿using System;
-using MediatR;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Commands
 {
-	public class AddArticleCommand : IRequest<bool>
+	public class AddArticleCommand : ICommand<bool>
 	{
 		public AddArticleCommand(string titleTransaltionCode, string title, string textTranslationCode, string text, int pageId, string countryCode, Uri imageUri = null)
 		{

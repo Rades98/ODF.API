@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Mapping;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 {
-	internal class UpdateContactPersonCommandHandler : IRequestHandler<UpdateContactPersonCommand, bool>
+	internal class UpdateContactPersonCommandHandler : ICommandHandler<UpdateContactPersonCommand, bool>
 	{
 		private readonly IContactRepo _contactRepo;
 

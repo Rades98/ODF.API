@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace ODF.API.RequestModels.Forms
+namespace ODF.API.RequestModels.Forms.User
 {
-	public class UserRequestForm
+	public class LoginUserForm
 	{
 		[JsonProperty("userName", Required = Required.Always)]
 		public string UserName { get; set; } = string.Empty;

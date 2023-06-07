@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 using ODF.API.Extensions;
-using ODF.API.RequestModels.Forms;
+using ODF.API.RequestModels.Forms.User;
 using ODF.API.ResponseModels.Common.Forms;
 using ODF.AppLayer.Dtos;
 using ODF.AppLayer.Extensions;
@@ -11,18 +11,31 @@ namespace ODF.API.FormFactories
 	{
 		public static Form GetLoginForm(
 			IReadOnlyList<TranslationDto> translations,
-			UserRequestForm? userRequestForm = null,
+			LoginUserForm? userRequestForm = null,
 			IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
 
-			var pwError = errors?.FirstOrDefault(p => p.PropertyName == nameof(UserRequestForm.UserName))?.ErrorMessage;
+			var pwError = errors?.FirstOrDefault(p => p.PropertyName == nameof(LoginUserForm.Password))?.ErrorMessage;
+			var idError = errors?.FirstOrDefault(p => p.PropertyName == nameof(LoginUserForm.UserName))?.ErrorMessage;
 
-			form.AddMember(new(translations.Get("login_username"), nameof(UserRequestForm.UserName).ToCamelCase(),
-				"text", userRequestForm?.UserName ?? "", true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UserRequestForm.UserName))?.ErrorMessage));
+			form.AddMember(
+				new(translations.Get("login_username"),
+				nameof(LoginUserForm.UserName).ToCamelCase(),
+				"text",
+				userRequestForm?.UserName ?? "",
+				true,
+				idError is not null ? translations.Get(idError) : null)
+			);
 
-			form.AddMember(new(translations.Get("login_pw"), nameof(UserRequestForm.Password).ToCamelCase(),
-				"password", userRequestForm?.Password ?? "", true, pwError is not null ? translations.Get(pwError) : null));
+			form.AddMember(
+				new(translations.Get("login_pw"),
+				nameof(LoginUserForm.Password).ToCamelCase(),
+				"password",
+				userRequestForm?.Password ?? "",
+				true,
+				pwError is not null ? translations.Get(pwError) : null)
+			);
 
 			return form;
 		}

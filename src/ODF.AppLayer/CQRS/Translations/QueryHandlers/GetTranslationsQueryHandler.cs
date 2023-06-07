@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using ODF.AppLayer.CQRS.Translations.Queries;
 using ODF.AppLayer.Dtos;
 using ODF.AppLayer.Mapping;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Translations.QueryHandlers
 {
-	internal class GetTranslationsQueryHandler : IRequestHandler<GetTranslationsQuery, TranslationsDto>
+	internal class GetTranslationsQueryHandler : IQueryHandler<GetTranslationsQuery, TranslationsDto>
 	{
 		private readonly ITranslationRepo _repo;
 

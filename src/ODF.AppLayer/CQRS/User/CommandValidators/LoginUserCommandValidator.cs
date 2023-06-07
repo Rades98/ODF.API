@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.User.Commands;
-using ODF.AppLayer.PWHashing;
 using ODF.AppLayer.Repos;
 using ODF.AppLayer.Services.Interfaces;
 
@@ -14,12 +12,12 @@ namespace ODF.AppLayer.CQRS.User.CommandValidators
 	public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 	{
 		private readonly IUserRepo _userRepo;
-		private readonly ITranslationsProvider _translationsProvider;
+		private readonly IPasswordHasher _pwHahser;
 
-		public LoginUserCommandValidator(IUserRepo userRepo, ITranslationsProvider translationsProvider)
+		public LoginUserCommandValidator(IUserRepo userRepo, IPasswordHasher pwHahser)
 		{
 			_userRepo = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
-			_translationsProvider = translationsProvider ?? throw new ArgumentNullException(nameof(translationsProvider));
+			_pwHahser = pwHahser ?? throw new ArgumentNullException(nameof(pwHahser));
 		}
 
 		//TODO add middleware for rate limit login action
@@ -27,11 +25,10 @@ namespace ODF.AppLayer.CQRS.User.CommandValidators
 		{
 
 			var user = await _userRepo.GetUserAsync(context.InstanceToValidate.UserName, cancellationToken);
-			byte[] hash = Encoding.UTF8.GetBytes(user.PasswordHash);
-			byte[] salt = Encoding.UTF8.GetBytes(user.PasswordSalt);
+			var pwValid = _pwHahser.Check(user.PasswordHash, context.InstanceToValidate.Password).Verified;
 
 			RuleFor(command => command.Password)
-				.Must(x => PasswordUtils.VerifyPasswordHash(context.InstanceToValidate.Password, hash, salt))
+				.Must(x => pwValid)
 				.WithMessage("error_login_wrong_pw");
 
 			return await base.ValidateAsync(context, cancellationToken);

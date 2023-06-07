@@ -7,19 +7,20 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using ODF.AppLayer.Dtos.Interfaces;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.Pipelines
 {
-	public class ValidationPipeline<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TResponse : class, IValidationDto where TRequest : IRequest<TResponse>
+	public class ValidationPipeline<TCommand, TResponse> : IPipelineBehavior<TCommand, TResponse> where TResponse : class, IValidationDto where TCommand : ICommand<TResponse>
 	{
-		private readonly IEnumerable<IValidator<TRequest>> _validators;
-		private readonly ILogger<TRequest> _logger;
+		private readonly IEnumerable<IValidator<TCommand>> _validators;
+		private readonly ILogger<TCommand> _logger;
 
-		public ValidationPipeline(IEnumerable<IValidator<TRequest>> validators, ILogger<TRequest> logger) => (_validators, _logger) = (validators, logger);
+		public ValidationPipeline(IEnumerable<IValidator<TCommand>> validators, ILogger<TCommand> logger) => (_validators, _logger) = (validators, logger);
 
-		public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+		public async Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 		{
-			var context = new ValidationContext<TRequest>(request);
+			var context = new ValidationContext<TCommand>(request);
 
 			var failures = _validators
 				.Select(validation => validation.ValidateAsync(context))

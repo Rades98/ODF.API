@@ -1,9 +1,9 @@
-﻿using MediatR;
-using ODF.AppLayer.Dtos;
+﻿using ODF.AppLayer.Dtos;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Queries
 {
-	public class GetArticleQuery : IRequest<ArticleDto>
+	public class GetArticleQuery : IQuery<ArticleDto>
 	{
 		public GetArticleQuery(int id, string countryCode)
 		{

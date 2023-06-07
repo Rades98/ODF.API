@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using ODF.AppLayer.CQRS.Article.Commands;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Article.CommandHandlers
 {
-	internal class AddArticleCommandHandler : IRequestHandler<AddArticleCommand, bool>
+	internal class AddArticleCommandHandler : ICommandHandler<AddArticleCommand, bool>
 	{
 		private readonly IArticleRepo _repo;
 		private readonly ITranslationRepo _translationRepo;

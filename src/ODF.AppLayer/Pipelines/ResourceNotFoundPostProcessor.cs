@@ -2,12 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR.Pipeline;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.Pipelines
 {
-	internal class ResourceNotFoundPostProcessor<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse>
+	internal class ResourceNotFoundPostProcessor<TQuery, TResponse> : IRequestPostProcessor<TQuery, TResponse> where TQuery : notnull, IQuery<TResponse>
 	{
-		public Task Process(TRequest request, TResponse response, CancellationToken cancellationToken)
+		public Task Process(TQuery request, TResponse response, CancellationToken cancellationToken)
 		{
 			if (response is null)
 			{

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mapping;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 {
-	internal class AddContactPersonCommandHandler : IRequestHandler<AddContactPersonCommand, ValidationDto>
+	internal class AddContactPersonCommandHandler : ICommandHandler<AddContactPersonCommand, ValidationDto>
 	{
 		private readonly IContactRepo _contactRepo;
 

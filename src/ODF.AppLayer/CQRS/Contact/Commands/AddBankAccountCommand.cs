@@ -1,9 +1,9 @@
-﻿using MediatR;
-using ODF.AppLayer.Dtos.Validation;
+﻿using ODF.AppLayer.Dtos.Validation;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class AddBankAccountCommand : IRequest<ValidationDto>
+	public class AddBankAccountCommand : ICommand<ValidationDto>
 	{
 		public AddBankAccountCommand(string bank, string accountId, string iban)
 		{
