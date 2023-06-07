@@ -1,6 +1,8 @@
 Domain:
  - */src/ODF.Domain/*
 Database:
-  - any: */src/ODF.Data.*/*
+  - */src/ODF.Data.*/*
 BE:
   - */src/*
+DEVOPS:
+  - */*docker*
