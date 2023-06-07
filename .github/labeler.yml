@@ -5,4 +5,4 @@ Database:
 BE:
   - src/**
 DEVOPS:
-  - *docker*
+  -any: ['Dockerfile.*', 'docker-compose.yml']
