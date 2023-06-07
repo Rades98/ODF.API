@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using ODF.AppLayer.CQRS.Lineup.Commands;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.Domain;
 using ODF.Domain.Entities;
 
 namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 {
-	internal class AddLIneupItemCommandHandler : IRequestHandler<AddLineupItemCommand, bool>
+	internal class AddLIneupItemCommandHandler : ICommandHandler<AddLineupItemCommand, bool>
 	{
 		private readonly ILineupRepo _repo;
 		private readonly ITranslationRepo _translationRepo;

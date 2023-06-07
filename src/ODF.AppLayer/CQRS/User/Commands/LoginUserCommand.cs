@@ -1,9 +1,9 @@
-﻿using MediatR;
-using ODF.AppLayer.Dtos.User;
+﻿using ODF.AppLayer.Dtos.User;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.User.Commands
 {
-	public class LoginUserCommand : IRequest<UserValidationDto>
+	public class LoginUserCommand : ICommand<UserValidationDto>
 	{
 		public LoginUserCommand(string userName, string password)
 		{

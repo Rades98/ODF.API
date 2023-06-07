@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Dtos.Validation;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 {
-	internal class AddBankAccountCommandHandler : IRequestHandler<AddBankAccountCommand, ValidationDto>
+	internal class AddBankAccountCommandHandler : ICommandHandler<AddBankAccountCommand, ValidationDto>
 	{
 		private readonly IContactRepo _contactRepo;
 

@@ -1,9 +1,9 @@
 ﻿using System;
-using MediatR;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class RemoveContactPersonCommand : IRequest<bool>
+	public class RemoveContactPersonCommand : ICommand<bool>
 	{
 		public RemoveContactPersonCommand(Guid id)
 		{

@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class UpdateContactCommand : IRequest<bool>
+	public class UpdateContactCommand : ICommand<bool>
 	{
 		public UpdateContactCommand(string eventName, string eventManager, string email)
 		{

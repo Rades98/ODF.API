@@ -2,17 +2,17 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using ODF.AppLayer.CQRS.Contact.Queries;
 using ODF.AppLayer.Dtos.ContactDtos;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Mapping;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.AppLayer.Services.Interfaces;
 
 namespace ODF.AppLayer.CQRS.Contact.QueryHandlers
 {
-	internal class GetContactQeuryHandler : IRequestHandler<GetContactQuery, ContactDto>
+	internal class GetContactQeuryHandler : IQueryHandler<GetContactQuery, ContactDto>
 	{
 		private readonly ITranslationsProvider _translationProvider;
 		private readonly IContactRepo _contactRepo;

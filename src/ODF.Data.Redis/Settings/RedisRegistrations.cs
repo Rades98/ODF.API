@@ -39,8 +39,7 @@ namespace ODF.Data.Redis.Settings
 					Email = "admin@folklorova.cz",
 					Id = Guid.Parse("5697F910-A490-47E2-B90B-C42C662178CA"),
 					IsAdmin = true,
-					PasswordHash = "",
-					PasswordSalt = "",
+					PasswordHash = "10000.ax5t6wtsWgG6WtpdVQSdSw==.0z9MlGFpiHXjxFMssxxFilUEtyLT57RH3j6BEjZqE7Q=", //heslopyco
 					IsActive = true,
 				};
 

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using MediatR;
 using ODF.AppLayer.Dtos;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Lineup.Queries
 {
-	public class GetLineupQuery : IRequest<IEnumerable<LineupItemDto>>
+	public class GetLineupQuery : IQuery<IEnumerable<LineupItemDto>>
 	{
 		public GetLineupQuery(string countryCode)
 		{

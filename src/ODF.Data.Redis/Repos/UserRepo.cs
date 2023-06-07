@@ -26,20 +26,21 @@ namespace ODF.Data.Redis.Repos
 
 			if (!string.IsNullOrEmpty(usr))
 			{
-				return JsonConvert.DeserializeObject<User>(usr);
+				var user = JsonConvert.DeserializeObject<User>(usr);
+
+				return (user?.IsActive ?? false) ? user : null;
 			}
 
 			return null;
 		}
 
-		public async Task<bool> RegisterAsync(string userName, string email, bool isAdmin, string passwordHash, string passwordSalt)
+		public async Task<bool> RegisterAsync(string userName, string email, bool isAdmin, string passwordHash)
 		{
 			var usr = new User()
 			{
 				UserName = userName,
 				Email = email,
 				IsAdmin = isAdmin,
-				PasswordSalt = passwordSalt,
 				PasswordHash = passwordHash
 			};
 

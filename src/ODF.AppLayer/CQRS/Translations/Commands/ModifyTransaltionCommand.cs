@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Translations.Commands
 {
-	public class ModifyTransaltionCommand : IRequest<bool>
+	public class ModifyTransaltionCommand : ICommand<bool>
 	{
 		public ModifyTransaltionCommand(string countryCode, string translationCode, string text)
 		{
@@ -13,7 +13,7 @@ namespace ODF.AppLayer.CQRS.Translations.Commands
 
 		public string CountryCode { get; }
 
-		public string TranslationCode { get;} 
+		public string TranslationCode { get; }
 
 		public string Text { get; }
 	}

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using ODF.AppLayer.CQRS.Translations.Commands;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Translations.CommandHandlers
 {
-	internal class ModifyTransaltionCommandHandler : IRequestHandler<ModifyTransaltionCommand, bool>
+	internal class ModifyTransaltionCommandHandler : ICommandHandler<ModifyTransaltionCommand, bool>
 	{
 		private readonly ITranslationRepo _repo;
 

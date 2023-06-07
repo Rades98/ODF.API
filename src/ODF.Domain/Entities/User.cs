@@ -13,8 +13,6 @@ namespace ODF.Domain.Entities
 
 		public string PasswordHash { get; set; } = string.Empty;
 
-		public string PasswordSalt { get; set; } = string.Empty;
-
 		public bool IsAdmin { get; set; } = false;
 
 		public string FirstName { get; set; } = string.Empty;

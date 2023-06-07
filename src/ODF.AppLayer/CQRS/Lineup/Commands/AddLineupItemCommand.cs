@@ -1,9 +1,9 @@
 ﻿using System;
-using MediatR;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Lineup.Commands
 {
-	public class AddLineupItemCommand : IRequest<bool>
+	public class AddLineupItemCommand : ICommand<bool>
 	{
 		public AddLineupItemCommand(string place, string interpret, string perfName, string description, string descriptionTranslationCode, DateTime dateTime, string countryCode)
 		{

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using MediatR;
 using ODF.AppLayer.Dtos;
+using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Queries
 {
-	public class GetArticlesQuery : IRequest<IEnumerable<ArticleDto>>
+	public class GetArticlesQuery : IQuery<IEnumerable<ArticleDto>>
 	{
 		public GetArticlesQuery(int offset, int size, int pageId, string countryCode)
 		{

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.User.Commands;
 using ODF.AppLayer.Dtos.User;
+using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.User.CommandHandlers
 {
-	internal class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, UserValidationDto>
+	internal class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, UserValidationDto>
 	{
 		private readonly IUserRepo _userRepo;
 
