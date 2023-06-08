@@ -16,7 +16,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://127.0.0.1:7155",
+      "applicationUrl": "http://127.0.0.1:7155",
       "dotnetRunMessages": true
     }
   }

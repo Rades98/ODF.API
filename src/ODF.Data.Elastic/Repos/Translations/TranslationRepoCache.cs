@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
-using ODF.AppLayer.Repos;
-using ODF.Domain.Entities;
 
 namespace ODF.Data.Elastic.Repos.Translations
 {

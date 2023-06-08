@@ -1,10 +1,10 @@
-﻿using System.Net;
-using FluentValidation;
+﻿using FluentValidation;
 using ODF.API.Extensions;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Pipelines;
 using ODF.AppLayer.Services.Interfaces;
+using System.Net;
 
 namespace ODF.API.Middleware
 {
@@ -42,7 +42,7 @@ namespace ODF.API.Middleware
 				}
 				else
 				{
-					resultMsg = translations.Get("internal_server_error");
+					resultMsg = translations.Get("internal_server_error") ?? "Internal server error";
 				}
 
 

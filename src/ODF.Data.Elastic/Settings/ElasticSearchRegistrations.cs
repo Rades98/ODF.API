@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Elasticsearch.Net;
+﻿using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
+using Newtonsoft.Json;
 using ODF.AppLayer.Repos;
 using ODF.Data.Elastic.Repos.Articles;
 using ODF.Data.Elastic.Repos.Contacts;
@@ -12,6 +10,9 @@ using ODF.Data.Elastic.Repos.Lineups;
 using ODF.Data.Elastic.Repos.Translations;
 using ODF.Domain.Entities;
 using ODF.Domain.Entities.ContactEntities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ODF.Data.Elastic.Settings
 {
@@ -275,6 +276,11 @@ namespace ODF.Data.Elastic.Settings
 			};
 
 			var res = client.IndexMany(sysTrans);
+
+			if (res.ItemsWithErrors.Any())
+			{
+				throw new Exception(JsonConvert.SerializeObject(res.ItemsWithErrors));
+			}
 
 			return client;
 		}

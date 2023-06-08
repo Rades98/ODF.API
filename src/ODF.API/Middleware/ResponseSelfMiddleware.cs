@@ -1,9 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using ODF.API.Extensions;
 using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Base;
+using System.Text.RegularExpressions;
 
 namespace ODF.API.Middleware
 {
@@ -51,6 +52,11 @@ namespace ODF.API.Middleware
 		//This stuff with regex and shit is some sort of hack.. would be nice if it was refactored once - but not today :D
 		private string GetModifiedResponse(string response, HttpContext httpContext)
 		{
+			if (!httpContext.IsApiRequest())
+			{
+				return response;
+			}
+
 			var responseBody = JsonConvert.DeserializeObject<BaseResponseModel>(response);
 
 			if (responseBody is null)

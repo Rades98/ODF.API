@@ -1,5 +1,4 @@
-﻿using System.Data;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
@@ -10,6 +9,7 @@ using ODF.API.ResponseModels.LanguageMutations;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain;
+using System.Data;
 
 namespace ODF.API.Controllers
 {
@@ -33,7 +33,7 @@ namespace ODF.API.Controllers
 
 				if (lang.GetCountryCode().ToLower() != countryCode.ToLower())
 				{
-					languageModel.ChangeLanguage = GetNamedAction(nameof(NavigationController.GetNavigation), actionName, "nav");
+					languageModel.ChangeLanguage = GetNamedAction(nameof(NavigationController.GetNavigation), actionName, "nav", countryCode: lang.GetCountryCode());
 				}
 
 				return languageModel;

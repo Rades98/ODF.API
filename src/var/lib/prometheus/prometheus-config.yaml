@@ -1,0 +1,17 @@
+global:
+  scrape_timeout: 60s
+  query_log_file: /etc/prometheus/query.log
+
+scrape_configs:
+  - job_name: 'odf-local'
+    scrape_interval: 10s
+    scheme: 'http'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['host.docker.internal:7155', '127.0.0.1:7155', 'localhost:7155']
+
+  - job_name: 'odf-dockerized'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['api:8982']
