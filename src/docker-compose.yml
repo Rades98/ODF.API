@@ -79,6 +79,7 @@ services:
       - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
     depends_on:
       - elasticsearch
+      - redis
     networks:
       - elastic-odf
       - odf-redis
@@ -121,8 +122,10 @@ services:
       - GF_INSTALL_PLUGINS=simpod-json-datasource
     depends_on:
       - prometheus
+      - api
     networks:
       - grafana_stuff
+      - webapi-network
 
 networks:
   elastic-odf:

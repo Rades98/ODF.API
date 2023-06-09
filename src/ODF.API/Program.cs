@@ -76,6 +76,7 @@ if (app.Environment.IsDevelopment())
 		delegate (IApplicationBuilder appBuilder)
 		{
 			appBuilder.UseHttpsRedirection();
+			appBuilder.UseResponseCompression();
 		}
 	);
 }
@@ -89,6 +90,7 @@ else
 	.WithOrigins("https://folklorova.cz"));
 
 	app.UseHttpsRedirection();
+	app.UseResponseCompression();
 }
 
 app.UseAuthentication();
@@ -97,8 +99,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigation", true, true));
-
-app.UseResponseCompression();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<CountryCodeMiddleWare>();

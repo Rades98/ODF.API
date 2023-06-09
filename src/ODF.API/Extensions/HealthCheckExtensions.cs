@@ -7,7 +7,7 @@ namespace ODF.API.Extensions
 {
 	public static class HealthCheckExtensions
 	{
-		public static Task WriteResponse(
+		public static async Task WriteResponse(
 			HttpContext context,
 			HealthReport report)
 		{
@@ -27,21 +27,20 @@ namespace ODF.API.Extensions
 						.Select(e =>
 							new
 							{
-								Key = e.Key,
-								Description = e.Value.Description,
-								Duration = e.Value.Duration,
+								e.Key,
+								e.Value.Description,
+								e.Value.Duration,
 								Status = Enum.GetName(
 									typeof(HealthStatus),
 									e.Value.Status),
 								Error = e.Value.Exception?.Message,
-								Data = e.Value.Data
 							})
 						.ToList()
 				},
 				jsonSerializerOptions);
 
 			context.Response.ContentType = MediaTypeNames.Application.Json;
-			return context.Response.WriteAsync(json);
+			await context.Response.WriteAsync(json);
 		}
 	}
 }
