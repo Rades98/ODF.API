@@ -7,3 +7,5 @@ BE:
 DEVOPS:
   - Dockerfile.*
   - docker-compose.yml
+  - src/var/**
+  - src/.env
