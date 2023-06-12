@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using ODF.API.Attributes;
+using ODF.API.Attributes.Binding;
 
 namespace ODF.API.RequestModels
 {

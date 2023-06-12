@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net.Mime;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using ODF.API.Controllers;
@@ -7,8 +9,7 @@ using ODF.API.FormFactories;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
-using System.Net.Mime;
-using System.Text;
+using ODF.Domain;
 
 namespace ODF.API.Middleware
 {
@@ -28,7 +29,7 @@ namespace ODF.API.Middleware
 		{
 			if (!authorizeResult.Succeeded)
 			{
-				string? countryCode = httpContext.GetCountryCode() ?? "CZ";
+				string? countryCode = httpContext.GetCountryCode() ?? Languages.Czech.GetCountryCode();
 
 				var translations = await _translationsProvider.GetTranslationsAsync(countryCode, default);
 

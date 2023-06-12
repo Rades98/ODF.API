@@ -1,7 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using ODF.API.Extensions;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ODF.API.Filters;
 using ODF.API.HealthChecks;
 using ODF.API.Middleware;
@@ -36,8 +36,8 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 //metrics
 builder.Services.AddOpenTelemetry()
 	.WithMetrics(builder => builder
-		.AddConsoleExporter()
 		.AddAspNetCoreInstrumentation()
+		.AddHttpClientInstrumentation()
 		.AddRuntimeInstrumentation()
 		.AddPrometheusExporter());
 
@@ -50,8 +50,6 @@ builder.Services.AddHealthChecks()
 builder.Host.UseSerilog();
 
 var app = builder.Build();
-
-app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 ServiceLocator.Instance = app.Services;
 
@@ -103,14 +101,11 @@ app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigatio
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<CountryCodeMiddleWare>();
 app.UseMiddleware<RateLimitMiddleware>();
-app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ResponseSelfMiddleware>();
 
 app.SetupLogging();
 
-app.MapHealthChecks("/health", new HealthCheckOptions
-{
-	ResponseWriter = HealthCheckExtensions.WriteResponse
-});
+app.UseHealthChecksPrometheusExporter(new("/health"), options => options.ResultStatusCodes[HealthStatus.Unhealthy] = (int)HttpStatusCode.OK);
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 app.Run();

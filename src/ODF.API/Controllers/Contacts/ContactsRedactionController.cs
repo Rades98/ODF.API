@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
@@ -22,6 +23,7 @@ namespace ODF.API.Controllers.Contacts
 
 		[HttpGet(Name = nameof(GetContactsRedaction))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetContactsRedaction([FromRoute] string countryCode)
 		{

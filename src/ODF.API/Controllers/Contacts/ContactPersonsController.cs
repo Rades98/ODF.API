@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
@@ -26,6 +27,7 @@ namespace ODF.API.Controllers.Contacts
 
 		[HttpPost(Name = nameof(UpdateContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactPersonResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> UpdateContactPerson([FromRoute] string countryCode, [FromBody] UpdateContactPersonForm form, CancellationToken cancellationToken)
@@ -40,6 +42,7 @@ namespace ODF.API.Controllers.Contacts
 
 		[HttpPut(Name = nameof(AddContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(CreateContactPersonResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(CreateContactPersonResponseModel), StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
@@ -63,6 +66,7 @@ namespace ODF.API.Controllers.Contacts
 
 		[HttpDelete(Name = nameof(RemoveContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(DeleteContactPersonResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> RemoveContactPerson([FromRoute] string countryCode, [FromBody] RemoveContactPersonForm form, CancellationToken cancellationToken)

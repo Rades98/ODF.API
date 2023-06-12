@@ -17,7 +17,8 @@ namespace ODF.API.Controllers
 		[HttpGet(Name = nameof(GetTickets))]
 		public IActionResult GetTickets([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
-			return Ok();
+			throw new NotImplementedException();
+			//return Ok();
 		}
 	}
 }

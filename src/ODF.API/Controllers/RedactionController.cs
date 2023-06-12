@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.Controllers.Contacts;
 using ODF.API.FormFactories;
@@ -13,7 +14,6 @@ using ODF.API.ResponseModels.Redaction;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
-using ODF.Domain;
 
 namespace ODF.API.Controllers
 {
@@ -25,17 +25,13 @@ namespace ODF.API.Controllers
 
 		[HttpGet(Name = nameof(GetRedaction))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> GetRedaction([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var transaltions = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
-
-			if (countryCode.ToUpper() != Languages.Czech.GetCountryCode())
-			{
-				return UnprocessableEntity("This action is supported for CZ language only");
-			}
 
 			var responseModel = new RedactionResponseModel("Redakce");
 

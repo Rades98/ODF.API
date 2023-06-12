@@ -10,7 +10,7 @@ services:
     networks:
       - odf-redis
     volumes:
-      - ./var/lib/redis:/redis
+      - redis_data:/var/lib/redis
 
   redis-commander-odf:
     image: rediscommander/redis-commander
@@ -36,12 +36,10 @@ services:
       memlock:
         soft: -1
         hard: -1
-    ports:
-      - 9200:9200
     networks:
       - elastic-odf
     volumes:
-       - ./var/lib/elastic:/elastic
+       - elastic_data:/var/lib/elastic
 
   kibana-odf:
     image: docker.elastic.co/kibana/kibana:7.16.3
@@ -104,6 +102,8 @@ services:
     container_name: odf-prometheus
     volumes:
       - ./var/lib/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090 #For dev usage only
     depends_on:
       - api
     networks:
@@ -118,14 +118,19 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./var/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./var/grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       - GF_INSTALL_PLUGINS=simpod-json-datasource
+      - GF_DASHBOARDS_JSON_ENABLED=true
+      - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
     depends_on:
       - prometheus
+      - elasticsearch
       - api
     networks:
       - grafana_stuff
       - webapi-network
+      - elastic-odf
 
 networks:
   elastic-odf:
@@ -135,8 +140,8 @@ networks:
     driver: bridge
 
 volumes:
-  esdata:
-    driver: local
+  elastic_data:
+  redis_data:
   grafana_data:
 
 # RTFM
@@ -146,8 +151,8 @@ volumes:
 # dotnet dev-certs https --trust
 # dotnet user-secrets set "Kestrel:Certificates:Development:Password" "kjkszpj"
 # cd ../
-# docker-compose up  -d 
-# after everything is running, run  docker-compose up --build -d 
+# docker-compose up -d --build  
+# after everything is running, run  docker restart odf-api
 
 #to down
 # docker-compose down --remove-orphans
@@ -163,3 +168,7 @@ volumes:
 #              |-- select odf-api-development + create
 #    |-- Discover again
 #  CG! u can see shit
+
+# Grafana is available on 127.0.0.1:3000
+#admin_user = admin
+#admin_password = lKmTivaSerGjk

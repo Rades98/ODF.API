@@ -1,24 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ODF.API.Extensions;
 using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Base;
-using System.Text.RegularExpressions;
 
 namespace ODF.API.Middleware
 {
 	public class ResponseSelfMiddleware
 	{
 		private readonly RequestDelegate _next;
-		private readonly IActionDescriptorCollectionProvider _adcp;
 		private readonly ApiSettings _apiSettings;
+
+		private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { Error = (sender, args) => { args.ErrorContext.Handled = true; } };
 		private static Regex SelfReg = new(@"(?:(!:[""]_self).)*(?:[""]_self).*[}}\]}]$", RegexOptions.Compiled);
 
-		public ResponseSelfMiddleware(RequestDelegate next, IActionDescriptorCollectionProvider adcp, IOptions<ApiSettings> apiSettings)
+		public ResponseSelfMiddleware(RequestDelegate next, IOptions<ApiSettings> apiSettings)
 		{
 			_next = next;
-			_adcp = adcp;
 			_apiSettings = apiSettings.Value;
 		}
 
@@ -57,7 +56,7 @@ namespace ODF.API.Middleware
 				return response;
 			}
 
-			var responseBody = JsonConvert.DeserializeObject<BaseResponseModel>(response);
+			var responseBody = JsonConvert.DeserializeObject<BaseResponseModel>(response, _jsonSerializerSettings);
 
 			if (responseBody is null)
 			{

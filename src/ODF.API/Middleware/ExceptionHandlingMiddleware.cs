@@ -1,10 +1,11 @@
-﻿using FluentValidation;
+﻿using System.Net;
+using FluentValidation;
 using ODF.API.Extensions;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Pipelines;
 using ODF.AppLayer.Services.Interfaces;
-using System.Net;
+using ODF.Domain;
 
 namespace ODF.API.Middleware
 {
@@ -21,7 +22,7 @@ namespace ODF.API.Middleware
 
 		public async Task Invoke(HttpContext httpContext)
 		{
-			string countryCode = httpContext.GetCountryCode() ?? "CZ";
+			string countryCode = httpContext.GetCountryCode() ?? Languages.Czech.GetCountryCode();
 			var translations = await _translationsProvider.GetTranslationsAsync(countryCode, default);
 
 			try
