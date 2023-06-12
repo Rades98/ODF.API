@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using ODF.API.Attributes;
+using ODF.API.Attributes.Binding;
 
 namespace ODF.API.RequestModels.Navigation
 {

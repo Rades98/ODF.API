@@ -5,6 +5,7 @@ using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Pipelines;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain;
 
 namespace ODF.API.Middleware
 {
@@ -21,7 +22,7 @@ namespace ODF.API.Middleware
 
 		public async Task Invoke(HttpContext httpContext)
 		{
-			string countryCode = httpContext.GetCountryCode() ?? "CZ";
+			string countryCode = httpContext.GetCountryCode() ?? Languages.Czech.GetCountryCode();
 			var translations = await _translationsProvider.GetTranslationsAsync(countryCode, default);
 
 			try
@@ -42,7 +43,7 @@ namespace ODF.API.Middleware
 				}
 				else
 				{
-					resultMsg = translations.Get("internal_server_error");
+					resultMsg = translations.Get("internal_server_error") ?? "Internal server error";
 				}
 
 

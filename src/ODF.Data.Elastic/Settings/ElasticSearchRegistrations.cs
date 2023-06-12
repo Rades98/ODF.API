@@ -5,6 +5,7 @@ using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
+using Newtonsoft.Json;
 using ODF.AppLayer.Repos;
 using ODF.Data.Elastic.Repos.Articles;
 using ODF.Data.Elastic.Repos.Contacts;
@@ -118,14 +119,6 @@ namespace ODF.Data.Elastic.Settings
 			{
 				client.Index(contact, i => i);
 			}
-
-			client.DeleteByQuery<Translation>(q => q
-				.Query(rq => rq
-					.Match(m => m
-					.Field(f => f.IsSystem)
-					.Query("true"))
-				)
-			);
 
 			List<Translation> sysTrans = new()
 			{
@@ -272,9 +265,35 @@ namespace ODF.Data.Elastic.Settings
 				new() { IsSystem = true, LanguageId = 0, Text = "Pořadatel", TranslationCode = "contact_event_manager" },
 				new() { IsSystem = true, LanguageId = 1, Text = "Organizer", TranslationCode = "contact_event_manager" },
 				new() { IsSystem = true, LanguageId = 2, Text = "Veranstalter", TranslationCode = "contact_event_manager" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Tato akce je povolena pouze pro {0}", TranslationCode = "supported_lang_only" },
+				new() { IsSystem = true, LanguageId = 1, Text = "This action is allowed for {0} only", TranslationCode = "supported_lang_only" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Diese Aktion ist nur für {0} zulässig", TranslationCode = "supported_lang_only" },
 			};
 
-			var res = client.IndexMany(sysTrans);
+			sysTrans.ForEach(tran =>
+			{
+				var actual = client.Search<Translation>(x => x
+					.Query(q => q
+						.Bool(bq => bq
+							.Filter(
+								fq => fq.Terms(t => t.Field(f => f.TranslationCode).Terms(tran.TranslationCode)),
+								fq => fq.Terms(t => t.Field(f => f.LanguageId).Terms(tran.LanguageId))
+							)
+						)
+					)
+					.Size(1)).Documents.FirstOrDefault();
+
+				if (actual is null)
+				{
+					var res = client.Index(tran, i => i);
+
+					if (res.ServerError is not null)
+					{
+						throw new Exception(JsonConvert.SerializeObject(res.ServerError));
+					}
+				}
+			});
 
 			return client;
 		}

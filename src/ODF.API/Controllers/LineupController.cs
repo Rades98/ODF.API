@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms;
@@ -48,6 +49,7 @@ namespace ODF.API.Controllers
 
 		[HttpPut(Name = nameof(AddItemToLineup))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(StatusCodes.Status202Accepted)]
 		public async Task<IActionResult> AddItemToLineup([FromRoute] string countryCode, [FromBody] AddLineupItemForm model, CancellationToken cancellationToken)

@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
-using ODF.AppLayer.Consts;
+﻿using ODF.AppLayer.Consts;
 using ODF.Domain;
+using System.Security.Claims;
 
 namespace ODF.API.Extensions
 {
@@ -27,7 +27,7 @@ namespace ODF.API.Extensions
 
 		public static string? GetCountryCode(this HttpContext httpContext)
 		{
-			if (httpContext.Request.Path == new PathString("/"))
+			if (!httpContext.IsApiRequest())
 			{
 				return Languages.Czech.GetCountryCode().ToLower();
 			}
@@ -47,5 +47,13 @@ namespace ODF.API.Extensions
 
 			return null;
 		}
+
+		public static bool IsApiRequest(this HttpContext httpContext)
+			=> !(httpContext.Request.Path == new PathString("/") ||
+				httpContext.Request.Path == new PathString("/metrics") ||
+				httpContext.Request.Path.ToString().Contains(".ico") ||
+				httpContext.Request.Path.ToString().Contains("ui") ||
+				httpContext.Request.Path.ToString().Contains("health")
+			);
 	}
 }

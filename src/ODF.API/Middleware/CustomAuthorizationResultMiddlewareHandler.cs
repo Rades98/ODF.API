@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Mime;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -8,6 +9,7 @@ using ODF.API.FormFactories;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain;
 
 namespace ODF.API.Middleware
 {
@@ -27,7 +29,7 @@ namespace ODF.API.Middleware
 		{
 			if (!authorizeResult.Succeeded)
 			{
-				string? countryCode = httpContext.GetCountryCode() ?? "CZ";
+				string? countryCode = httpContext.GetCountryCode() ?? Languages.Czech.GetCountryCode();
 
 				var translations = await _translationsProvider.GetTranslationsAsync(countryCode, default);
 
@@ -44,7 +46,7 @@ namespace ODF.API.Middleware
 
 				byte[] bytes = Encoding.UTF8.GetBytes(responseModel.ToString());
 				httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-				httpContext.Response.ContentType = "application/json";
+				httpContext.Response.ContentType = MediaTypeNames.Application.Json;
 				await httpContext.Response.Body.WriteAsync(bytes, 0, bytes.Length);
 			}
 			else

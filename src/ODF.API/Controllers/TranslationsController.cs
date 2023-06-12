@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
@@ -26,15 +27,11 @@ namespace ODF.API.Controllers
 
 		[HttpGet(Name = nameof(GetTranslations))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(GetTranslationsResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> GetTranslations([FromRoute] string countryCode, int size, int offset, CancellationToken cancellationToken)
 		{
-			if (countryCode.ToUpper() != Languages.Czech.GetCountryCode())
-			{
-				return UnprocessableEntity("This action is supported for CZ language only");
-			}
-
 			var translations = await Mediator.Send(new GetTranslationsQuery(countryCode, size, offset), cancellationToken);
 			var deTranslations = await Mediator.Send(new GetTranslationsQuery(Languages.Deutsch.GetCountryCode(), size, offset), cancellationToken);
 			var enTranslations = await Mediator.Send(new GetTranslationsQuery(Languages.English.GetCountryCode(), size, offset), cancellationToken);
@@ -75,18 +72,13 @@ namespace ODF.API.Controllers
 
 		[HttpPost(Name = nameof(ChangeTranslation))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateTranslationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(BadRequestExceptionResponseModel), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> ChangeTranslation(string countryCode, [FromBody] ChangeTranslationForm form, CancellationToken cancellationToken)
 		{
-			if (countryCode.ToUpper() != Languages.Czech.GetCountryCode())
-			{
-				return BadRequest(new BadRequestExceptionResponseModel("This action is supported for CZ language only", "Switch to cz",
-					altAction: GetNamedAction(nameof(NavigationController.GetNavigation), "Přepnout do CZ", "nav", countryCode: Languages.Czech.GetCountryCode())));
-			}
-
 			bool result = await Mediator.Send(new ModifyTransaltionCommand(form.CountryCode, form.TranslationCode, form.Text), cancellationToken);
 
 			if (result)

@@ -2,7 +2,7 @@
 using ODF.API.Extensions;
 using ODF.API.Registration;
 
-namespace ODF.API.Attributes
+namespace ODF.API.Attributes.Binding
 {
 	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
 	public class IsAdminAttribute : BindingAttribute

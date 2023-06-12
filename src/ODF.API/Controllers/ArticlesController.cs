@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
 using ODF.API.Registration.SettingModels;
@@ -29,6 +30,7 @@ namespace ODF.API.Controllers
 
 		[HttpPut(Name = nameof(AddArticle))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(CreateArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]

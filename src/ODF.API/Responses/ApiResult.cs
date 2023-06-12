@@ -1,6 +1,7 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
+using System.Net.Mime;
 
 namespace ODF.API.Responses
 {
@@ -20,7 +21,7 @@ namespace ODF.API.Responses
 		public async Task ExecuteResultAsync(ActionContext context)
 		{
 			context.HttpContext.Response.StatusCode = (int)StatusCode;
-			context.HttpContext.Response.ContentType = "application/json";
+			context.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
 			await context.HttpContext.Response.WriteAsync(ResponseModel.ToString()!);
 		}
 	}

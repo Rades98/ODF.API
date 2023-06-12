@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
+using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms.Contacts;
@@ -35,6 +36,7 @@ namespace ODF.API.Controllers.Contacts
 
 		[HttpPost(Name = nameof(UpdateContact))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> UpdateContact([FromRoute] string countryCode, [FromBody] UpdateContactForm form)

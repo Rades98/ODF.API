@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ODF.API.Attributes;
+using ODF.API.Attributes.Binding;
 
 namespace ODF.API.Filters
 {
-	public class PropertyBindingActionFilterAttribute : ActionFilterAttribute
+    public class PropertyBindingActionFilterAttribute : ActionFilterAttribute
 	{
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
 		{
