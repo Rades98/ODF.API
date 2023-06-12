@@ -9,3 +9,4 @@ DEVOPS:
   - docker-compose.yml
   - src/var/**
   - src/.env
+  - .github/**
