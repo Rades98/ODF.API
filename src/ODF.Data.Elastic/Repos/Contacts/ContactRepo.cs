@@ -29,6 +29,9 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			return response.Documents.FirstOrDefault();
 		}
 
+		public async Task<IEnumerable<BankAccount>> GetBankAccountsAsync(CancellationToken cancellationToken)
+			=> (await GetAsync(cancellationToken)).BankAccounts;
+
 		public async Task<bool> UpdateAddressAsync(string street, string city, string postalCode, string country, CancellationToken cancellationToken)
 		{
 			var scriptParams = new Dictionary<string, object>();
@@ -156,8 +159,6 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			}
 
 			return false;
-
-			//TODO add some check
 		}
 
 		#region bank acc
@@ -220,7 +221,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 				return false;
 			}
 
-			var lastOrder = last.ContactPersons.OrderBy(x => x.Order.Value).LastOrDefault()?.Order ?? 1;
+			int lastOrder = last.ContactPersons.OrderBy(x => x.Order.Value).LastOrDefault()?.Order ?? 1;
 
 			person.Order = lastOrder + 1;
 			var id = Guid.NewGuid();

@@ -19,7 +19,6 @@ namespace ODF.AppLayer.Settings
 				.AddTransient(typeof(IRequestPostProcessor<,>), typeof(ResourceNotFoundPostProcessor<,>));
 
 			services.AddTransient<ITranslationsProvider, TranslationsProvider>();
-			services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
 			return services;
 		}

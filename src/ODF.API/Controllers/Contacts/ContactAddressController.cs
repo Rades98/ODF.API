@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
-using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
@@ -13,6 +12,7 @@ using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Contacts
 {
@@ -27,7 +27,7 @@ namespace ODF.API.Controllers.Contacts
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactAddressResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> UpdateAddress([FromRoute] string countryCode, [FromBody] UpdateAddressForm form)
+		public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressForm form)
 		{
 			if (await Mediator.Send(new UpdateContactAddressCommand(form.Street, form.City, form.PostalCode, form.Country)))
 			{

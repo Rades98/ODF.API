@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ODF.API.Extensions;
-using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Base;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Middleware
 {
@@ -32,7 +32,7 @@ namespace ODF.API.Middleware
 				await _next(httpContext).ConfigureAwait(false);
 
 				memStream.Position = 0;
-				var responseBody = GetModifiedResponse(new StreamReader(memStream).ReadToEnd(), httpContext);
+				string responseBody = GetModifiedResponse(new StreamReader(memStream).ReadToEnd(), httpContext);
 
 				var memoryStreamModified = new MemoryStream();
 				var sw = new StreamWriter(memoryStreamModified);
@@ -63,7 +63,7 @@ namespace ODF.API.Middleware
 				return response;
 			}
 
-			var method = httpContext.Request.Method;
+			string method = httpContext.Request.Method;
 
 			var link = httpContext.Request.Path;
 

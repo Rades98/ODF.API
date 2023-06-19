@@ -1,15 +1,15 @@
-﻿using MediatR;
+﻿using System.Data;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
-using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.LanguageMutations;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain;
-using System.Data;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {

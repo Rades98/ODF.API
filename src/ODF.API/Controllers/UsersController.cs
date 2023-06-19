@@ -2,13 +2,13 @@
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
-using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms.User;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.User;
@@ -16,6 +16,7 @@ using ODF.API.Responses;
 using ODF.AppLayer.CQRS.User.Commands;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
@@ -68,8 +69,9 @@ namespace ODF.API.Controllers
 			return Ok();
 		}
 
+		[Authorize]
 		[HttpDelete(Name = nameof(LogoutUser))]
-		public async Task<IActionResult> LogoutUser([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> LogoutUser()
 		{
 			if (HttpContext.IsLoggedIn())
 			{

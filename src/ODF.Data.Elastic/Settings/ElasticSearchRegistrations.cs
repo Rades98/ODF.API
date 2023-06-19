@@ -269,6 +269,14 @@ namespace ODF.Data.Elastic.Settings
 				new() { IsSystem = true, LanguageId = 0, Text = "Tato akce je povolena pouze pro {0}", TranslationCode = "supported_lang_only" },
 				new() { IsSystem = true, LanguageId = 1, Text = "This action is allowed for {0} only", TranslationCode = "supported_lang_only" },
 				new() { IsSystem = true, LanguageId = 2, Text = "Diese Aktion ist nur für {0} zulässig", TranslationCode = "supported_lang_only" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Podpořte náš festival", TranslationCode = "donations_header" },
+				new() { IsSystem = true, LanguageId = 1, Text = "Support our festival", TranslationCode = "donations_header" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Unterstützen Sie unser Festival", TranslationCode = "donations_header" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Peníze můžete zaslat pomocí přiložených QR kódů", TranslationCode = "donations_text" },
+				new() { IsSystem = true, LanguageId = 1, Text = "You can send money using the attached QR codes", TranslationCode = "donations_text" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Mit den beigefügten QR-Codes können Sie Geld versenden", TranslationCode = "donations_text" },
 			};
 
 			sysTrans.ForEach(tran =>
@@ -294,6 +302,7 @@ namespace ODF.Data.Elastic.Settings
 					}
 				}
 			});
+
 
 			return client;
 		}

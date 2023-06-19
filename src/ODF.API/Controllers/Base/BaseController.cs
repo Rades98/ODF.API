@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Extensions;
-using ODF.API.Registration.SettingModels;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Common.Forms;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Base
 {

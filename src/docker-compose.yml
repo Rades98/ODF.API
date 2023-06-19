@@ -5,26 +5,16 @@ services:
     container_name: odf-redis
     image: redis:latest
     restart: always
-    ports:
+    ports: # Hide in case of production
       - 6379:6379
     networks:
       - odf-redis
     volumes:
       - redis_data:/var/lib/redis
-
-  redis-commander-odf:
-    image: rediscommander/redis-commander
-    container_name: odf-redis-commander
-    restart: always
-    environment:
-      - REDIS_HOSTS=redis
-      - REDIS_PORT=6379
-    ports:
-      - "8081:8081"
-    networks:
-      - odf-redis
-
+      
   elasticsearch:
+    ports: # Hide in case of production
+      - 9200:9200
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
     container_name: elasticsearch-odf
     restart: always
@@ -53,6 +43,7 @@ services:
       # ASPNETCORE_HTTPS_PORT: "${WEB_API_PORT}"
       ASPNETCORE_URLS: "http://*:${WEB_API_PORT_HTTP};" #https://*:${WEB_API_PORT}
       ApiSettings__ApiUrl: "https://127.0.0.1:${WEB_API_PORT_HTTP}"
+      ApiSettings__AdminPw: ${ADMIN_PW}
       ElasticsearchSettings__DefaultIndex: "odf-articles"
       ElasticsearchSettings__Nodes__0: http://elasticsearch:9200
       ElasticsearchSettings__Password: "kjKSzpjAeyakMiHesoyAm"
@@ -110,7 +101,7 @@ services:
       - GF_INSTALL_PLUGINS=simpod-json-datasource
       - GF_DASHBOARDS_JSON_ENABLED=true
       - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
-      - GF_SECURITY_ADMIN_PASSWORD={GRAFANA_PW}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PW}
     depends_on:
       - prometheus
       - elasticsearch
