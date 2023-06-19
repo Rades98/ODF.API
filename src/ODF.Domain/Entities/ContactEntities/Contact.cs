@@ -6,16 +6,16 @@ namespace ODF.Domain.Entities.ContactEntities
 	{
 		public int Id = 1;
 
-		public string EventName { get; set; }
+		public string EventName { get; set; } = string.Empty;
 
-		public string EventManager { get; set; }
+		public string EventManager { get; set; } = string.Empty;
 
-		public string Email { get; set; }
+		public string Email { get; set; } = string.Empty;
 
-		public Address Address { get; set; }
+		public Address Address { get; set; } = new();
 
-		public IEnumerable<BankAccount> BankAccounts { get; set; }
+		public IEnumerable<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
 
-		public IEnumerable<ContactPerson> ContactPersons { get; set; }
+		public IEnumerable<ContactPerson> ContactPersons { get; set; } = new List<ContactPerson>();
 	}
 }

@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using ODF.AppLayer.Repos;
 using ODF.Data.Redis.Repos;
 using ODF.Domain.Entities;
+using ODF.Domain.SettingModels;
+using ODF.Domain.Utils;
 using StackExchange.Redis;
 
 namespace ODF.Data.Redis.Settings
@@ -18,14 +20,14 @@ namespace ODF.Data.Redis.Settings
 
 			services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer
 				.Connect(redisSettings.Url)
-				.Seed());
+				.Seed(configuration));
 
 			services.AddTransient<IUserRepo, UserRepo>();
 
 			return services;
 		}
 
-		private static ConnectionMultiplexer Seed(this ConnectionMultiplexer connectionMultiplexer)
+		private static ConnectionMultiplexer Seed(this ConnectionMultiplexer connectionMultiplexer, IConfiguration configuration)
 		{
 			var db = connectionMultiplexer.GetDatabase();
 			string userName = "admin";
@@ -39,7 +41,7 @@ namespace ODF.Data.Redis.Settings
 					Email = "admin@folklorova.cz",
 					Id = Guid.Parse("5697F910-A490-47E2-B90B-C42C662178CA"),
 					IsAdmin = true,
-					PasswordHash = "10000.ax5t6wtsWgG6WtpdVQSdSw==.0z9MlGFpiHXjxFMssxxFilUEtyLT57RH3j6BEjZqE7Q=", //heslopyco
+					PasswordHash = PasswordHasher.Hash(configuration.Get<ApiSettings>().AdminPw),
 					IsActive = true,
 				};
 

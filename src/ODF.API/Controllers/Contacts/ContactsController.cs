@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
-using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseComposers.Contacts;
 using ODF.API.ResponseModels.Contacts.GetContacts;
@@ -16,6 +15,7 @@ using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.CQRS.Contact.Queries;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Contacts
 {
@@ -23,7 +23,10 @@ namespace ODF.API.Controllers.Contacts
 	{
 		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
 		{
+			ApiSettings = apiSettings;
 		}
+
+		public IOptions<ApiSettings> ApiSettings { get; }
 
 		[HttpGet(Name = nameof(GetContacts))]
 		[ProducesResponseType(typeof(ContactResponseModel), StatusCodes.Status200OK)]
@@ -39,7 +42,7 @@ namespace ODF.API.Controllers.Contacts
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> UpdateContact([FromRoute] string countryCode, [FromBody] UpdateContactForm form)
+		public async Task<IActionResult> UpdateContact([FromBody] UpdateContactForm form)
 		{
 			if (await Mediator.Send(new UpdateContactCommand(form.EventName, form.EventManager, form.Email)))
 			{

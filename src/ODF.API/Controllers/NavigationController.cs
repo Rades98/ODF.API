@@ -6,12 +6,12 @@ using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Controllers.Contacts;
 using ODF.API.FormFactories;
-using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Navigation;
 using ODF.API.ResponseModels.Navigation;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
@@ -41,7 +41,7 @@ namespace ODF.API.Controllers
 			responseModel.MenuItems.Add(GetNamedAction(nameof(AboutController.GetAbout), translations.Get("menu_about"), "aboutMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(AssociationController.GetAssociation), translations.Get("menu_association"), "associationMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(LineupController.GetLineup), translations.Get("menu_lineup"), "lineupMenuItem"));
-			responseModel.MenuItems.Add(GetNamedAction(nameof(TicketsController.GetTickets), translations.Get("menu_tickets"), "ticketsMenuItem"));
+			responseModel.MenuItems.Add(GetNamedAction(nameof(DonationController.GetDonation), translations.Get("menu_tickets"), "ticketsMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(ContactsController.GetContacts), translations.Get("menu_contacts"), "contactMenuItem"));
 
 			if (!requestModel.IsLoggedIn)

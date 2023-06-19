@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
-using ODF.API.Registration.SettingModels;
 using ODF.API.RequestModels.Forms;
 using ODF.API.ResponseModels.Articles;
 using ODF.API.ResponseModels.Common;
@@ -19,6 +18,7 @@ using ODF.AppLayer.CQRS.Article.Queries;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
@@ -63,7 +63,7 @@ namespace ODF.API.Controllers
 		public async Task<IActionResult> GetArticle([FromRoute] int articleId, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
-			var result = await Mediator.Send(new GetArticleQuery(articleId, countryCode));
+			var result = await Mediator.Send(new GetArticleQuery(articleId, countryCode), cancellationToken);
 
 			if (result != null)
 			{

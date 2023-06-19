@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.IO.Compression;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -7,7 +8,7 @@ using ODF.API.Registration.SettingModels;
 using ODF.AppLayer.Settings;
 using ODF.Data.Elastic.Settings;
 using ODF.Data.Redis.Settings;
-using System.IO.Compression;
+using ODF.Domain.SettingModels;
 
 namespace ODF.API.Registration
 {

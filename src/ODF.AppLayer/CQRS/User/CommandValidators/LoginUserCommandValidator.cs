@@ -5,19 +5,17 @@ using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.User.Commands;
 using ODF.AppLayer.Repos;
-using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.Utils;
 
 namespace ODF.AppLayer.CQRS.User.CommandValidators
 {
 	public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 	{
 		private readonly IUserRepo _userRepo;
-		private readonly IPasswordHasher _pwHahser;
 
-		public LoginUserCommandValidator(IUserRepo userRepo, IPasswordHasher pwHahser)
+		public LoginUserCommandValidator(IUserRepo userRepo)
 		{
 			_userRepo = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
-			_pwHahser = pwHahser ?? throw new ArgumentNullException(nameof(pwHahser));
 		}
 
 		//TODO add middleware for rate limit login action
@@ -25,7 +23,7 @@ namespace ODF.AppLayer.CQRS.User.CommandValidators
 		{
 
 			var user = await _userRepo.GetUserAsync(context.InstanceToValidate.UserName, cancellationToken);
-			var pwValid = _pwHahser.Check(user.PasswordHash, context.InstanceToValidate.Password).Verified;
+			bool pwValid = PasswordHasher.Check(user.PasswordHash, context.InstanceToValidate.Password).Verified;
 
 			RuleFor(command => command.Password)
 				.Must(x => pwValid)
