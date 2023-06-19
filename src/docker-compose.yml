@@ -40,41 +40,27 @@ services:
       - elastic-odf
     volumes:
        - elastic_data:/var/lib/elastic
-
-  kibana-odf:
-    image: docker.elastic.co/kibana/kibana:7.16.3
-    container_name: kibana-odf
-    restart: always
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PW}
-    ports:
-        - 5601:5601
-    depends_on:
-        - elasticsearch
-    networks:
-        - elastic-odf
   
   api:
+    image: raduzz/odf:api
     restart: always
     container_name: odf-api
-    build: .
     ports:
-      - "8981:${WEB_API_PORT}"
+      - "8982:${WEB_API_PORT_HTTP}"
+      # - "8981:${WEB_API_PORT}"
     environment:
       ASPNETCORE_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
-      ASPNETCORE_HTTPS_PORT: "${WEB_API_PORT}"
-      ASPNETCORE_URLS: "http://*:${WEB_API_PORT_HTTP};https://*:${WEB_API_PORT}"
-      ApiSettings__ApiUrl: "https://127.0.0.1:${WEB_API_PORT}"
+      # ASPNETCORE_HTTPS_PORT: "${WEB_API_PORT}"
+      ASPNETCORE_URLS: "http://*:${WEB_API_PORT_HTTP};" #https://*:${WEB_API_PORT}
+      ApiSettings__ApiUrl: "https://127.0.0.1:${WEB_API_PORT_HTTP}"
       ElasticsearchSettings__DefaultIndex: "odf-articles"
       ElasticsearchSettings__Nodes__0: http://elasticsearch:9200
       ElasticsearchSettings__Password: "kjKSzpjAeyakMiHesoyAm"
       RedisSettings__Url: "redis:6379"
      
     volumes:
-      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-      - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/
+      - ${DOTNET_SECRETS}:/root/.microsoft/usersecrets
+      - ${DOCTNET_HTTPS}:/root/.aspnet/https/
     depends_on:
       - elasticsearch
       - redis
@@ -113,6 +99,7 @@ services:
   grafana:
     image: grafana/grafana:8.1.5
     container_name: odf-grafana
+    restart: always
     ports:
       - 3000:3000
     volumes:
@@ -123,6 +110,7 @@ services:
       - GF_INSTALL_PLUGINS=simpod-json-datasource
       - GF_DASHBOARDS_JSON_ENABLED=true
       - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
+      - GF_SECURITY_ADMIN_PASSWORD={GRAFANA_PW}
     depends_on:
       - prometheus
       - elasticsearch
@@ -160,14 +148,6 @@ volumes:
 #API LOGIN: admin : heslopyco
 
 #To see logs type to cmd docker logs odf-api
-
-#To see shit in kibana: 127.0.0.1:5601 -> elastic : kjKSzpjAeyakMiHesoyAm
-# - Analytics
-#    |-- Discover
-#         |-- Create index pattern
-#              |-- select odf-api-development + create
-#    |-- Discover again
-#  CG! u can see shit
 
 # Grafana is available on 127.0.0.1:3000
 #admin_user = admin
