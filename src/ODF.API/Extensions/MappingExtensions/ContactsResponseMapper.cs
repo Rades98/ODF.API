@@ -1,11 +1,11 @@
 ﻿using ODF.API.ResponseModels.Contacts.GetContacts;
 using ODF.AppLayer.Dtos.ContactDtos;
 
-namespace ODF.API.ResponseComposers.Contacts
+namespace ODF.API.Extensions.MappingExtensions
 {
-	internal static class ContactsResponseComposer
+	internal static class ContactsResponseMapper
 	{
-		internal static ContactResponseModel GetContactResponse(ContactDto model)
+		internal static ContactResponseModel GetContactResponse(this ContactDto model)
 		{
 			var responseModel = new ContactResponseModel();
 

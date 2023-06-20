@@ -9,7 +9,6 @@ using ODF.API.Controllers.Base;
 using ODF.API.RequestModels.Forms;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Lineup;
-using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Lineup.Commands;
 using ODF.AppLayer.CQRS.Lineup.Queries;
@@ -64,7 +63,7 @@ namespace ODF.API.Controllers
 				return Accepted();
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
 		}
 	}
 }

@@ -12,7 +12,6 @@ using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms.User;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.User;
-using ODF.API.Responses;
 using ODF.AppLayer.CQRS.User.Commands;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
@@ -61,7 +60,7 @@ namespace ODF.API.Controllers.Users
 			var registerAction = GetNamedAction(nameof(RegisterUser), translations.Get("register_user"), "register",
 				UserFormFactory.GetRegisterForm(translations));
 
-			return CustomApiResponses.Unauthorized(new UnauthorizedExceptionResponseModel(translations.Get("login_failed_title"), translations.Get("login_failed_msg"), loginAction, registerAction));
+			return Unauthorized(new UnauthorizedExceptionResponseModel(translations.Get("login_failed_title"), translations.Get("login_failed_msg"), loginAction, registerAction));
 		}
 
 		[HttpPut(Name = nameof(RegisterUser))]
