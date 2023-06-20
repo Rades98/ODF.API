@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ODF.API.Extensions
+namespace ODF.Domain.Extensions
 {
 	public static class StringExtensions
 	{

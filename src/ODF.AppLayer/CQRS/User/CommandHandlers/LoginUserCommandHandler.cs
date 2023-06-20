@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.User.Commands;
 using ODF.AppLayer.Dtos.User;
 using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
+using ODF.Domain.Constants;
 
 namespace ODF.AppLayer.CQRS.User.CommandHandlers
 {

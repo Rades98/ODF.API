@@ -11,10 +11,10 @@ using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Contacts.GetContacts;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.CQRS.Contact.Queries;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Contacts
@@ -35,7 +35,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 			var contact = await Mediator.Send(new GetContactQuery(countryCode));
 
-			return Ok(contact.GetContactResponse());
+			return Ok(ContactsResponseMapper.GetContactResponse(contact));
 		}
 
 		[HttpPost(Name = nameof(UpdateContact))]

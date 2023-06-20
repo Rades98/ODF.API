@@ -8,9 +8,9 @@ using ODF.API.Controllers.Base;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Contacts

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Data.Elastic", "ODF.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Data.Redis", "ODF.Data.Redis\ODF.Data.Redis.csproj", "{AD0978C3-C23A-41ED-A714-C7CA23A0A488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODF.Domain", "ODF.Domain\ODF.Domain.csproj", "{4ABBA344-7171-4942-A58E-9C8C12F6EF58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Domain", "ODF.Domain\ODF.Domain.csproj", "{4ABBA344-7171-4942-A58E-9C8C12F6EF58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

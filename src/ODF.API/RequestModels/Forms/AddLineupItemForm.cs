@@ -16,7 +16,7 @@ namespace ODF.API.RequestModels.Forms
 		[JsonProperty("description", Required = Required.Always)]
 		public string Description { get; set; } = string.Empty;
 
-		[JsonProperty("DescriptionTranslationCode", Required = Required.Always)]
+		[JsonProperty("descriptionTranslationCode", Required = Required.Always)]
 		public string DescriptionTranslationCode { get; set; } = string.Empty;
 
 		[JsonProperty("dateTime", Required = Required.Always)]

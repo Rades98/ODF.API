@@ -1,4 +1,4 @@
-﻿using ODF.API.Extensions;
+﻿using ODF.Domain.Extensions;
 
 namespace ODF.API.Registration.SpecificOptions
 {
