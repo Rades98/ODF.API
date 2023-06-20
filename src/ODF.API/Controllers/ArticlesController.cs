@@ -12,7 +12,6 @@ using ODF.API.ResponseModels.Articles;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Contacts.Create;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Article.Commands;
 using ODF.AppLayer.CQRS.Article.Queries;
@@ -43,7 +42,7 @@ namespace ODF.API.Controllers
 
 			if (!validationResult.IsOk)
 			{
-				return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
+				return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
 			}
 
 			if (validationResult.Errors.Any())

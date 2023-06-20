@@ -9,7 +9,6 @@ using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.LanguageMutations;
-using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Translations.Commands;
 using ODF.AppLayer.CQRS.Translations.Queries;
@@ -91,7 +90,7 @@ namespace ODF.API.Controllers
 				return Ok(responseModel);
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel($"Při překladu {form.TranslationCode} pro {form.CountryCode} na hodnotu {form.Text} došlo k chybě."));
+			return InternalServerError(new ExceptionResponseModel($"Při překladu {form.TranslationCode} pro {form.CountryCode} na hodnotu {form.Text} došlo k chybě."));
 		}
 	}
 }

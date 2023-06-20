@@ -11,7 +11,6 @@ using ODF.API.ResponseModels.Contacts.Create;
 using ODF.API.ResponseModels.Contacts.Delete;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Services.Interfaces;
@@ -45,7 +44,7 @@ namespace ODF.API.Controllers.Contacts
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby"));
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby"));
 		}
 
 		[HttpPut(Name = nameof(AddContactPerson))]
@@ -69,7 +68,7 @@ namespace ODF.API.Controllers.Contacts
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě kontaktní osoby"));
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě kontaktní osoby"));
 		}
 
 		[HttpDelete(Name = nameof(RemoveContactPerson))]
@@ -92,7 +91,7 @@ namespace ODF.API.Controllers.Contacts
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání kontaktní osoby"));
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání kontaktní osoby"));
 		}
 	}
 }

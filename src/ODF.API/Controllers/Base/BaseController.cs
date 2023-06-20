@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 using ODF.API.Extensions;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Common.Forms;
+using ODF.API.ResponseModels.Exceptions;
+using ODF.API.Responses;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain.SettingModels;
 
@@ -47,5 +49,17 @@ namespace ODF.API.Controllers.Base
 
 		internal string GetRelativeUrlByAction(string actionIdentifier)
 			=> _adcp.GetRelativeUrlByAction(HttpContext, actionIdentifier);
+
+		internal static IActionResult InternalServerError(ExceptionResponseModel response)
+			=> new ApiResult(System.Net.HttpStatusCode.InternalServerError, response);
+
+		internal static IActionResult NotFound(NotFoundExceptionResponseModel response)
+			=> new ApiResult(System.Net.HttpStatusCode.NotFound, response);
+
+		internal static IActionResult BadRequest(BadRequestExceptionResponseModel response)
+			=> new ApiResult(System.Net.HttpStatusCode.BadRequest, response);
+
+		internal static IActionResult Unauthorized(UnauthorizedExceptionResponseModel response)
+			=> new ApiResult(System.Net.HttpStatusCode.Unauthorized, response);
 	}
 }

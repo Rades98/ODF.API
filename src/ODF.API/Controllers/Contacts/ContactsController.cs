@@ -5,13 +5,12 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
+using ODF.API.Extensions.MappingExtensions;
 using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms.Contacts;
-using ODF.API.ResponseComposers.Contacts;
 using ODF.API.ResponseModels.Contacts.GetContacts;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.API.Responses;
 using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.CQRS.Contact.Queries;
@@ -36,7 +35,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 			var contact = await Mediator.Send(new GetContactQuery(countryCode));
 
-			return Ok(ContactsResponseComposer.GetContactResponse(contact));
+			return Ok(contact.GetContactResponse());
 		}
 
 		[HttpPost(Name = nameof(UpdateContact))]
@@ -58,7 +57,7 @@ namespace ODF.API.Controllers.Contacts
 				return UnprocessableEntity(new UpdateContactResponseModel(resultForm));
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktu"));
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktu"));
 		}
 	}
 }
