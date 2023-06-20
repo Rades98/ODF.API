@@ -22,7 +22,7 @@ namespace ODF.Data.Elastic.Repos.Articles
 			_repo = repo ?? throw new ArgumentNullException(nameof(repo));
 		}
 
-		public Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, Uri? imageUrl, CancellationToken cancellationToken)
+		public Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, Uri imageUrl, CancellationToken cancellationToken)
 			=> _repo.AddArticleAsync(titleTranslationCode, textTransaltionCode, pageId, imageUrl, cancellationToken);
 
 		public Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)
