@@ -8,9 +8,9 @@ using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
 using ODF.API.ResponseModels.Contacts.Redaction;
 using ODF.API.ResponseModels.Redaction;
-using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Contact.Queries;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Contacts

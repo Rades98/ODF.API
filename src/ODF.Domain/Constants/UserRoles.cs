@@ -1,4 +1,4 @@
-﻿namespace ODF.AppLayer.Consts
+﻿namespace ODF.Domain.Constants
 {
 	public static class UserRoles
 	{

@@ -12,12 +12,12 @@ using ODF.API.ResponseModels.Articles;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Contacts.Create;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.AppLayer.Consts;
 using ODF.AppLayer.CQRS.Article.Commands;
 using ODF.AppLayer.CQRS.Article.Queries;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers

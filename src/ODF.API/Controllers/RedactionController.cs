@@ -11,9 +11,9 @@ using ODF.API.FormFactories;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Redaction;
-using ODF.AppLayer.Consts;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
