@@ -8,7 +8,6 @@ using ODF.API.Controllers.Base;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
-using ODF.API.Responses;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain.Constants;
@@ -35,7 +34,7 @@ namespace ODF.API.Controllers.Contacts
 				return Ok(new UpdateContactAddressResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci adresy"));
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci adresy"));
 		}
 	}
 }
