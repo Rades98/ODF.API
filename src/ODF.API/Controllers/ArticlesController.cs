@@ -10,6 +10,7 @@ using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms;
 using ODF.API.ResponseModels.Articles;
 using ODF.API.ResponseModels.Common;
+using ODF.API.ResponseModels.Contacts.Create;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.Responses;
 using ODF.AppLayer.Consts;
@@ -24,7 +25,8 @@ namespace ODF.API.Controllers
 {
 	public class ArticlesController : BaseController
 	{
-		public ArticlesController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public ArticlesController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -34,24 +36,29 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(CreateArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> AddArticle([FromBody] AddArticleRequestForm model, [FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> AddArticle([FromBody] AddArticleRequestForm requestForm, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
-			bool result = await Mediator.Send(new AddArticleCommand(model.TitleTranslationCode, model.Title,
-				model.TextTranslationCode, model.Text, model.PageId, countryCode, model.ImageUrl), cancellationToken);
+			var validationResult = await Mediator.Send(new AddArticleCommand(requestForm.TitleTranslationCode, requestForm.Title,
+				requestForm.TextTranslationCode, requestForm.Text, requestForm.PageId, countryCode, requestForm.ImageUrl), cancellationToken);
 
-			if (!result)
+			if (!validationResult.IsOk)
 			{
 				return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
 			}
 
-			var responseModel = new CreateArticleResponseModel("Článek byl úspěšně přidán.",
-				ArticleFormFactory.GetAddArticleForm(model.Title, model.TitleTranslationCode, model.Text, model.TitleTranslationCode, model.PageId, model.ImageUrl));
+			if (validationResult.Errors.Any())
+			{
+				var responseForm = ArticleFormFactory.GetAddArticleForm(requestForm, validationResult.Errors);
+				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
+			}
 
-			responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(model.Title, Languages.Deutsch.GetCountryCode());
-			responseModel.AddTextDeTranslation = GetTranslateArticleTextAction(model.Text, Languages.Deutsch.GetCountryCode());
+			var responseModel = new CreateArticleResponseModel("Článek byl úspěšně přidán.");
 
-			responseModel.AddTitleEnTranslation = GetTranslateArticleTitleAction(model.Title, Languages.English.GetCountryCode());
-			responseModel.AddTextEnTranslation = GetTranslateArticleTextAction(model.Text, Languages.English.GetCountryCode());
+			responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(requestForm.Title, Languages.Deutsch.GetCountryCode());
+			responseModel.AddTextDeTranslation = GetTranslateArticleTextAction(requestForm.Text, Languages.Deutsch.GetCountryCode());
+
+			responseModel.AddTitleEnTranslation = GetTranslateArticleTitleAction(requestForm.Title, Languages.English.GetCountryCode());
+			responseModel.AddTextEnTranslation = GetTranslateArticleTextAction(requestForm.Text, Languages.English.GetCountryCode());
 
 			return Ok(responseModel);
 		}

@@ -18,11 +18,12 @@ using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain.SettingModels;
 
-namespace ODF.API.Controllers
+namespace ODF.API.Controllers.Users
 {
 	public class UsersController : BaseController
 	{
-		public UsersController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public UsersController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -34,7 +35,7 @@ namespace ODF.API.Controllers
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-			var userResult = await Mediator.Send(new LoginUserCommand(user.UserName, user.Password), cancellationToken);
+			var userResult = await Mediator.Send(new LoginUserCommand(user.UserName, user.Password, countryCode), cancellationToken);
 
 			if (userResult.IsOk)
 			{
@@ -64,22 +65,25 @@ namespace ODF.API.Controllers
 		}
 
 		[HttpPut(Name = nameof(RegisterUser))]
-		public IActionResult RegisterUser([FromRoute] string countryCode)
+		public async Task<IActionResult> RegisterUser([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
-			return Ok();
+			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			return Ok(translations.Get("work_in_progress"));
 		}
 
 		[Authorize]
 		[HttpDelete(Name = nameof(LogoutUser))]
-		public async Task<IActionResult> LogoutUser()
+		public async Task<IActionResult> LogoutUser([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
+			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+
 			if (HttpContext.IsLoggedIn())
 			{
 				await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-				return Accepted();
+				return Accepted(translations.Get("logout_succes"));
 			}
 
-			return UnprocessableEntity();
+			return UnprocessableEntity(translations.Get("logout_fail"));
 		}
 	}
 }

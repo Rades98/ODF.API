@@ -17,7 +17,8 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactsRedactionController : BaseController
 	{
-		public ContactsRedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public ContactsRedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -32,7 +33,7 @@ namespace ODF.API.Controllers.Contacts
 			var responseModel = new GetContactRedactionNavigationResponseModel();
 
 			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsController.UpdateContact), "Upravit kontakt",
-				"updateContact", ContactFormFactory.GetUpdateContactForm(contact));
+				"updateContact", ContactFormFactory.GetUpdateContactForm(new() { Email = contact.Email, EventManager = contact.EventManager, EventName = contact.EventName }));
 
 			responseModel.UpdateAddress = GetNamedAction(nameof(ContactAddressController.UpdateAddress), "Upravit adresu",
 				"updateAddress", ContactFormFactory.GetUpdateAddressForm(contact.Address));
@@ -58,7 +59,17 @@ namespace ODF.API.Controllers.Contacts
 				DeleteContactPerson = GetNamedAction(nameof(ContactPersonsController.RemoveContactPerson),
 					"Smazat", "removeContactPerson", ContactFormFactory.GetRemoveContactPersonForm(person.Id)),
 				UpdateContactPerson = GetNamedAction(nameof(ContactPersonsController.UpdateContactPerson),
-					"Upravit", "updateContactPerson", ContactFormFactory.GetUpdateContactPersonForm(person))
+					"Upravit", "updateContactPerson", ContactFormFactory.GetUpdateContactPersonForm(new()
+					{
+						Base64Image = person.Base64Image,
+						Email = person.Email,
+						Id = person.Id,
+						Name = person.Name,
+						Surname = person.Surname,
+						Order = person.Order,
+						Roles = person.Roles,
+						Title = person.Title,
+					}))
 			});
 
 			return Ok(responseModel);

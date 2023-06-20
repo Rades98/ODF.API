@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using ODF.API.Controllers;
+using ODF.API.Controllers.Users;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.ResponseModels.Exceptions;
@@ -13,7 +13,7 @@ using ODF.Domain;
 
 namespace ODF.API.Middleware
 {
-	public class CustomAuthorizationResultMiddlewareHandler : IAuthorizationMiddlewareResultHandler
+    public class CustomAuthorizationResultMiddlewareHandler : IAuthorizationMiddlewareResultHandler
 	{
 		private readonly AuthorizationMiddlewareResultHandler DefaultHandler = new();
 		private readonly ITranslationsProvider _translationsProvider;

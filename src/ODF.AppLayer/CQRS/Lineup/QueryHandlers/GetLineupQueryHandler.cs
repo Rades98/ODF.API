@@ -47,7 +47,7 @@ namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 		{
 			if (lineupItem is not null && Languages.TryParse(countryCode, out var lang))
 			{
-				var description = await _translationRepo.GetTranslationAsync(lineupItem.DescriptionTranslation, lang.Id, cancellationToken);
+				string description = await _translationRepo.GetTranslationAsync(lineupItem.DescriptionTranslation, lang.Id, cancellationToken);
 
 				if (!string.IsNullOrEmpty(description))
 				{

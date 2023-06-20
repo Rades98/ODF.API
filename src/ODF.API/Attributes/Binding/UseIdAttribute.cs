@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using ODF.API.Extensions;
-using ODF.API.Registration;
 
 namespace ODF.API.Attributes.Binding
 {
@@ -11,10 +10,6 @@ namespace ODF.API.Attributes.Binding
 	public class UseIdAttribute : BindingAttribute
 	{
 		public override void Bind(PropertyInfo propInfo, object obj)
-		{
-			var httpContextAccessor = ServiceLocator.Instance!.GetService<IHttpContextAccessor>()!;
-			var userId = httpContextAccessor.HttpContext!.GetUserId();
-			propInfo.SetValue(obj, userId, null);
-		}
+			=> propInfo.SetValue(obj, HttpContextAccessor.HttpContext!.GetUserId(), null);
 	}
 }

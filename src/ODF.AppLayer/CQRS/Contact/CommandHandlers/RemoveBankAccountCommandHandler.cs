@@ -2,12 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ODF.AppLayer.CQRS.Contact.Commands;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 {
-	internal class RemoveBankAccountCommandHandler : ICommandHandler<RemoveBankAccountCommand, bool>
+	internal class RemoveBankAccountCommandHandler : ICommandHandler<RemoveBankAccountCommand, ValidationDto>
 	{
 		private readonly IContactRepo _contactRepo;
 
@@ -16,7 +17,8 @@ namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 			_contactRepo = contactRepo ?? throw new NotImplementedException(nameof(contactRepo));
 		}
 
-		public Task<bool> Handle(RemoveBankAccountCommand request, CancellationToken cancellationToken)
-			=> _contactRepo.RemoveBankAccountAsync(request.IBAN, cancellationToken);
+		public async Task<ValidationDto> Handle(RemoveBankAccountCommand request, CancellationToken cancellationToken)
+			=> new() { IsOk = await _contactRepo.RemoveBankAccountAsync(request.IBAN, cancellationToken) };
+
 	}
 }

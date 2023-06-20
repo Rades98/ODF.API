@@ -20,7 +20,8 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactBankAccountsController : BaseController
 	{
-		public ContactBankAccountsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public ContactBankAccountsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -32,16 +33,16 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> AddBankAccount([FromBody] AddBankAccountForm form, CancellationToken cancellationToken)
 		{
-			var validationResponse = await Mediator.Send(new AddBankAccountCommand(form.Bank, form.AccountId, form.IBAN), cancellationToken);
+			var validationResult = await Mediator.Send(new AddBankAccountCommand(form.Bank, form.AccountId, form.IBAN), cancellationToken);
 
-			if (validationResponse.IsOk)
+			if (validationResult.IsOk)
 			{
 				return Ok(new CreateContactBankAccResponseModel());
 			}
 
-			if (validationResponse.Errors.Any())
+			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetAddBankAcountForm(validationResponse.Errors, form.Bank, form.AccountId, form.IBAN);
+				var responseForm = ContactFormFactory.GetAddBankAcountForm(validationResult.Errors, form.Bank, form.AccountId, form.IBAN);
 				return UnprocessableEntity(new CreateContactBankAccResponseModel(responseForm));
 			}
 
@@ -55,12 +56,20 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> RemoveBankAccount([FromBody] RemoveBankAccountForm form, CancellationToken cancellationToken)
 		{
-			if (await Mediator.Send(new RemoveBankAccountCommand(form.IBAN), cancellationToken))
+			var validationResult = await Mediator.Send(new RemoveBankAccountCommand(form.IBAN), cancellationToken);
+
+			if (validationResult.IsOk)
 			{
 				return Ok(new DeleteContactBankAccResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání bankovního účtu")); // TODO add validation with form
+			if (validationResult.Errors.Any())
+			{
+				var responseForm = ContactFormFactory.GetRemoveBankAcountForm(form.IBAN, validationResult.Errors);
+				return UnprocessableEntity(new DeleteContactBankAccResponseModel(responseForm));
+			}
+
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání bankovního účtu"));
 		}
 	}
 }

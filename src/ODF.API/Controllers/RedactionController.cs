@@ -19,7 +19,8 @@ namespace ODF.API.Controllers
 {
 	public class RedactionController : BaseController
 	{
-		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -35,14 +36,14 @@ namespace ODF.API.Controllers
 
 			var responseModel = new RedactionResponseModel("Redakce");
 
-			responseModel.AddAboutArticle = GetAddArticleAction(ApiBaseUrl, transaltions.Get("nav_about"), 0, countryCode); // TODO ADD FORM
+			responseModel.AddAboutArticle = GetAddArticleAction(transaltions.Get("nav_about"), 0, countryCode);
 
-			responseModel.AddAssociationArticle = GetAddArticleAction(ApiBaseUrl, transaltions.Get("nav_association"), 1, countryCode); // TODO ADD FORM
+			responseModel.AddAssociationArticle = GetAddArticleAction(transaltions.Get("nav_association"), 1, countryCode);
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
 					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
 
-			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsRedactionController.GetContactsRedaction), "Upravit kontakty", "updateContacts"); //TODO ADD FORM
+			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsRedactionController.GetContactsRedaction), "Upravit kontakty", "updateContacts");
 
 			responseModel.AddAction(GetQueriedAppAction(nameof(TranslationsController.GetTranslations), "translations_change",
 				new Dictionary<string, string> {
@@ -52,8 +53,15 @@ namespace ODF.API.Controllers
 			return Ok(responseModel);
 		}
 
-		private NamedAction GetAddArticleAction(string baseUrl, string sectionTranslation, int pageNum, string countryCode)
+		private NamedAction GetAddArticleAction(string sectionTranslation, int pageNum, string countryCode)
 				=> GetNamedAction(nameof(ArticlesController.AddArticle), $"Přidat článek do {sectionTranslation}", "add_article",
-						ArticleFormFactory.GetAddArticleForm("", $"page{pageNum}_title_{{id}}", "", $"page{pageNum}_text_{{id}}", pageNum));
+						ArticleFormFactory.GetAddArticleForm(new()
+						{
+							Title = "",
+							PageId = pageNum,
+							Text = "",
+							TextTranslationCode = $"page{pageNum}_text_{{id}}",
+							TitleTranslationCode = $"page{pageNum}_title_{{id}}"
+						}));
 	}
 }

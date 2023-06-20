@@ -21,7 +21,8 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactPersonsController : BaseController
 	{
-		public ContactPersonsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public ContactPersonsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -32,12 +33,19 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> UpdateContactPerson([FromBody] UpdateContactPersonForm form, CancellationToken cancellationToken)
 		{
-			if (await Mediator.Send(new UpdateContactPersonCommand(form.Email, form.Title, form.Name, form.Surname, form.Roles, form.Base64Image, form.Id, form.Order), cancellationToken))
+			var validationResult = await Mediator.Send(new UpdateContactPersonCommand(form.Email, form.Title, form.Name, form.Surname, form.Roles, form.Base64Image, form.Id, form.Order), cancellationToken);
+			if (validationResult.IsOk)
 			{
 				return Ok(new UpdateContactPersonResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby")); // TODO add validation with form
+			if (validationResult.Errors.Any())
+			{
+				var responseForm = ContactFormFactory.GetUpdateContactPersonForm(form, validationResult.Errors);
+				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
+			}
+
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby"));
 		}
 
 		[HttpPut(Name = nameof(AddContactPerson))]
@@ -48,16 +56,16 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> AddContactPerson([FromBody] AddContactPersonForm form, CancellationToken cancellationToken)
 		{
-			var validationResponse = await Mediator.Send(new AddContactPersonCommand(form.Email, form.Title, form.Name, form.Surname, form.Roles, form.Base64Image), cancellationToken);
+			var validationResult = await Mediator.Send(new AddContactPersonCommand(form.Email, form.Title, form.Name, form.Surname, form.Roles, form.Base64Image), cancellationToken);
 
-			if (validationResponse.IsOk)
+			if (validationResult.IsOk)
 			{
 				return Ok(new CreateContactPersonResponseModel());
 			}
 
-			if (validationResponse.Errors.Any())
+			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetAddContactPersonForm(validationResponse.Errors, form);
+				var responseForm = ContactFormFactory.GetAddContactPersonForm(validationResult.Errors, form);
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
@@ -71,12 +79,20 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> RemoveContactPerson([FromBody] RemoveContactPersonForm form, CancellationToken cancellationToken)
 		{
-			if (await Mediator.Send(new RemoveContactPersonCommand(form.Id), cancellationToken))
+			var validationResult = await Mediator.Send(new RemoveContactPersonCommand(form.Id), cancellationToken);
+
+			if (validationResult.IsOk)
 			{
 				return Ok(new DeleteContactPersonResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání kontaktní osoby")); // TODO add validation with form
+			if (validationResult.Errors.Any())
+			{
+				var responseForm = ContactFormFactory.GetRemoveContactPersonForm(form.Id, validationResult.Errors);
+				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
+			}
+
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při mazání kontaktní osoby"));
 		}
 	}
 }

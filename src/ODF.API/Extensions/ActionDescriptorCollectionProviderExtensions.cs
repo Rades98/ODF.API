@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using ODF.API.ResponseModels.Common;
@@ -35,7 +34,7 @@ namespace ODF.API.Extensions
 				method = httpMethodConstraint.HttpMethods.First();
 			}
 
-			var link = action.AttributeRouteInfo!.Template!.Replace("{countryCode}", countryCode ?? context.GetCountryCode()!);
+			string link = action.AttributeRouteInfo!.Template!.Replace("{countryCode}", countryCode ?? context.GetCountryCode()!);
 
 			return new($"{baseUrl}/{link}", rel, ((HttpMethodActionConstraint)action.ActionConstraints!.First()).HttpMethods.First(), form: actionForm);
 		}
@@ -58,13 +57,13 @@ namespace ODF.API.Extensions
 				method = httpMethodConstraint.HttpMethods.First();
 			}
 
-			var link = action.AttributeRouteInfo!.Template!
+			string link = action.AttributeRouteInfo!.Template!
 				.Replace("{countryCode}", context.GetCountryCode()!);
 
 			var linkAddition = new StringBuilder("");
-			foreach (ParameterDescriptor param in action.Parameters)
+			foreach (var param in action.Parameters)
 			{
-				if (queryParams.Keys.Contains(param.Name))
+				if (queryParams.ContainsKey(param.Name))
 				{
 					linkAddition.Append($"&{param.Name}={queryParams[param.Name]}");
 				}
@@ -87,7 +86,7 @@ namespace ODF.API.Extensions
 				throw new NullReferenceException(nameof(action));
 			}
 
-			var link = action.AttributeRouteInfo!.Template!
+			string link = action.AttributeRouteInfo!.Template!
 				.Replace("{countryCode}", context.GetCountryCode()!);
 
 			return link;

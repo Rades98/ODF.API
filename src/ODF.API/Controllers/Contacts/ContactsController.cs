@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
+using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseComposers.Contacts;
 using ODF.API.ResponseModels.Contacts.GetContacts;
@@ -21,7 +22,8 @@ namespace ODF.API.Controllers.Contacts
 {
 	public class ContactsController : BaseController
 	{
-		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 			ApiSettings = apiSettings;
 		}
@@ -34,7 +36,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 			var contact = await Mediator.Send(new GetContactQuery(countryCode));
 
-			return Ok(ContactsResponseComposer.GetContactResponse(countryCode, ApiBaseUrl, contact));
+			return Ok(ContactsResponseComposer.GetContactResponse(contact));
 		}
 
 		[HttpPost(Name = nameof(UpdateContact))]
@@ -44,12 +46,19 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> UpdateContact([FromBody] UpdateContactForm form)
 		{
-			if (await Mediator.Send(new UpdateContactCommand(form.EventName, form.EventManager, form.Email)))
+			var validationResult = await Mediator.Send(new UpdateContactCommand(form.EventName, form.EventManager, form.Email));
+			if (validationResult.IsOk)
 			{
 				return Ok(new UpdateContactResponseModel());
 			}
 
-			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktu"));  // TODO add validation with form
+			if (validationResult.Errors.Any())
+			{
+				var resultForm = ContactFormFactory.GetUpdateContactForm(form, validationResult.Errors);
+				return UnprocessableEntity(new UpdateContactResponseModel(resultForm));
+			}
+
+			return CustomApiResponses.InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktu"));
 		}
 	}
 }

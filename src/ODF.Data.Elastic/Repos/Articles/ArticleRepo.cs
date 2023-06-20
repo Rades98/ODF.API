@@ -18,7 +18,7 @@ namespace ODF.Data.Elastic.Repos.Articles
 			_elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
 		}
 
-		public async Task<bool> AddArticleAsync(string titleTranslationCode, string textTranslationCode, int pageId, Uri? imageUrl, CancellationToken cancellationToken)
+		public async Task<bool> AddArticleAsync(string titleTranslationCode, string textTranslationCode, int pageId, Uri imageUrl, CancellationToken cancellationToken)
 		{
 			var last = await GetLast(cancellationToken);
 			int id = 0;
@@ -39,7 +39,7 @@ namespace ODF.Data.Elastic.Repos.Articles
 			return (await _elasticClient.IndexAsync(article, i => i, cancellationToken)).IsValid;
 		}
 
-		public async Task<Article?> GetArticleAsync(int id, CancellationToken cancellationToken)
+		public async Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)
 			=> (await _elasticClient.SearchAsync<Article>(s => s
 							.Query(fq => fq.Terms(t => t.Field(f => f.Id).Terms(id)))
 							.Size(1), cancellationToken)).Documents.FirstOrDefault();

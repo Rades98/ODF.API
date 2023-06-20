@@ -7,13 +7,15 @@ using ODF.API.ResponseModels.About;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
 	public class AboutController : BaseController
 	{
-		public AboutController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public AboutController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -26,11 +28,7 @@ namespace ODF.API.Controllers
 
 			var responseModel = new AboutResponseModel(translations.Get("about_info"), translations.Get("about_header"));
 
-			responseModel.AddAction(GetQueriedAppAction(nameof(ArticlesController.GetArticles), "about_articles",
-				new Dictionary<string, string> {
-					{ "size", "10" },
-					{ "offset", "0" },
-					{ "pageId", "0" } }));
+			responseModel.AddAction(GetQueriedAppAction(nameof(ArticlesController.GetArticles), "about_articles", PaginationConsts.DefaultPaginationSetting));
 
 			return Ok(responseModel);
 		}

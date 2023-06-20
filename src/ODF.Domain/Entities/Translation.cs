@@ -2,7 +2,7 @@
 {
 	public class Translation
 	{
-		public string TranslationCode { get; set; }
+		public string TranslationCode { get; set; } = string.Empty;
 
 		public string Text { get; set; } = string.Empty;
 
