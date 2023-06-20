@@ -1,6 +1,6 @@
-﻿using ODF.AppLayer.Consts;
+﻿using System.Security.Claims;
+using ODF.AppLayer.Consts;
 using ODF.Domain;
-using System.Security.Claims;
 
 namespace ODF.API.Extensions
 {
@@ -20,6 +20,25 @@ namespace ODF.API.Extensions
 			}
 
 			return null;
+		}
+
+		public static string GetUserName(this HttpContext context)
+		{
+			string? name = context.User?.FindFirstValue(ClaimTypes.Name);
+
+			if (!string.IsNullOrEmpty(name))
+			{
+				return name;
+			}
+
+			string? email = context.User?.FindFirstValue(ClaimTypes.Email);
+
+			if (!string.IsNullOrEmpty(email))
+			{
+				return email;
+			}
+
+			return string.Empty;
 		}
 
 		public static bool IsLoggedIn(this HttpContext context)

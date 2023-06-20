@@ -9,5 +9,8 @@ namespace ODF.AppLayer.Dtos.Validation
 		public bool IsOk { get; set; }
 
 		public IEnumerable<ValidationFailure> Errors { get; set; }
+
+		public static ValidationDto Invalid
+			=> new() { IsOk = false };
 	}
 }

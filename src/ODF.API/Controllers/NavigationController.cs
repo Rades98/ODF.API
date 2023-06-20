@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Controllers.Contacts;
+using ODF.API.Controllers.Users;
 using ODF.API.FormFactories;
 using ODF.API.RequestModels.Navigation;
 using ODF.API.ResponseModels.Navigation;
@@ -17,11 +18,8 @@ namespace ODF.API.Controllers
 {
 	public class NavigationController : BaseController
 	{
-		public NavigationController(
-			IMediator mediator,
-			IOptions<ApiSettings> apiSettings,
-			IActionDescriptorCollectionProvider adcp,
-			ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public NavigationController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -53,7 +51,7 @@ namespace ODF.API.Controllers
 			}
 			else
 			{
-				responseModel.UserName = "UserName"; // TODO get from context
+				responseModel.UserName = requestModel.UserName;
 				responseModel.LogoutAction = GetNamedAction(nameof(UsersController.LogoutUser), translations.Get("logout_user"), "logout");
 			}
 

@@ -5,7 +5,7 @@ namespace ODF.API.ResponseComposers.Contacts
 {
 	internal static class ContactsResponseComposer
 	{
-		internal static ContactResponseModel GetContactResponse(string countryCode, string baseUrl, ContactDto model)
+		internal static ContactResponseModel GetContactResponse(ContactDto model)
 		{
 			var responseModel = new ContactResponseModel();
 

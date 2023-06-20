@@ -12,5 +12,9 @@ namespace ODF.API.RequestModels.Navigation
 		[JsonIgnore]
 		[IsLoggedIn]
 		public bool IsLoggedIn { get; set; }
+
+		[JsonIgnore]
+		[UserName]
+		public string UserName { get; set; } = string.Empty;
 	}
 }

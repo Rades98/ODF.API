@@ -7,7 +7,7 @@ namespace ODF.API.ResponseModels.Articles
 {
 	public class CreateArticleResponseModel : BaseResponseModel
 	{
-		public CreateArticleResponseModel(string message, Form form) : base(form)
+		public CreateArticleResponseModel(string message, Form? form = null) : base(form)
 		{
 			Message = message;
 		}

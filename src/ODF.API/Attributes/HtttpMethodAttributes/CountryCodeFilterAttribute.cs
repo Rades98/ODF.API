@@ -14,12 +14,12 @@ namespace ODF.API.Attributes.HtttpMethodAttributes
 
 		public CountryCodeFilterAttribute(string countryCode)
 		{
-			_countryCode = Languages.TryParse(countryCode, out _) ? countryCode : Languages.Czech.GetCountryCode();
+			_countryCode = Languages.TryParse(countryCode, out _) ? countryCode : Languages.English.GetCountryCode();
 		}
 
 		public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
-			var countryCode = context.HttpContext.GetCountryCode();
+			string? countryCode = context.HttpContext.GetCountryCode();
 
 			if (countryCode != _countryCode)
 			{

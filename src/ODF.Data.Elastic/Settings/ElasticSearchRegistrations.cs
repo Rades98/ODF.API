@@ -277,6 +277,18 @@ namespace ODF.Data.Elastic.Settings
 				new() { IsSystem = true, LanguageId = 0, Text = "Peníze můžete zaslat pomocí přiložených QR kódů", TranslationCode = "donations_text" },
 				new() { IsSystem = true, LanguageId = 1, Text = "You can send money using the attached QR codes", TranslationCode = "donations_text" },
 				new() { IsSystem = true, LanguageId = 2, Text = "Mit den beigefügten QR-Codes können Sie Geld versenden", TranslationCode = "donations_text" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Na tomto zatím pracujeme", TranslationCode = "work_in_progress" },
+				new() { IsSystem = true, LanguageId = 1, Text = "We are still working on this", TranslationCode = "work_in_progress" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Daran arbeiten wir noch", TranslationCode = "work_in_progress" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Odhlášení proběhlo úspěšně", TranslationCode = "logout_succes" },
+				new() { IsSystem = true, LanguageId = 1, Text = "Logout was successful", TranslationCode = "logout_succes" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Die Abmeldung war erfolgreich", TranslationCode = "logout_succes" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "Neznámá chyba při odhlášení", TranslationCode = "logout_fail" },
+				new() { IsSystem = true, LanguageId = 1, Text = "Unknown error while logging out", TranslationCode = "logout_fail" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Unbekannter Fehler beim Abmelden", TranslationCode = "logout_fail" },
 			};
 
 			sysTrans.ForEach(tran =>

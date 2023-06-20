@@ -1,9 +1,10 @@
 ﻿using System;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Commands
 {
-	public class AddArticleCommand : ICommand<bool>
+	public class AddArticleCommand : ICommand<ValidationDto>
 	{
 		public AddArticleCommand(string titleTransaltionCode, string title, string textTranslationCode, string text, int pageId, string countryCode, Uri imageUri = null)
 		{

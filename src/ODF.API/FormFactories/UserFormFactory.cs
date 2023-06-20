@@ -16,16 +16,13 @@ namespace ODF.API.FormFactories
 		{
 			var form = new Form();
 
-			var pwError = errors?.FirstOrDefault(p => p.PropertyName == nameof(LoginUserForm.Password))?.ErrorMessage;
-			var idError = errors?.FirstOrDefault(p => p.PropertyName == nameof(LoginUserForm.UserName))?.ErrorMessage;
-
 			form.AddMember(
 				new(translations.Get("login_username"),
 				nameof(LoginUserForm.UserName).ToCamelCase(),
 				"text",
 				userRequestForm?.UserName ?? "",
 				true,
-				idError is not null ? translations.Get(idError) : null)
+				errors?.FirstOrDefault(p => p.PropertyName == nameof(LoginUserForm.UserName))?.ErrorMessage)
 			);
 
 			form.AddMember(
@@ -34,7 +31,7 @@ namespace ODF.API.FormFactories
 				"password",
 				userRequestForm?.Password ?? "",
 				true,
-				pwError is not null ? translations.Get(pwError) : null)
+				errors?.FirstOrDefault(p => p.PropertyName == nameof(LoginUserForm.Password))?.ErrorMessage)
 			);
 
 			return form;

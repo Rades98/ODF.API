@@ -18,19 +18,19 @@ namespace ODF.API.Middleware
 			_next = next;
 			_cache = cache ?? throw new ArgumentNullException(nameof(cache));
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_scrapOpts = scrapOpts.Value ?? throw new ArgumentException(nameof(scrapOpts));
+			_scrapOpts = scrapOpts.Value ?? throw new ArgumentNullException(nameof(scrapOpts));
 		}
 
 		public async Task Invoke(HttpContext httpContext)
 		{
 			CancellationToken cancellationToken = default;
 
-			var key = $"{httpContext.Request.Path}_{httpContext.Connection.RemoteIpAddress}";
+			string key = $"{httpContext.Request.Path}_{httpContext.Connection.RemoteIpAddress}";
 			var clientStatistics = await _cache.GetCachedValueAsyn<ClientStatistics>(key, cancellationToken) ?? new() { LastSuccessfulResponseTime = DateTime.Now };
 
 			var blockedIp = await _cache.GetCachedValueAsyn<BlockedIp>($"block_{httpContext.Connection.RemoteIpAddress}", cancellationToken);
 
-			if(blockedIp is not null && blockedIp.AllertCount >= _scrapOpts.WarningCount)
+			if (blockedIp is not null && blockedIp.AllertCount >= _scrapOpts.WarningCount)
 			{
 				_logger.LogWarning("Some boii has been banned for scrapping from {ip}", httpContext.Connection.RemoteIpAddress);
 				httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -87,7 +87,7 @@ namespace ODF.API.Middleware
 		{
 			var blockedIp = await _cache.GetCachedValueAsyn<BlockedIp>($"block_{key}", cancellationToken);
 
-			if(blockedIp is not null)
+			if (blockedIp is not null)
 			{
 				blockedIp.AllertCount += 1;
 			}

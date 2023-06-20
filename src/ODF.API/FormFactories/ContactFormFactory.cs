@@ -7,12 +7,12 @@ namespace ODF.API.FormFactories
 {
 	public static class ContactFormFactory
 	{
-		public static Form GetUpdateContactForm(ContactDto contact)
+		public static Form GetUpdateContactForm(UpdateContactForm contact, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("Název akce", nameof(UpdateContactForm.EventName), "text", contact.EventName, true));
-			form.AddMember(new("Pořadatel", nameof(UpdateContactForm.EventManager), "text", contact.EventManager, true));
-			form.AddMember(new("e-mail", nameof(UpdateContactForm.Email), "text", contact.Email, true));
+			form.AddMember(new("Název akce", nameof(UpdateContactForm.EventName), "text", contact.EventName, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactForm.EventName))?.ErrorMessage));
+			form.AddMember(new("Pořadatel", nameof(UpdateContactForm.EventManager), "text", contact.EventManager, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactForm.EventManager))?.ErrorMessage));
+			form.AddMember(new("e-mail", nameof(UpdateContactForm.Email), "text", contact.Email, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactForm.Email))?.ErrorMessage));
 
 			return form;
 		}
@@ -39,10 +39,10 @@ namespace ODF.API.FormFactories
 			return form;
 		}
 
-		public static Form GetRemoveBankAcountForm(string iban)
+		public static Form GetRemoveBankAcountForm(string iban, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("IBAN", nameof(AddBankAccountForm.IBAN), "text", iban, true));
+			form.AddMember(new("IBAN", nameof(AddBankAccountForm.IBAN), "text", iban, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddBankAccountForm.IBAN))?.ErrorMessage));
 
 			return form;
 		}
@@ -60,26 +60,26 @@ namespace ODF.API.FormFactories
 			return form;
 		}
 
-		public static Form GetUpdateContactPersonForm(ContactPersonDto person)
+		public static Form GetUpdateContactPersonForm(UpdateContactPersonForm person, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
 
-			form.AddMember(new("e-mail", nameof(UpdateContactPersonForm.Email), "text", person.Email, true));
-			form.AddMember(new("Titul", nameof(UpdateContactPersonForm.Title), "text", person.Title, true));
-			form.AddMember(new("Jméno", nameof(UpdateContactPersonForm.Name), "text", person.Name, true));
-			form.AddMember(new("Příjmení", nameof(UpdateContactPersonForm.Surname), "text", person.Surname, true));
-			form.AddMember(new("Obrázek", nameof(UpdateContactPersonForm.Base64Image), "text", person.Base64Image, true));
-			form.AddMember(new("Role", nameof(UpdateContactPersonForm.Roles), "textArray", person.Roles, true));
-			form.AddMember(new("Id", nameof(UpdateContactPersonForm.Id), "text", person.Id));
-			form.AddMember(new("Order", nameof(UpdateContactPersonForm.Order), "number", person.Order, true));
+			form.AddMember(new("e-mail", nameof(UpdateContactPersonForm.Email), "text", person.Email, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Email))?.ErrorMessage));
+			form.AddMember(new("Titul", nameof(UpdateContactPersonForm.Title), "text", person.Title, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Title))?.ErrorMessage));
+			form.AddMember(new("Jméno", nameof(UpdateContactPersonForm.Name), "text", person.Name, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Name))?.ErrorMessage));
+			form.AddMember(new("Příjmení", nameof(UpdateContactPersonForm.Surname), "text", person.Surname, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Surname))?.ErrorMessage));
+			form.AddMember(new("Obrázek", nameof(UpdateContactPersonForm.Base64Image), "text", person.Base64Image, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Base64Image))?.ErrorMessage));
+			form.AddMember(new("Role", nameof(UpdateContactPersonForm.Roles), "textArray", person.Roles, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Roles))?.ErrorMessage));
+			form.AddMember(new("Id", nameof(UpdateContactPersonForm.Id), "text", person.Id, false, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Id))?.ErrorMessage));
+			form.AddMember(new("Order", nameof(UpdateContactPersonForm.Order), "number", person.Order, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Order))?.ErrorMessage));
 
 			return form;
 		}
 
-		public static Form GetRemoveContactPersonForm(Guid personId)
+		public static Form GetRemoveContactPersonForm(Guid personId, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("Id", nameof(RemoveContactPersonForm.Id), "text", personId));
+			form.AddMember(new("Id", nameof(RemoveContactPersonForm.Id), "text", personId, false, errors?.FirstOrDefault(p => p.PropertyName == nameof(RemoveContactPersonForm.Id))?.ErrorMessage));
 
 			return form;
 		}

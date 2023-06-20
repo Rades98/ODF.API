@@ -7,13 +7,15 @@ using ODF.API.ResponseModels.Association;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
 	public class AssociationController : BaseController
 	{
-		public AssociationController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider) : base(mediator, apiSettings, adcp, translationsProvider)
+		public AssociationController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
 
@@ -25,11 +27,7 @@ namespace ODF.API.Controllers
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 			var responseModel = new AssociationResponseModel(translations.Get("association_info"), translations.Get("association_header"));
 
-			responseModel.AddAction(GetQueriedAppAction(nameof(ArticlesController.GetArticles), "about_articles",
-				new Dictionary<string, string> {
-					{ "size", "10" },
-					{ "offset", "0" },
-					{ "pageId", "1" } }));
+			responseModel.AddAction(GetQueriedAppAction(nameof(ArticlesController.GetArticles), "about_articles", PaginationConsts.DefaultPaginationSetting));
 
 			return Ok(responseModel);
 		}
