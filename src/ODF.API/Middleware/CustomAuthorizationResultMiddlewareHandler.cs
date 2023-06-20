@@ -13,7 +13,7 @@ using ODF.Domain;
 
 namespace ODF.API.Middleware
 {
-    public class CustomAuthorizationResultMiddlewareHandler : IAuthorizationMiddlewareResultHandler
+	public class CustomAuthorizationResultMiddlewareHandler : IAuthorizationMiddlewareResultHandler
 	{
 		private readonly AuthorizationMiddlewareResultHandler DefaultHandler = new();
 		private readonly ITranslationsProvider _translationsProvider;
@@ -40,14 +40,14 @@ namespace ODF.API.Middleware
 				string message = isLoggedIn ? translations.Get("unauthorized_msg_logged") : translations.Get("unauthorized_msg_annonymous");
 
 				var loginAction = _adcp.GetNamedAction(httpContext, $"{httpContext.Request.Scheme}://{httpContext.Request.Host}",
-					nameof(UsersController.LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(translations));
+					nameof(UsersController.LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(new(), translations));
 
 				var responseModel = new UnauthorizedExceptionResponseModel(title, message, null, !isLoggedIn ? loginAction : null);
 
 				byte[] bytes = Encoding.UTF8.GetBytes(responseModel.ToString());
 				httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 				httpContext.Response.ContentType = MediaTypeNames.Application.Json;
-				await httpContext.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+				await httpContext.Response.Body.WriteAsync(bytes, default);
 			}
 			else
 			{

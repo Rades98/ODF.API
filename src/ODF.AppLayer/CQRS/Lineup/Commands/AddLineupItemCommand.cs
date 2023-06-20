@@ -1,11 +1,13 @@
 ﻿using System;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Lineup.Commands
 {
-	public class AddLineupItemCommand : ICommand<bool>
+	public class AddLineupItemCommand : ICommand<ValidationDto>
 	{
-		public AddLineupItemCommand(string place, string interpret, string perfName, string description, string descriptionTranslationCode, DateTime dateTime, string countryCode)
+		public AddLineupItemCommand(string place, string interpret, string perfName, string description,
+			string descriptionTranslationCode, DateTime dateTime, string countryCode, string userName = null)
 		{
 			Place = place;
 			Interpret = interpret;
@@ -14,6 +16,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 			Description = description;
 			DateTime = dateTime;
 			CountryCode = countryCode;
+			UserName = userName;
 		}
 
 		public string Place { get; }
@@ -29,5 +32,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 		public DateTime DateTime { get; }
 
 		public string CountryCode { get; }
+
+		public string UserName { get; } = null;
 	}
 }

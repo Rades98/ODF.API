@@ -22,9 +22,6 @@ namespace ODF.API.ResponseModels.Contacts.Redaction
 		[JsonProperty("removeBankAccountActions", Required = Required.Always)]
 		public IEnumerable<NamedAction> RemoveBankAccountActions { get; set; } = new List<NamedAction>();
 
-		[JsonProperty("addContactPerson", Required = Required.Always)]
-		public NamedAction? AddContactPerson { get; set; }
-
 		[JsonProperty("contactPerson", Required = Required.Always)]
 		public IEnumerable<GetContactPersonRedactionResponseModel> ContactPersons { get; set; } = new List<GetContactPersonRedactionResponseModel>();
 	}

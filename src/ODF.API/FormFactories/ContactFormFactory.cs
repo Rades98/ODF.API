@@ -1,7 +1,9 @@
 ﻿using FluentValidation.Results;
+using ODF.API.Extensions;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Common.Forms;
 using ODF.AppLayer.Dtos.ContactDtos;
+using ODF.Domain.Constants;
 
 namespace ODF.API.FormFactories
 {
@@ -10,31 +12,48 @@ namespace ODF.API.FormFactories
 		public static Form GetUpdateContactForm(UpdateContactForm contact, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("Název akce", nameof(UpdateContactForm.EventName), "text", contact.EventName, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactForm.EventName))?.ErrorMessage));
-			form.AddMember(new("Pořadatel", nameof(UpdateContactForm.EventManager), "text", contact.EventManager, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactForm.EventManager))?.ErrorMessage));
-			form.AddMember(new("e-mail", nameof(UpdateContactForm.Email), "text", contact.Email, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactForm.Email))?.ErrorMessage));
+			form.AddMember(new("Název akce", nameof(UpdateContactForm.EventName), FormValueTypes.Text, contact.EventName, true,
+				errors?.GetErrorMessage(nameof(UpdateContactForm.EventName))));
+
+			form.AddMember(new("Pořadatel", nameof(UpdateContactForm.EventManager), FormValueTypes.Text, contact.EventManager, true,
+				errors?.GetErrorMessage(nameof(UpdateContactForm.EventManager))));
+
+			form.AddMember(new("e-mail", nameof(UpdateContactForm.Email), FormValueTypes.Text, contact.Email, true,
+				errors?.GetErrorMessage(nameof(UpdateContactForm.Email))));
 
 			return form;
 		}
 
-		public static Form GetUpdateAddressForm(AddressDto address)
+		public static Form GetUpdateAddressForm(AddressDto address, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
 
-			form.AddMember(new("Město", nameof(UpdateAddressForm.City), "text", address.City, true));
-			form.AddMember(new("Ulice", nameof(UpdateAddressForm.Street), "text", address.Street, true));
-			form.AddMember(new("PSČ", nameof(UpdateAddressForm.PostalCode), "text", address.PostalCode, true));
-			form.AddMember(new("Země", nameof(UpdateAddressForm.Country), "text", address.Country, true));
+			form.AddMember(new("Město", nameof(UpdateAddressForm.City), FormValueTypes.Text, address.City, true,
+				errors?.GetErrorMessage(nameof(UpdateAddressForm.City))));
+
+			form.AddMember(new("Ulice", nameof(UpdateAddressForm.Street), FormValueTypes.Text, address.Street, true,
+				errors?.GetErrorMessage(nameof(UpdateAddressForm.Street))));
+
+			form.AddMember(new("PSČ", nameof(UpdateAddressForm.PostalCode), FormValueTypes.Text, address.PostalCode, true,
+				errors?.GetErrorMessage(nameof(UpdateAddressForm.PostalCode))));
+
+			form.AddMember(new("Země", nameof(UpdateAddressForm.Country), FormValueTypes.Text, address.Country, true,
+				errors?.GetErrorMessage(nameof(UpdateAddressForm.Country))));
 
 			return form;
 		}
 
-		public static Form GetAddBankAcountForm(IEnumerable<ValidationFailure>? errors = null, string? bank = "", string accountId = "", string iban = "")
+		public static Form GetAddBankAcountForm(AddBankAccountForm bankAcc, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("Banka", nameof(AddBankAccountForm.Bank), "text", bank, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddBankAccountForm.Bank))?.ErrorMessage));
-			form.AddMember(new("Číslo účtu", nameof(AddBankAccountForm.AccountId), "text", accountId, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddBankAccountForm.AccountId))?.ErrorMessage));
-			form.AddMember(new("IBAN", nameof(AddBankAccountForm.IBAN), "text", iban, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddBankAccountForm.IBAN))?.ErrorMessage));
+			form.AddMember(new("Banka", nameof(AddBankAccountForm.Bank), FormValueTypes.Text, bankAcc.Bank, true,
+				errors?.GetErrorMessage(nameof(AddBankAccountForm.Bank))));
+
+			form.AddMember(new("Číslo účtu", nameof(AddBankAccountForm.AccountId), FormValueTypes.Text, bankAcc.AccountId, true,
+				errors?.GetErrorMessage(nameof(AddBankAccountForm.AccountId))));
+
+			form.AddMember(new("IBAN", nameof(AddBankAccountForm.IBAN), FormValueTypes.Text, bankAcc.IBAN, true,
+				errors?.GetErrorMessage(nameof(AddBankAccountForm.IBAN))));
 
 			return form;
 		}
@@ -42,20 +61,32 @@ namespace ODF.API.FormFactories
 		public static Form GetRemoveBankAcountForm(string iban, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("IBAN", nameof(AddBankAccountForm.IBAN), "text", iban, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddBankAccountForm.IBAN))?.ErrorMessage));
+			form.AddMember(new("IBAN", nameof(AddBankAccountForm.IBAN), FormValueTypes.Text, iban, true,
+				errors?.GetErrorMessage(nameof(AddBankAccountForm.IBAN))));
 
 			return form;
 		}
 
-		public static Form GetAddContactPersonForm(IEnumerable<ValidationFailure>? errors = null, AddContactPersonForm? reqForm = null)
+		public static Form GetAddContactPersonForm(AddContactPersonForm? reqForm = null, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("e-mail", nameof(AddContactPersonForm.Email), "text", reqForm?.Email ?? "", true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddContactPersonForm.Email))?.ErrorMessage));
-			form.AddMember(new("Titul", nameof(AddContactPersonForm.Title), "text", reqForm?.Title ?? "", true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddContactPersonForm.Title))?.ErrorMessage));
-			form.AddMember(new("Jméno", nameof(AddContactPersonForm.Name), "text", reqForm?.Name ?? "", true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddContactPersonForm.Name))?.ErrorMessage));
-			form.AddMember(new("Příjmení", nameof(AddContactPersonForm.Surname), reqForm?.Surname ?? "text", "", true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddContactPersonForm.Surname))?.ErrorMessage));
-			form.AddMember(new("Obrázek", nameof(AddContactPersonForm.Base64Image), reqForm?.Base64Image ?? "text", "", true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddContactPersonForm.Base64Image))?.ErrorMessage));
-			form.AddMember(new("Role", nameof(AddContactPersonForm.Roles), "text", reqForm?.Roles ?? Enumerable.Empty<string>(), true, errors?.FirstOrDefault(p => p.PropertyName == nameof(AddContactPersonForm.Roles))?.ErrorMessage));
+			form.AddMember(new("e-mail", nameof(AddContactPersonForm.Email), FormValueTypes.Text, reqForm?.Email ?? "", true,
+				errors?.GetErrorMessage(nameof(AddContactPersonForm.Email))));
+
+			form.AddMember(new("Titul", nameof(AddContactPersonForm.Title), FormValueTypes.Text, reqForm?.Title ?? "", true,
+				errors?.GetErrorMessage(nameof(AddContactPersonForm.Title))));
+
+			form.AddMember(new("Jméno", nameof(AddContactPersonForm.Name), FormValueTypes.Text, reqForm?.Name ?? "", true,
+				errors?.GetErrorMessage(nameof(AddContactPersonForm.Name))));
+
+			form.AddMember(new("Příjmení", nameof(AddContactPersonForm.Surname), FormValueTypes.Text, reqForm?.Surname ?? "text", true,
+				errors?.GetErrorMessage(nameof(AddContactPersonForm.Surname))));
+
+			form.AddMember(new("Obrázek", nameof(AddContactPersonForm.Base64Image), FormValueTypes.Text, reqForm?.Base64Image ?? "text", true,
+				errors?.GetErrorMessage(nameof(AddContactPersonForm.Base64Image))));
+
+			form.AddMember(new("Role", nameof(AddContactPersonForm.Roles), FormValueTypes.Text, reqForm?.Roles ?? Enumerable.Empty<string>(), true,
+				errors?.GetErrorMessage(nameof(AddContactPersonForm.Roles))));
 
 			return form;
 		}
@@ -64,14 +95,29 @@ namespace ODF.API.FormFactories
 		{
 			var form = new Form();
 
-			form.AddMember(new("e-mail", nameof(UpdateContactPersonForm.Email), "text", person.Email, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Email))?.ErrorMessage));
-			form.AddMember(new("Titul", nameof(UpdateContactPersonForm.Title), "text", person.Title, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Title))?.ErrorMessage));
-			form.AddMember(new("Jméno", nameof(UpdateContactPersonForm.Name), "text", person.Name, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Name))?.ErrorMessage));
-			form.AddMember(new("Příjmení", nameof(UpdateContactPersonForm.Surname), "text", person.Surname, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Surname))?.ErrorMessage));
-			form.AddMember(new("Obrázek", nameof(UpdateContactPersonForm.Base64Image), "text", person.Base64Image, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Base64Image))?.ErrorMessage));
-			form.AddMember(new("Role", nameof(UpdateContactPersonForm.Roles), "textArray", person.Roles, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Roles))?.ErrorMessage));
-			form.AddMember(new("Id", nameof(UpdateContactPersonForm.Id), "text", person.Id, false, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Id))?.ErrorMessage));
-			form.AddMember(new("Order", nameof(UpdateContactPersonForm.Order), "number", person.Order, true, errors?.FirstOrDefault(p => p.PropertyName == nameof(UpdateContactPersonForm.Order))?.ErrorMessage));
+			form.AddMember(new("e-mail", nameof(UpdateContactPersonForm.Email), FormValueTypes.Text, person.Email, true,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Email))));
+
+			form.AddMember(new("Titul", nameof(UpdateContactPersonForm.Title), FormValueTypes.Text, person.Title, true,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Title))));
+
+			form.AddMember(new("Jméno", nameof(UpdateContactPersonForm.Name), FormValueTypes.Text, person.Name, true,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Name))));
+
+			form.AddMember(new("Příjmení", nameof(UpdateContactPersonForm.Surname), FormValueTypes.Text, person.Surname, true,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Surname))));
+
+			form.AddMember(new("Obrázek", nameof(UpdateContactPersonForm.Base64Image), FormValueTypes.Text, person.Base64Image, true,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Base64Image))));
+
+			form.AddMember(new("Role", nameof(UpdateContactPersonForm.Roles), FormValueTypes.TextArray, person.Roles, true,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Roles))));
+
+			form.AddMember(new("Id", nameof(UpdateContactPersonForm.Id), FormValueTypes.Text, person.Id, false,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Id))));
+
+			form.AddMember(new("Order", nameof(UpdateContactPersonForm.Order), FormValueTypes.Number, person.Order, true,
+				errors?.GetErrorMessage(nameof(UpdateContactPersonForm.Order))));
 
 			return form;
 		}
@@ -79,7 +125,8 @@ namespace ODF.API.FormFactories
 		public static Form GetRemoveContactPersonForm(Guid personId, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
-			form.AddMember(new("Id", nameof(RemoveContactPersonForm.Id), "text", personId, false, errors?.FirstOrDefault(p => p.PropertyName == nameof(RemoveContactPersonForm.Id))?.ErrorMessage));
+			form.AddMember(new("Id", nameof(RemoveContactPersonForm.Id), FormValueTypes.Text, personId, false,
+				errors?.GetErrorMessage(nameof(RemoveContactPersonForm.Id))));
 
 			return form;
 		}

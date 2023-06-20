@@ -1,20 +1,38 @@
-﻿using ODF.API.ResponseModels.Common.Forms;
+﻿using FluentValidation.Results;
+using ODF.API.Extensions;
+using ODF.API.RequestModels.Forms;
+using ODF.API.ResponseModels.Common.Forms;
+using ODF.Domain.Constants;
 
 namespace ODF.API.FormFactories
 {
 	public static class LineupItemFormFactory
 	{
-		public static Form GetAddLineupItemForm(string place, string interpret, string performanceName, string description, string DescriptionTranslationCode, DateTime dateTime)
+		public static Form GetAddLineupItemForm(AddLineupItemForm form, IEnumerable<ValidationFailure>? errors = null)
 		{
-			var form = new Form();
-			form.AddMember(new("Místo", nameof(place), "text", place, true));
-			form.AddMember(new("Interpret", nameof(interpret), "text", interpret, true));
-			form.AddMember(new("Název vystoupení", nameof(performanceName), "text", performanceName, true));
-			form.AddMember(new("Popis", nameof(description), "text", description, true));
-			form.AddMember(new("Překladová proměnná popisu", nameof(DescriptionTranslationCode), "text", DescriptionTranslationCode, true));
-			form.AddMember(new("Datum a čas", nameof(dateTime), "datetime-local", dateTime, true));
+			var requestForm = new Form();
+			requestForm.AddMember(new("Místo", nameof(AddLineupItemForm.Place), FormValueTypes.Text, form.Place, true,
+				errors?.GetErrorMessage(nameof(AddLineupItemForm.Place))));
 
-			return form;
+			requestForm.AddMember(new("Interpret", nameof(AddLineupItemForm.Interpret), FormValueTypes.Text, form.Interpret, true,
+				errors?.GetErrorMessage(nameof(AddLineupItemForm.Interpret))));
+
+			requestForm.AddMember(new("Název vystoupení", nameof(AddLineupItemForm.PerformanceName), FormValueTypes.Text, form.PerformanceName, true,
+				errors?.GetErrorMessage(nameof(AddLineupItemForm.PerformanceName))));
+
+			requestForm.AddMember(new("Popis", nameof(AddLineupItemForm.Description), FormValueTypes.Text, form.Description, true,
+				errors?.GetErrorMessage(nameof(AddLineupItemForm.Description))));
+
+			requestForm.AddMember(new("Překladová proměnná popisu", nameof(AddLineupItemForm.DescriptionTranslationCode), FormValueTypes.Text, form.DescriptionTranslationCode, true,
+				errors?.GetErrorMessage(nameof(AddLineupItemForm.DescriptionTranslationCode))));
+
+			requestForm.AddMember(new("Datum a čas", nameof(AddLineupItemForm.DateTime), FormValueTypes.DateTimeLocal, form.DateTime, true,
+				errors?.GetErrorMessage(nameof(AddLineupItemForm.DateTime))));
+
+			requestForm.AddMember(new("Jméno uživatele", nameof(AddLineupItemForm.UserName), FormValueTypes.Text, form.UserName, true,
+				errors?.GetErrorMessage(nameof(AddLineupItemForm.UserName))));
+
+			return requestForm;
 		}
 	}
 }

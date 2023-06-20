@@ -32,7 +32,7 @@ services:
        - elastic_data:/var/lib/elastic
   
   api:
-    image: raduzz/odf:api
+    image: ghcr.io/rades98/odf.api:main
     restart: always
     container_name: odf-api
     ports:

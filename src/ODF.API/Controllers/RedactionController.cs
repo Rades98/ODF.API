@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.Controllers.Contacts;
+using ODF.API.Controllers.Lineup;
 using ODF.API.FormFactories;
 using ODF.API.ResponseModels.Common;
 using ODF.API.ResponseModels.Exceptions;
@@ -41,7 +42,7 @@ namespace ODF.API.Controllers
 			responseModel.AddAssociationArticle = GetAddArticleAction(transaltions.Get("nav_association"), 1, countryCode);
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
-					LineupItemFormFactory.GetAddLineupItemForm("Místo", "Interpret", "Název představení", "popis vystoupení", "{vystoupeni}_desc", DateTime.Now));
+					LineupItemFormFactory.GetAddLineupItemForm(new()));
 
 			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsRedactionController.GetContactsRedaction), "Upravit kontakty", "updateContacts");
 
