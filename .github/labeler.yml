@@ -4,6 +4,8 @@ Database:
   - src/ODF.Data.*/**
 BE:
   - src/**
+API:
+  - src/ODF.API/**
 DEVOPS:
   - Dockerfile.*
   - docker-compose.yml
