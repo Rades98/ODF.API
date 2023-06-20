@@ -1,8 +1,9 @@
-name: Docker Image CI
+
+name: Create and publish a Docker image
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
 
 env:
   REGISTRY: ghcr.io
