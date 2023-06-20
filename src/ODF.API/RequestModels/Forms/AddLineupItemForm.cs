@@ -21,5 +21,8 @@ namespace ODF.API.RequestModels.Forms
 
 		[JsonProperty("dateTime", Required = Required.Always)]
 		public DateTime DateTime { get; set; }
+
+		[JsonProperty("userName", Required = Required.AllowNull)]
+		public string? UserName { get; set; }
 	}
 }

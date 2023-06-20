@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
+using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Lineup;
@@ -15,7 +16,7 @@ using ODF.AppLayer.CQRS.Lineup.Queries;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain.SettingModels;
 
-namespace ODF.API.Controllers
+namespace ODF.API.Controllers.Lineup
 {
 	public class LineupController : BaseController
 	{
@@ -52,15 +53,20 @@ namespace ODF.API.Controllers
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(StatusCodes.Status202Accepted)]
-		public async Task<IActionResult> AddItemToLineup([FromRoute] string countryCode, [FromBody] AddLineupItemForm model, CancellationToken cancellationToken)
+		public async Task<IActionResult> AddItemToLineup([FromRoute] string countryCode, [FromBody] AddLineupItemForm form, CancellationToken cancellationToken)
 		{
-			bool result = await Mediator.Send(new AddLineupItemCommand(
-				model.Place, model.Interpret, model.PerformanceName,
-				model.Description, model.DescriptionTranslationCode, model.DateTime, countryCode), cancellationToken);
+			var validationResult = await Mediator.Send(new AddLineupItemCommand(
+				form.Place, form.Interpret, form.PerformanceName,
+				form.Description, form.DescriptionTranslationCode, form.DateTime, countryCode), cancellationToken);
 
-			if (result)
+			if (validationResult.IsOk)
 			{
-				return Accepted();
+				return Ok(new AddLineupResponseModel("Přidání položky do programu proběhlo úspěšně"));
+			}
+
+			if (validationResult.Errors.Any())
+			{
+				return UnprocessableEntity(new AddLineupResponseModel(null, LineupItemFormFactory.GetAddLineupItemForm(form)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));

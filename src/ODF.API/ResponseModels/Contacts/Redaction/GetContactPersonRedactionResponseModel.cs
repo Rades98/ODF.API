@@ -19,5 +19,8 @@ namespace ODF.API.ResponseModels.Contacts.Redaction
 
 		[JsonProperty("deleteContactPerson", Required = Required.Always)]
 		public NamedAction? DeleteContactPerson { get; set; }
+
+		[JsonProperty("addContactPerson", Required = Required.Always)]
+		public NamedAction? AddContactPerson { get; set; }
 	}
 }

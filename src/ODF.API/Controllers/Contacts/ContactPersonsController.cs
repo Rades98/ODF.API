@@ -64,7 +64,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetAddContactPersonForm(validationResult.Errors, form);
+				var responseForm = ContactFormFactory.GetAddContactPersonForm(form, validationResult.Errors);
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 

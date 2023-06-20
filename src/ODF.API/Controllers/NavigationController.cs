@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Controllers.Contacts;
+using ODF.API.Controllers.Lineup;
 using ODF.API.Controllers.Users;
 using ODF.API.FormFactories;
 using ODF.API.RequestModels.Navigation;
@@ -44,10 +45,10 @@ namespace ODF.API.Controllers
 
 			if (!requestModel.IsLoggedIn)
 			{
-				responseModel.LoginAction = GetNamedAction(nameof(UsersController.LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(translations));
+				responseModel.LoginAction = GetNamedAction(nameof(UsersController.LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(new(), translations));
 
 				responseModel.RegisterAction = GetNamedAction(nameof(UsersController.RegisterUser), translations.Get("register_user"), "register",
-					UserFormFactory.GetRegisterForm(translations));
+					UserFormFactory.GetRegisterForm(new(), translations));
 			}
 			else
 			{

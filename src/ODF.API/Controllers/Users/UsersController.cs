@@ -29,12 +29,12 @@ namespace ODF.API.Controllers.Users
 		[HttpPost(Name = nameof(LoginUser))]
 		[ProducesResponseType(typeof(UserResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> LoginUser([FromBody] LoginUserForm user, [FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> LoginUser([FromBody] LoginUserForm form, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-			var userResult = await Mediator.Send(new LoginUserCommand(user.UserName, user.Password, countryCode), cancellationToken);
+			var userResult = await Mediator.Send(new LoginUserCommand(form.UserName, form.Password, countryCode), cancellationToken);
 
 			if (userResult.IsOk)
 			{
@@ -49,16 +49,16 @@ namespace ODF.API.Controllers.Users
 
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-				var responseModel = new UserResponseModel(userResult.User.UserName, UserFormFactory.GetLoginForm(translations));
+				var responseModel = new UserResponseModel(userResult.User.UserName);
 				responseModel.AddAction(GetAppAction(nameof(NavigationController.GetNavigation), "nav"));
 
 				return Ok(responseModel);
 			}
 
-			var loginAction = GetNamedAction(nameof(LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(translations, errors: userResult.Errors));
+			var loginAction = GetNamedAction(nameof(LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(form, translations, errors: userResult.Errors));
 
 			var registerAction = GetNamedAction(nameof(RegisterUser), translations.Get("register_user"), "register",
-				UserFormFactory.GetRegisterForm(translations));
+				UserFormFactory.GetRegisterForm(new(), translations));
 
 			return Unauthorized(new UnauthorizedExceptionResponseModel(translations.Get("login_failed_title"), translations.Get("login_failed_msg"), loginAction, registerAction));
 		}

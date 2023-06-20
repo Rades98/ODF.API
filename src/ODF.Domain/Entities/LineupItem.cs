@@ -13,5 +13,7 @@ namespace ODF.Domain.Entities
 		public string PerformanceName { get; set; } = string.Empty;
 
 		public string DescriptionTranslation { get; set; } = string.Empty;
+
+		public string? UserName { get; set; }
 	}
 }

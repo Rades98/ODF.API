@@ -40,7 +40,7 @@ namespace ODF.API.Controllers.Contacts
 
 			// Bank acc
 			responseModel.AddBankAccount = GetNamedAction(nameof(ContactBankAccountsController.AddBankAccount),
-				"Přidat bankovní účet", "addBankAccount", ContactFormFactory.GetAddBankAcountForm());
+				"Přidat bankovní účet", "addBankAccount", ContactFormFactory.GetAddBankAcountForm(new()));
 
 			responseModel.RemoveBankAccountActions = contact.BankAccounts.Select(bankAcc
 				=> GetNamedAction(nameof(ContactBankAccountsController.RemoveBankAccount),
@@ -48,16 +48,15 @@ namespace ODF.API.Controllers.Contacts
 				ContactFormFactory.GetRemoveBankAcountForm(bankAcc.IBAN)));
 
 			// Contact persons
-			responseModel.AddContactPerson = GetNamedAction(nameof(ContactPersonsController.AddContactPerson),
-				"Přidat kontaktní osobu", "addContactPerson", ContactFormFactory.GetAddContactPersonForm());
-
 			responseModel.ContactPersons = contact.ContactPersons.Select(person => new GetContactPersonRedactionResponseModel()
 			{
 				Title = person.Title,
 				Name = person.Name,
 				Surname = person.Surname,
+
 				DeleteContactPerson = GetNamedAction(nameof(ContactPersonsController.RemoveContactPerson),
 					"Smazat", "removeContactPerson", ContactFormFactory.GetRemoveContactPersonForm(person.Id)),
+
 				UpdateContactPerson = GetNamedAction(nameof(ContactPersonsController.UpdateContactPerson),
 					"Upravit", "updateContactPerson", ContactFormFactory.GetUpdateContactPersonForm(new()
 					{
@@ -69,7 +68,10 @@ namespace ODF.API.Controllers.Contacts
 						Order = person.Order,
 						Roles = person.Roles,
 						Title = person.Title,
-					}))
+					})),
+
+				AddContactPerson = GetNamedAction(nameof(ContactPersonsController.AddContactPerson),
+				"Přidat kontaktní osobu", "addContactPerson", ContactFormFactory.GetAddContactPersonForm())
 			});
 
 			return Ok(responseModel);

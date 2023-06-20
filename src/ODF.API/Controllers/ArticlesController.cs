@@ -107,10 +107,10 @@ namespace ODF.API.Controllers
 
 		private NamedAction GetTranslateArticleTextAction(string translationCode, string countryCode)
 			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit text do {countryCode}", "translate_article",
-					TranslationFormFactory.GetChangeTranslationForm(translationCode, "", countryCode));
+					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
 
 		private NamedAction GetTranslateArticleTitleAction(string translationCode, string countryCode)
 			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit nadpis do {countryCode}", "translate_article",
-					TranslationFormFactory.GetChangeTranslationForm(translationCode, "", countryCode));
+					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
 	}
 }

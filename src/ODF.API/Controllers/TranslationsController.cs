@@ -42,13 +42,13 @@ namespace ODF.API.Controllers
 				var model = new GetTranslationResponseModel(tr.TranslationCode, tr.Text);
 
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit AJ překlad", "transalation_en_submit",
-					TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, model.Text, Languages.English.GetCountryCode()));
+					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = Languages.English.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit DE překlad", "transalation_de_submit",
-					TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, model.Text, Languages.Deutsch.GetCountryCode()));
+					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = Languages.Deutsch.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit CZ překlad", "transalation_cz_submit",
-					TranslationFormFactory.GetChangeTranslationForm(model.TranslationCode, model.Text, Languages.Czech.GetCountryCode()));
+					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = Languages.Czech.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
 				return model;
 			});
@@ -84,7 +84,7 @@ namespace ODF.API.Controllers
 			if (result)
 			{
 				var responseModel = new UpdateTranslationResponseModel(
-					TranslationFormFactory.GetChangeTranslationForm(form.TranslationCode, form.Text, countryCode),
+					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = form.TranslationCode, Text = form.Text }),
 					$"Proměnná {form.TranslationCode} byla úspěšně přeložena pro {form.CountryCode}: {form.Text}.");
 
 				return Ok(responseModel);
