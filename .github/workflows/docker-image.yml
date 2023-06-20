@@ -13,4 +13,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file ./src/Dockerfile --tag odf-api:$(date +%s)
+      run: docker build . --tag odf-api:$(date +%s)
