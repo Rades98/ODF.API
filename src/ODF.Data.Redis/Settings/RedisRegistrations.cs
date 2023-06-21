@@ -16,10 +16,10 @@ namespace ODF.Data.Redis.Settings
 		public static IServiceCollection ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
 		{
 			var redisSettings = configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>()
-				?? throw new ArgumentNullException(nameof(RedisSettings));
+				?? throw new ArgumentException(nameof(RedisSettings));
 
 			var apiSettings = configuration.GetSection(nameof(ApiSettings)).Get<ApiSettings>()
-				?? throw new ArgumentNullException(nameof(ApiSettings));
+				?? throw new ArgumentException(nameof(ApiSettings));
 
 			services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer
 				.Connect(redisSettings.Url)

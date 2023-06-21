@@ -1,15 +1,15 @@
-﻿using System.Text.RegularExpressions;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.Contact.Commands;
+using ODF.Domain.Extensions;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 {
 	public class UpdateContactAddressCommandValidator : AbstractValidator<UpdateContactAddressCommand>
 	{
-		private readonly static Regex PostalCodeRegex = new(@"^(?:\d{3}\s\d{2})|(?:\d{5})$", RegexOptions.Compiled);
+
 
 		public override async Task<ValidationResult> ValidateAsync(ValidationContext<UpdateContactAddressCommand> context, CancellationToken cancellation = default)
 		{
@@ -19,7 +19,7 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 				.WithMessage("PSČ musí být vyplněno");
 
 			RuleFor(command => command.PostalCode)
-				.Must(command => PostalCodeRegex.IsMatch(context.InstanceToValidate.PostalCode))
+				.Must(AddressExtensions.ValidatePostalCode)
 				.WithMessage("PSČ musí být ve formátu XXX XX nebo XXXXX");
 
 			RuleFor(command => command.City)

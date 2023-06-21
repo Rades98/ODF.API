@@ -4,11 +4,14 @@ namespace ODF.Domain.Constants
 {
 	public static class PaginationConsts
 	{
-		public static readonly Dictionary<string, string> DefaultPaginationSetting = new()
+		private static readonly Dictionary<string, string> _defaultPaginationSetting = new()
 			{
 				{ "size", "10" },
 				{ "offset", "0" },
 				{ "pageId", "1" }
 			};
+
+		public static Dictionary<string, string> DefaultPaginationSetting
+			=> _defaultPaginationSetting;
 	}
 }
