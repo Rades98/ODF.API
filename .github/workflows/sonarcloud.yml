@@ -44,5 +44,5 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Rades98_ODF.API" /o:"rades98" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet clean ./src/ODF.API/ODF.API.csproj
-          dotnet build ./src/ODF.API/ODF.API.csproj --no-restore
+          dotnet build ./src/ODF.API/ODF.API.csproj
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
