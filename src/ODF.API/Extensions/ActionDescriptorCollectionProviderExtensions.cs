@@ -29,7 +29,7 @@ namespace ODF.API.Extensions
 
 			string link = action.AttributeRouteInfo!.Template!.Replace("{countryCode}", countryCode ?? context.GetCountryCode()!);
 
-			return new($"{baseUrl}/{link}", rel, ((HttpMethodActionConstraint)action.ActionConstraints!.First()).HttpMethods.First(), form: actionForm);
+			return new($"{baseUrl}/{link}", rel, ((HttpMethodActionConstraint)action.ActionConstraints![0]).HttpMethods.First(), form: actionForm);
 		}
 
 		internal static AppAction GetQueriedAppAction(
@@ -46,21 +46,17 @@ namespace ODF.API.Extensions
 			string link = action.AttributeRouteInfo!.Template!
 				.Replace("{countryCode}", context.GetCountryCode()!);
 
-			var linkAddition = new StringBuilder("");
-			foreach (var param in action.Parameters)
-			{
-				if (queryParams.ContainsKey(param.Name))
-				{
-					linkAddition.Append($"&{param.Name}={queryParams[param.Name]}");
-				}
-			}
+			string linkAddition = action.Parameters
+											.Where(param => queryParams.ContainsKey(param.Name))
+											.Aggregate(new StringBuilder(), (sb, param) => sb.Append($"&{param.Name}={queryParams[param.Name]}"))
+											.ToString();
 
 			if (linkAddition.Length > 0)
 			{
 				link += string.Concat("?", linkAddition.ToString().AsSpan(1));
 			}
 
-			return new($"{baseUrl}/{link}", rel, ((HttpMethodActionConstraint)action.ActionConstraints!.First()).HttpMethods.First(), form: actionForm);
+			return new($"{baseUrl}/{link}", rel, ((HttpMethodActionConstraint)action.ActionConstraints![0]).HttpMethods.First(), form: actionForm);
 		}
 
 		internal static string GetRelativeUrlByAction(this IActionDescriptorCollectionProvider adcp, HttpContext context, string actionIdentifier)

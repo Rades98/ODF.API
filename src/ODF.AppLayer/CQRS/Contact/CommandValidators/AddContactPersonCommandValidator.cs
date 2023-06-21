@@ -1,25 +1,15 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.Contact.Commands;
-using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 {
 	public class AddContactPersonCommandValidator : AbstractValidator<AddContactPersonCommand>
 	{
-		private readonly IContactRepo _contactRepo;
-
-		public AddContactPersonCommandValidator(IContactRepo contactRepo)
-		{
-			_contactRepo = contactRepo ?? throw new ArgumentNullException(nameof(contactRepo));
-		}
-
 		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddContactPersonCommand> context, CancellationToken cancellation = default)
 		{
-			var contact = await _contactRepo.GetAsync(cancellation);
 
 			RuleFor(command => command.Name)
 				.NotEmpty()

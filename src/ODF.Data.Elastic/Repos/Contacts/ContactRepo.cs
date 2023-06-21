@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -222,47 +221,13 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			StringBuilder script = new StringBuilder("for (item in ctx._source.contactPersons) {if (item.id == params.Id) {");
 			scriptParams.Add(nameof(ContactPerson.Id), person.Id);
 
-			if (!string.IsNullOrEmpty(person.Email))
-			{
-				scriptParams.Add(nameof(ContactPerson.Email), person.Email);
-				script.Append("item.email = params.Email;");
-			}
-
-			if (!string.IsNullOrEmpty(person.Title))
-			{
-				scriptParams.Add(nameof(ContactPerson.Title), person.Title);
-				script.Append("item.title = params.Title;");
-			}
-
-			if (!string.IsNullOrEmpty(person.Name))
-			{
-				scriptParams.Add(nameof(ContactPerson.Name), person.Name);
-				script.Append("item.name = params.Name;");
-			}
-
-			if (!string.IsNullOrEmpty(person.Surname))
-			{
-				scriptParams.Add(nameof(ContactPerson.Surname), person.Surname);
-				script.Append("item.surname = params.Surname;");
-			}
-
-			if (person.Roles.Any())
-			{
-				scriptParams.Add(nameof(ContactPerson.Roles), person.Roles);
-				script.Append("item.roles = params.Roles;");
-			}
-
-			if (!string.IsNullOrEmpty(person.Base64Image))
-			{
-				scriptParams.Add(nameof(ContactPerson.Base64Image), person.Base64Image);
-				script.Append("item.base64Image = params.Base64Image;");
-			}
-
-			if (person.Order is not null)
-			{
-				scriptParams.Add(nameof(ContactPerson.Order), person.Order);
-				script.Append("item.order = params.Order;");
-			}
+			person.Email.AddIfEdited(scriptParams, script);
+			person.Title.AddIfEdited(scriptParams, script);
+			person.Email.AddIfEdited(scriptParams, script);
+			person.Surname.AddIfEdited(scriptParams, script);
+			person.Base64Image.AddIfEdited(scriptParams, script);
+			person.Order.AddIfEdited(scriptParams, script);
+			person.Roles.AddIfEdited(scriptParams, script);
 
 			script.Append("} }");
 
@@ -274,52 +239,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 					.Refresh(true), cancellationToken
 					);
 
-			if (response.IsValid)
-			{
-				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
-
-				Expression<Func<ContactPerson, bool>> exp = c => c.Id == person.Id;
-
-				if (!string.IsNullOrEmpty(person.Email))
-				{
-					exp = exp.AndAlsoNext(x => x.Email == person.Email);
-				}
-
-				if (!string.IsNullOrEmpty(person.Title))
-				{
-					exp = exp.AndAlsoNext(x => x.Title == person.Title);
-				}
-
-				if (!string.IsNullOrEmpty(person.Name))
-				{
-					exp = exp.AndAlsoNext(x => x.Name == person.Name);
-				}
-
-				if (!string.IsNullOrEmpty(person.Surname))
-				{
-					exp = exp.AndAlsoNext(x => x.Surname == person.Surname);
-				}
-
-				if (person.Roles.Any())
-				{
-					exp = exp.AndAlsoNext(x => x.Roles.SequenceEqual(person.Roles));
-				}
-
-				if (!string.IsNullOrEmpty(person.Base64Image))
-				{
-					exp = exp.AndAlsoNext(x => x.Base64Image == person.Base64Image);
-				}
-
-				if (person.Order is not null)
-				{
-					exp = exp.AndAlsoNext(x => x.Order == person.Order);
-				}
-
-				var filter = exp.Compile();
-				return actual.ContactPersons.Any(filter);
-			}
-
-			return false;
+			return response.IsValid;
 		}
 
 		public async Task<bool> RemoveContactPersonAsync(Guid id, CancellationToken cancellationToken)

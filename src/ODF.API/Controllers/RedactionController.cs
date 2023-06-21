@@ -37,9 +37,9 @@ namespace ODF.API.Controllers
 
 			var responseModel = new RedactionResponseModel("Redakce");
 
-			responseModel.AddAboutArticle = GetAddArticleAction(transaltions.Get("menu_about"), 0, countryCode);
+			responseModel.AddAboutArticle = GetAddArticleAction(transaltions.Get("menu_about"), 0);
 
-			responseModel.AddAssociationArticle = GetAddArticleAction(transaltions.Get("menu_association"), 1, countryCode);
+			responseModel.AddAssociationArticle = GetAddArticleAction(transaltions.Get("menu_association"), 1);
 
 			responseModel.UpdateLineup = GetNamedAction(nameof(LineupRedactionController.GetLineupRedaction), $"Upavit lineup", "update_lineup");
 
@@ -53,7 +53,7 @@ namespace ODF.API.Controllers
 			return Ok(responseModel);
 		}
 
-		private NamedAction GetAddArticleAction(string sectionTranslation, int pageNum, string countryCode)
+		private NamedAction GetAddArticleAction(string sectionTranslation, int pageNum)
 				=> GetNamedAction(nameof(ArticlesController.AddArticle), $"Přidat článek do {sectionTranslation}", "add_article",
 						ArticleFormFactory.GetAddArticleForm(new()
 						{

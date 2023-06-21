@@ -63,7 +63,7 @@ namespace ODF.Data.Elastic.Repos.Translations
 				return defaultTranslation;
 			}
 
-			return translation.Text;
+			return null;
 		}
 
 		public async Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
