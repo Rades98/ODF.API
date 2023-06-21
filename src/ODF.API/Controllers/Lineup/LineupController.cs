@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.FormFactories;
-using ODF.API.RequestModels.Forms;
+using ODF.API.RequestModels.Forms.Lineup;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Lineup;
 using ODF.AppLayer.CQRS.Lineup.Commands;
@@ -52,6 +52,7 @@ namespace ODF.API.Controllers.Lineup
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(AddLineupResponseModel), StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(StatusCodes.Status202Accepted)]
 		public async Task<IActionResult> AddItemToLineup([FromRoute] string countryCode, [FromBody] AddLineupItemForm form, CancellationToken cancellationToken)
 		{
@@ -66,7 +67,55 @@ namespace ODF.API.Controllers.Lineup
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new AddLineupResponseModel(null, LineupItemFormFactory.GetAddLineupItemForm(form)));
+				return UnprocessableEntity(new AddLineupResponseModel(null, LineupItemFormFactory.GetAddLineupItemForm(form, validationResult.Errors)));
+			}
+
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
+		}
+
+		[HttpPost(Name = nameof(UpdateLineupItem))]
+		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
+		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(AddLineupResponseModel), StatusCodes.Status422UnprocessableEntity)]
+		[ProducesResponseType(StatusCodes.Status202Accepted)]
+		public async Task<IActionResult> UpdateLineupItem([FromRoute] string countryCode, [FromBody] UpdateLineupItemForm form, CancellationToken cancellationToken)
+		{
+			var validationResult = await Mediator.Send(
+				new UpdateLineupItemCommand(form.Id, form.Place, form.Interpret, form.PerformanceName, form.Description,
+				form.DescriptionTranslationCode, form.DateTime, countryCode, form.UserName), cancellationToken);
+
+			if (validationResult.IsOk)
+			{
+				return Ok(new UpdateLineupResponseModel("Úprava položky z programu proběhlo úspěšně"));
+			}
+
+			if (validationResult.Errors.Any())
+			{
+				return UnprocessableEntity(new UpdateLineupResponseModel(null, LineupItemFormFactory.GetUdpateLineupItemForm(form, validationResult.Errors)));
+			}
+
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
+		}
+
+		[HttpDelete(Name = nameof(DeleteLineupItem))]
+		[Authorize(Roles = UserRoles.Admin)]
+		[CountryCodeFilter("cz")]
+		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
+		[ProducesResponseType(typeof(AddLineupResponseModel), StatusCodes.Status422UnprocessableEntity)]
+		[ProducesResponseType(StatusCodes.Status202Accepted)]
+		public async Task<IActionResult> DeleteLineupItem([FromBody] DeleteLineupItemForm form, CancellationToken cancellationToken)
+		{
+			var validationResult = await Mediator.Send(new DeleteLineupItemCommand(form.Id), cancellationToken);
+
+			if (validationResult.IsOk)
+			{
+				return Ok(new DeleteLineupResponseModel("Odebrání položky z programu proběhlo úspěšně"));
+			}
+
+			if (validationResult.Errors.Any())
+			{
+				return UnprocessableEntity(new DeleteLineupResponseModel(null, LineupItemFormFactory.GetDeleteLineupItemForm(form, validationResult.Errors)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));

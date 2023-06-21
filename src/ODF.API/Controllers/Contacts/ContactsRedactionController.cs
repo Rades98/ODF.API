@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
+using ODF.API.Extensions.MappingExtensions;
 using ODF.API.FormFactories;
 using ODF.API.ResponseModels.Contacts.Redaction;
 using ODF.API.ResponseModels.Redaction;
@@ -33,10 +34,10 @@ namespace ODF.API.Controllers.Contacts
 			var responseModel = new GetContactRedactionNavigationResponseModel();
 
 			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsController.UpdateContact), "Upravit kontakt",
-				"updateContact", ContactFormFactory.GetUpdateContactForm(new() { Email = contact.Email, EventManager = contact.EventManager, EventName = contact.EventName }));
+				"updateContact", ContactFormFactory.GetUpdateContactForm(contact.ToForm()));
 
 			responseModel.UpdateAddress = GetNamedAction(nameof(ContactAddressController.UpdateAddress), "Upravit adresu",
-				"updateAddress", ContactFormFactory.GetUpdateAddressForm(contact.Address));
+				"updateAddress", ContactFormFactory.GetUpdateAddressForm(contact.Address.ToForm()));
 
 			// Bank acc
 			responseModel.AddBankAccount = GetNamedAction(nameof(ContactBankAccountsController.AddBankAccount),
@@ -46,6 +47,9 @@ namespace ODF.API.Controllers.Contacts
 				=> GetNamedAction(nameof(ContactBankAccountsController.RemoveBankAccount),
 				$"Smazat bankovní účet {bankAcc.IBAN}", "removeBankAccount",
 				ContactFormFactory.GetRemoveBankAcountForm(bankAcc.IBAN)));
+
+			responseModel.AddContactPerson = GetNamedAction(nameof(ContactPersonsController.AddContactPerson),
+				"Přidat kontaktní osobu", "addContactPerson", ContactFormFactory.GetAddContactPersonForm());
 
 			// Contact persons
 			responseModel.ContactPersons = contact.ContactPersons.Select(person => new GetContactPersonRedactionResponseModel()
@@ -69,9 +73,6 @@ namespace ODF.API.Controllers.Contacts
 						Roles = person.Roles,
 						Title = person.Title,
 					})),
-
-				AddContactPerson = GetNamedAction(nameof(ContactPersonsController.AddContactPerson),
-				"Přidat kontaktní osobu", "addContactPerson", ContactFormFactory.GetAddContactPersonForm())
 			});
 
 			return Ok(responseModel);

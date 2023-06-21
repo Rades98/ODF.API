@@ -58,12 +58,9 @@ namespace ODF.Data.Elastic.Repos.Translations
 		{
 			var translation = await GetAsync(translationIdentifier, languageId, cancellationToken);
 
-			if (translation is null)
+			if (translation is null && await AddTranslationAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken))
 			{
-				if (await AddTranslationAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken))
-				{
-					return defaultTranslation;
-				}
+				return defaultTranslation;
 			}
 
 			return translation.Text;
@@ -131,5 +128,13 @@ namespace ODF.Data.Elastic.Repos.Translations
 								)
 							)
 							.Size(1), cancellationToken)).Documents.FirstOrDefault();
+		public async Task<bool> DeleteTranslationAsync(string translationIdentifier, CancellationToken cancellationToken)
+		=> (await _elasticClient.DeleteByQueryAsync<Translation>(q => q
+					.Query(rq => rq
+						.Match(m => m
+						.Field(f => f.TranslationCode)
+						.Query(translationIdentifier))
+					), cancellationToken
+				)).IsValid;
 	}
 }

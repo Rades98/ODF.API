@@ -43,6 +43,7 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 				{
 					var lineupItem = new LineupItem()
 					{
+						Id = Guid.NewGuid(),
 						DateTime = request.DateTime,
 						DescriptionTranslation = request.DescriptionTranslationCode,
 						Interpret = request.Interpret,

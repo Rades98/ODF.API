@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
+using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Contacts.Update;
 using ODF.API.ResponseModels.Exceptions;
@@ -29,9 +30,16 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressForm form)
 		{
-			if (await Mediator.Send(new UpdateContactAddressCommand(form.Street, form.City, form.PostalCode, form.Country)))
+			var validationResult = await Mediator.Send(new UpdateContactAddressCommand(form.Street, form.City, form.PostalCode, form.Country));
+
+			if (validationResult.IsOk)
 			{
 				return Ok(new UpdateContactAddressResponseModel());
+			}
+
+			if (validationResult.Errors.Any())
+			{
+				return UnprocessableEntity(new UpdateContactAddressResponseModel(ContactFormFactory.GetUpdateAddressForm(form)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci adresy"));

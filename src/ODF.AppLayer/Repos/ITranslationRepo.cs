@@ -20,5 +20,7 @@ namespace ODF.AppLayer.Repos
 		Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken);
 
 		Task<IEnumerable<Translation>> GetAllAsync(int languageId, CancellationToken cancellationToken);
+
+		Task<bool> DeleteTranslationAsync(string translationIdentifier, CancellationToken cancellationToken);
 	}
 }

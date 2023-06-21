@@ -17,15 +17,19 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandValidators
 			_userRepo = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
 		}
 
-		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddLineupItemCommand> context, CancellationToken cancellationToken)
+		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddLineupItemCommand> context, CancellationToken cancellation = default)
 		{
 			if (!string.IsNullOrEmpty(context.InstanceToValidate.UserName))
 			{
-				var user = await _userRepo.GetUserAsync(context.InstanceToValidate.UserName, cancellationToken);
+				var user = await _userRepo.GetUserAsync(context.InstanceToValidate.UserName, cancellation);
 
 				RuleFor(command => command.UserName)
 					.Must(command => user is not null)
 					.WithMessage("Událost nelze přiřadit neexistujícímu uživateli");
+
+				RuleFor(command => command.UserName)
+					.Must(command => user.IsActive)
+					.WithMessage("Uživatel musí být aktivován, aby se dal používat na tyhle čupr finty");
 			}
 
 			RuleFor(command => command.DateTime)
@@ -57,7 +61,7 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandValidators
 				.NotEmpty()
 				.WithMessage("Interpret musí být vyplněn");
 
-			return await base.ValidateAsync(context, cancellationToken);
+			return await base.ValidateAsync(context, cancellation);
 		}
 	}
 }

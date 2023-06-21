@@ -53,11 +53,14 @@ namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 				{
 					return new()
 					{
+						Id = lineupItem.Id,
 						DateTime = lineupItem.DateTime,
 						Description = description,
 						Interpret = lineupItem.Interpret,
 						PerformanceName = lineupItem.PerformanceName,
 						Place = lineupItem.Place,
+						DescriptionTranslationCode = lineupItem.DescriptionTranslation,
+						UserName = lineupItem.UserName,
 					};
 				}
 

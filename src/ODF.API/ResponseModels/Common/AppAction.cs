@@ -8,7 +8,7 @@ namespace ODF.API.ResponseModels.Common
 	{
 		public AppAction(string href, string rel, string method, Form? form = null)
 		{
-			Curl ??= new Curl(new(string.IsNullOrEmpty(href) ? "http://api.odf" : href), rel, method, form);
+			Curl ??= new Curl(new(string.IsNullOrEmpty(href) ? "https://api.odf" : href), rel, method, form);
 		}
 
 		[JsonProperty("curl")]

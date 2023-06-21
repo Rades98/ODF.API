@@ -12,12 +12,9 @@ namespace ODF.API.ResponseModels.Base
 				Message = message;
 			}
 
-			if (form is not null)
+			if (form is not null && form.Props.Any(prop => !string.IsNullOrEmpty(prop.ErrorMessage)))
 			{
-				if (form.Props.Any(prop => !string.IsNullOrEmpty(prop.ErrorMessage)))
-				{
-					Message = "Nevalidní vstup";
-				}
+				Message = "Nevalidní vstup";
 			}
 		}
 

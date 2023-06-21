@@ -37,7 +37,6 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			var scriptParams = new Dictionary<string, object>();
 			StringBuilder script = new StringBuilder();
 
-			//TODO Find a better way or FML
 			if (!string.IsNullOrEmpty(street))
 			{
 				scriptParams.Add(nameof(Address.Street), street);
@@ -70,36 +69,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 					.Refresh(true), cancellationToken
 					);
 
-			if (response.IsValid)
-			{
-				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
-
-				bool streetOk = true, cityOk = true, postalCodeOk = true, countryOk = true;
-
-				if (!string.IsNullOrEmpty(street))
-				{
-					streetOk = actual.Address.Street == street;
-				}
-
-				if (!string.IsNullOrEmpty(city))
-				{
-					cityOk = actual.Address.City == city;
-				}
-
-				if (!string.IsNullOrEmpty(postalCode))
-				{
-					postalCodeOk = actual.Address.PostalCode == postalCode;
-				}
-
-				if (!string.IsNullOrEmpty(country))
-				{
-					countryOk = actual.Address.Country == country;
-				}
-
-				return streetOk && cityOk && postalCodeOk && countryOk;
-			}
-
-			return false;
+			return response.IsValid;
 		}
 
 		public async Task<bool> UpdateContactAsync(string eventName, string eventManager, string email, CancellationToken cancellationToken)
@@ -107,7 +77,6 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			var scriptParams = new Dictionary<string, object>();
 			StringBuilder script = new StringBuilder();
 
-			//TODO Find a better way or FML
 			if (!string.IsNullOrEmpty(eventName))
 			{
 				scriptParams.Add(nameof(Contact.EventName), eventName);
@@ -253,7 +222,6 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			StringBuilder script = new StringBuilder("for (item in ctx._source.contactPersons) {if (item.id == params.Id) {");
 			scriptParams.Add(nameof(ContactPerson.Id), person.Id);
 
-			//TODO Find a better way or FML
 			if (!string.IsNullOrEmpty(person.Email))
 			{
 				scriptParams.Add(nameof(ContactPerson.Email), person.Email);

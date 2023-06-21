@@ -81,14 +81,26 @@ if (app.Environment.IsDevelopment())
 else
 {
 	app.UseCors(x => x
-	.AllowAnyOrigin()
 	.AllowAnyMethod()
 	.AllowAnyHeader()
 	.AllowCredentials()
 	.WithOrigins("https://folklorova.cz"));
 
 	app.UseHttpsRedirection();
-	app.UseResponseCompression();
+
+	app.UseWhen(
+		delegate (HttpContext httpContext)
+		{
+			return !(httpContext.Request.Path.ToString().Contains("/metrics") ||
+					httpContext.Request.Path.ToString().Contains("/health") ||
+					httpContext.Request.Path == new PathString("/"));
+		}
+		,
+		delegate (IApplicationBuilder appBuilder)
+		{
+			appBuilder.UseResponseCompression();
+		}
+	);
 }
 
 app.UseAuthentication();

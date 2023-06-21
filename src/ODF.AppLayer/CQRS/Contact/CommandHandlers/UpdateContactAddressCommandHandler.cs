@@ -2,12 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ODF.AppLayer.CQRS.Contact.Commands;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 {
-	internal class UpdateContactAddressCommandHandler : ICommandHandler<UpdateContactAddressCommand, bool>
+	internal class UpdateContactAddressCommandHandler : ICommandHandler<UpdateContactAddressCommand, ValidationDto>
 	{
 		private readonly IContactRepo _contactRepo;
 
@@ -16,7 +17,7 @@ namespace ODF.AppLayer.CQRS.Contact.CommandHandlers
 			_contactRepo = contactRepo ?? throw new NotImplementedException(nameof(contactRepo));
 		}
 
-		public Task<bool> Handle(UpdateContactAddressCommand request, CancellationToken cancellationToken)
-			=> _contactRepo.UpdateAddressAsync(request.Street, request.City, request.PostalCode, request.Country, cancellationToken);
+		public async Task<ValidationDto> Handle(UpdateContactAddressCommand request, CancellationToken cancellationToken)
+			=> new() { IsOk = await _contactRepo.UpdateAddressAsync(request.Street, request.City, request.PostalCode, request.Country, cancellationToken) };
 	}
 }

@@ -12,7 +12,7 @@ namespace ODF.API.ResponseModels.Base
 			Actions ??= new();
 		}
 
-		public BaseResponseModel(Form? form = null)
+		public BaseResponseModel(Form form)
 		{
 			_self.Curl.Form = form;
 			Actions ??= new();
@@ -24,8 +24,8 @@ namespace ODF.API.ResponseModels.Base
 			Actions ??= new();
 		}
 
-		[JsonProperty("_self", Required = Required.Always)]
-		public NamedAction _self { get; set; } = new("http://odfapi.odf", "", "", "");
+		[JsonProperty(nameof(_self), Required = Required.Always)]
+		public NamedAction _self { get; set; } = new("https://odfapi.odf", "", "", "");
 
 		[JsonProperty("actions")]
 		public List<AppAction> Actions { get; set; }

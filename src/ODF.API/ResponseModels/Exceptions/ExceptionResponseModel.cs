@@ -24,7 +24,7 @@ namespace ODF.API.ResponseModels.Exceptions
 
 		public override string ToString() => JsonConvert.SerializeObject(this);
 
-		[JsonProperty("_self", Required = Required.Always)]
+		[JsonProperty(nameof(_self), Required = Required.Always)]
 		public NamedAction? _self { get; }
 	}
 }

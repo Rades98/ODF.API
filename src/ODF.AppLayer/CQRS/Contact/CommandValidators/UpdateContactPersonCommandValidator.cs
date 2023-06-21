@@ -18,16 +18,16 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 			_contactRepo = contactRepo ?? throw new ArgumentNullException(nameof(contactRepo));
 		}
 
-		public override async Task<ValidationResult> ValidateAsync(ValidationContext<UpdateContactPersonCommand> context, CancellationToken cancellationToken)
+		public override async Task<ValidationResult> ValidateAsync(ValidationContext<UpdateContactPersonCommand> context, CancellationToken cancellation = default)
 		{
-			var contact = await _contactRepo.GetAsync(cancellationToken);
+			var contact = await _contactRepo.GetAsync(cancellation);
 			bool exist = contact.ContactPersons.Any(person => person.Id == context.InstanceToValidate.Id);
 
 			RuleFor(person => person.Id)
 				.Must(x => exist)
 				.WithMessage("Kontaktní osoba nenalezena");
 
-			return await base.ValidateAsync(context, cancellationToken);
+			return await base.ValidateAsync(context, cancellation);
 		}
 	}
 }

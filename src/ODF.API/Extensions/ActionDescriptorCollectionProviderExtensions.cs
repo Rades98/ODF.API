@@ -24,14 +24,7 @@ namespace ODF.API.Extensions
 
 			if (action is null)
 			{
-				throw new NullReferenceException(nameof(action));
-			}
-
-			string method = HttpMethods.Put;
-
-			if (action.ActionConstraints!.FirstOrDefault(constraint => constraint is HttpMethodActionConstraint httpMethodConstraint) is HttpMethodActionConstraint httpMethodConstraint)
-			{
-				method = httpMethodConstraint.HttpMethods.First();
+				throw new IndexOutOfRangeException(nameof(action));
 			}
 
 			string link = action.AttributeRouteInfo!.Template!.Replace("{countryCode}", countryCode ?? context.GetCountryCode()!);
@@ -47,14 +40,7 @@ namespace ODF.API.Extensions
 
 			if (action is null)
 			{
-				throw new NullReferenceException(nameof(action));
-			}
-
-			string method = HttpMethods.Put;
-
-			if (action.ActionConstraints!.FirstOrDefault(constraint => constraint is HttpMethodActionConstraint httpMethodConstraint) is HttpMethodActionConstraint httpMethodConstraint)
-			{
-				method = httpMethodConstraint.HttpMethods.First();
+				throw new IndexOutOfRangeException(nameof(action));
 			}
 
 			string link = action.AttributeRouteInfo!.Template!
@@ -83,7 +69,7 @@ namespace ODF.API.Extensions
 
 			if (action is null)
 			{
-				throw new NullReferenceException(nameof(action));
+				throw new IndexOutOfRangeException(nameof(action));
 			}
 
 			string link = action.AttributeRouteInfo!.Template!
