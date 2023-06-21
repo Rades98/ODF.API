@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using ODF.AppLayer.Repos;
@@ -22,28 +21,25 @@ namespace ODF.Data.Elastic.Repos.Articles
 			_repo = repo ?? throw new ArgumentNullException(nameof(repo));
 		}
 
-		public Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, Uri imageUrl, CancellationToken cancellationToken)
-			=> _repo.AddArticleAsync(titleTranslationCode, textTransaltionCode, pageId, imageUrl, cancellationToken);
+		public Task<bool> AddArticleAsync(string titleTranslationCode, string textTranslationCode, int pageId, Uri imageUrl, CancellationToken cancellationToken)
+			=> _repo.AddArticleAsync(titleTranslationCode, textTranslationCode, pageId, imageUrl, cancellationToken);
 
-		public Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)
-			=> _repo.GetArticleAsync(id, cancellationToken);
-
-		public async Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken)
+		public async Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)
 		{
-			string cacheKey = $"{nameof(Article)}s_{pageId}_paged{size}_{offset}";
+			string cacheKey = $"{nameof(Article)}_{id}";
 
 			object cachedResponse = _cache.Get(cacheKey);
 
 			if (cachedResponse != null)
 			{
-				var res = JsonConvert.DeserializeObject<IEnumerable<Article>>(Encoding.Default.GetString((byte[])cachedResponse));
+				var res = JsonConvert.DeserializeObject<Article>(Encoding.Default.GetString((byte[])cachedResponse));
 				if (res is not null)
 				{
 					return res;
 				}
 			}
 
-			var response = await _repo.GetArticlesPaginatedAsync(pageId, size, offset, cancellationToken);
+			var response = await _repo.GetArticleAsync(id, cancellationToken);
 
 			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), new MemoryCacheEntryOptions()
 			{
@@ -52,5 +48,8 @@ namespace ODF.Data.Elastic.Repos.Articles
 
 			return response;
 		}
+
+		public Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken)
+			=> _repo.GetArticlesPaginatedAsync(pageId, size, offset, cancellationToken);
 	}
 }

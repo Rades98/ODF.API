@@ -13,7 +13,7 @@ namespace ODF.API.ResponseModels.Base
 			}
 		}
 
-		public BaseCreateResponseModel(Form form, string? message = null) : base(form)
+		public BaseCreateResponseModel(Form form, string message) : base(form)
 		{
 			Message = message ?? "Nevalidní vstup";
 		}

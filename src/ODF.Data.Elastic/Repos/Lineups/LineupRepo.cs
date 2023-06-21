@@ -44,33 +44,11 @@ namespace ODF.Data.Elastic.Repos.Lineups
 			var scriptParams = new Dictionary<string, object>();
 			StringBuilder script = new StringBuilder();
 
-			if (!string.IsNullOrEmpty(lineupItem.PerformanceName))
-			{
-				scriptParams.Add(nameof(LineupItem.PerformanceName), lineupItem.PerformanceName);
-				script.Append($"ctx._source.performanceName = params.{nameof(LineupItem.PerformanceName)};");
-			}
-
-			if (!string.IsNullOrEmpty(lineupItem.UserName))
-			{
-				scriptParams.Add(nameof(LineupItem.UserName), lineupItem.UserName);
-				script.Append($"ctx._source.userName = params.{nameof(LineupItem.UserName)};");
-			}
-
-			if (!string.IsNullOrEmpty(lineupItem.Interpret))
-			{
-				scriptParams.Add(nameof(LineupItem.Interpret), lineupItem.Interpret);
-				script.Append($"ctx._source.interpret = params.{nameof(LineupItem.Interpret)};");
-			}
-
-			if (!string.IsNullOrEmpty(lineupItem.Place))
-			{
-				scriptParams.Add(nameof(LineupItem.Place), lineupItem.Place);
-				script.Append($"ctx._source.place = params.{nameof(LineupItem.Place)};");
-			}
-
-			scriptParams.Add(nameof(LineupItem.DateTime), lineupItem.DateTime.ToString("yyyy-MM-ddTHH:mm:ss"));
-			script.Append($"ctx._source.dateTime = params.{nameof(LineupItem.DateTime)};");
-
+			lineupItem.PerformanceName.AddIfEdited(scriptParams, script);
+			lineupItem.UserName.AddIfEdited(scriptParams, script);
+			lineupItem.Interpret.AddIfEdited(scriptParams, script);
+			lineupItem.Place.AddIfEdited(scriptParams, script);
+			lineupItem.DateTime.AddIfEdited(scriptParams, script);
 
 			var res = await _elasticClient.UpdateByQueryAsync<LineupItem>(s => s
 					.MatchAll()

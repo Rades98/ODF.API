@@ -33,8 +33,6 @@ namespace ODF.API.Controllers
 		public async Task<IActionResult> GetTranslations([FromRoute] string countryCode, int size, int offset, CancellationToken cancellationToken)
 		{
 			var translations = await Mediator.Send(new GetTranslationsQuery(countryCode, size, offset), cancellationToken);
-			var deTranslations = await Mediator.Send(new GetTranslationsQuery(Languages.Deutsch.GetCountryCode(), size, offset), cancellationToken);
-			var enTranslations = await Mediator.Send(new GetTranslationsQuery(Languages.English.GetCountryCode(), size, offset), cancellationToken);
 
 			var responseModel = new GetTranslationsResponseModel("Správa překladů");
 			responseModel.Translations = translations.Translations.Select(tr =>

@@ -39,7 +39,7 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 				.WithMessage("Číslo účtu musí být vyplněno");
 
 			RuleFor(command => command.AccountId)
-				.Must(iban => !ibans.Contains(iban))
+				.Must(accountId => !accouuntIds.Contains(accountId))
 				.WithMessage("Zadané bankovní číslo už je použito");
 
 			RuleFor(command => command.Bank)

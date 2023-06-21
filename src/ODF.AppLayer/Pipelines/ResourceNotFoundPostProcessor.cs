@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR.Pipeline;
@@ -19,11 +20,26 @@ namespace ODF.AppLayer.Pipelines
 		}
 	}
 
+	[Serializable]
 	public class TranslationNotFoundException : Exception
 	{
-		public TranslationNotFoundException(string message) : base(message)
+		public TranslationNotFoundException()
 		{
+		}
 
+		public TranslationNotFoundException(string message)
+			: base(message)
+		{
+		}
+
+		public TranslationNotFoundException(string message, Exception innerException)
+			: base(message, innerException)
+		{
+		}
+
+		protected TranslationNotFoundException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
 		}
 	}
 }

@@ -12,6 +12,6 @@ namespace ODF.AppLayer.Repos
 
 		Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken);
 
-		Task<bool> AddArticleAsync(string titleTranslationCode, string textTransaltionCode, int pageId, Uri imageUrl, CancellationToken cancellationToken);
+		Task<bool> AddArticleAsync(string titleTranslationCode, string textTranslationCode, int pageId, Uri imageUrl, CancellationToken cancellationToken);
 	}
 }

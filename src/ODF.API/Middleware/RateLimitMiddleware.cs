@@ -103,13 +103,13 @@ namespace ODF.API.Middleware
 			await _cache.SetCachedValueAsync($"block_{key}", blockedIp, new() { AbsoluteExpiration = DateTime.Now.AddMinutes(_scrapOpts.DurationMin) }, cancellationToken);
 		}
 
-		private record ClientStatistics()
+		private sealed record ClientStatistics()
 		{
 			public DateTime LastSuccessfulResponseTime { get; set; }
 			public int NumberofRequestsCompletedSuccessfully { get; set; }
 		}
 
-		private record BlockedIp()
+		private sealed record BlockedIp()
 		{
 			public string Ip { get; set; } = string.Empty;
 

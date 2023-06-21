@@ -51,13 +51,13 @@ namespace ODF.Data.Elastic.Settings
 			services.AddSingleton<IElasticClient>(client);
 
 			services.AddTransient<IArticleRepo, ArticleRepo>();
-			//services.Decorate<IArticleRepo, ArticleRepoCache>();
+			services.Decorate<IArticleRepo, ArticleRepoCache>();
 
 			services.AddTransient<ITranslationRepo, TranslationRepo>();
 			services.Decorate<ITranslationRepo, TranslationRepoCache>();
 
 			services.AddTransient<ILineupRepo, LineupRepo>();
-			//services.Decorate<ILineupRepo, LineupRepoCahce>();
+			services.Decorate<ILineupRepo, LineupRepoCahce>();
 
 			services.AddTransient<IContactRepo, ContactRepo>();
 

@@ -4,7 +4,7 @@ namespace ODF.Domain.Entities.ContactEntities
 {
 	public class Contact
 	{
-		public int Id = 1;
+		public int Id { get; set; } = 1;
 
 		public string EventName { get; set; } = string.Empty;
 
