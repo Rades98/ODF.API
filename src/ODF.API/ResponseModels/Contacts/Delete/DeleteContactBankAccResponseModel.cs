@@ -5,7 +5,11 @@ namespace ODF.API.ResponseModels.Contacts.Delete
 {
 	public class DeleteContactBankAccResponseModel : BaseDeleteResponseModel
 	{
-		public DeleteContactBankAccResponseModel(Form? form = null) : base(form: form)
+		public DeleteContactBankAccResponseModel() : base()
+		{
+		}
+
+		public DeleteContactBankAccResponseModel(Form form) : base(form)
 		{
 		}
 	}

@@ -9,7 +9,7 @@ namespace ODF.AppLayer.Extensions
 	{
 		public static string Get(this IReadOnlyList<TranslationDto> translations, string translationCode)
 		{
-			var translation = translations.FirstOrDefault(tr => tr.TranslationCode == translationCode)?.Text;
+			string translation = translations.FirstOrDefault(tr => tr.TranslationCode == translationCode)?.Text;
 
 			if (translation is not null)
 			{

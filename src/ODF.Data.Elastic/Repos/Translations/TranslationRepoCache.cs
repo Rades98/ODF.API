@@ -41,9 +41,9 @@ namespace ODF.Data.Elastic.Repos.Translations
 
 		public async Task<IEnumerable<Translation>> GetAllAsync(int languageId, CancellationToken cancellationToken)
 		{
-			var cacheKey = $"{nameof(Translation)}s_{languageId}";
+			string cacheKey = $"{nameof(Translation)}s_{languageId}";
 
-			var cachedResponse = _cache.Get(cacheKey);
+			object cachedResponse = _cache.Get(cacheKey);
 
 			if (cachedResponse != null)
 			{

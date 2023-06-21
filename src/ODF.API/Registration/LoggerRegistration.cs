@@ -11,7 +11,7 @@ namespace ODF.API.Registration
 		public static WebApplication SetupLogging(this WebApplication app)
 		{
 			var configuration = app.Configuration;
-			var environment = app.Environment.EnvironmentName;
+			string environment = app.Environment.EnvironmentName;
 
 			Log.Logger = new LoggerConfiguration()
 				.Enrich.FromLogContext()

@@ -5,7 +5,15 @@ namespace ODF.API.ResponseModels.Base
 {
 	public class BaseUpdateResponseModel : BaseResponseModel
 	{
-		public BaseUpdateResponseModel(string? message = null, Form? form = null) : base(form)
+		public BaseUpdateResponseModel(string? message = null) : base()
+		{
+			if (message is not null)
+			{
+				Message = message;
+			}
+		}
+
+		public BaseUpdateResponseModel(Form form, string? message = null) : base(form)
 		{
 			if (message is not null)
 			{

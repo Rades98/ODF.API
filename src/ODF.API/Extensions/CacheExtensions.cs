@@ -8,7 +8,7 @@ namespace ODF.API.Extensions
 	{
 		public async static Task<T?> GetCachedValueAsyn<T>(this IDistributedCache cache, string key, CancellationToken cancellationToken) where T : class, new()
 		{
-			var result = await cache.GetAsync(key, cancellationToken);
+			byte[]? result = await cache.GetAsync(key, cancellationToken);
 
 			if (result is null)
 			{
