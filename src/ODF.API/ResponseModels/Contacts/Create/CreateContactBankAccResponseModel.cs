@@ -5,7 +5,11 @@ namespace ODF.API.ResponseModels.Contacts.Create
 {
 	public class CreateContactBankAccResponseModel : BaseCreateResponseModel
 	{
-		public CreateContactBankAccResponseModel(Form? form = null) : base(form: form)
+		public CreateContactBankAccResponseModel() : base()
+		{
+		}
+
+		public CreateContactBankAccResponseModel(Form form) : base(form)
 		{
 		}
 	}

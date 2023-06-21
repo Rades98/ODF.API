@@ -37,14 +37,13 @@ namespace ODF.API.Controllers
 
 			var responseModel = new RedactionResponseModel("Redakce");
 
-			responseModel.AddAboutArticle = GetAddArticleAction(transaltions.Get("nav_about"), 0, countryCode);
+			responseModel.AddAboutArticle = GetAddArticleAction(transaltions.Get("menu_about"), 0, countryCode);
 
-			responseModel.AddAssociationArticle = GetAddArticleAction(transaltions.Get("nav_association"), 1, countryCode);
+			responseModel.AddAssociationArticle = GetAddArticleAction(transaltions.Get("menu_association"), 1, countryCode);
 
-			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
-					LineupItemFormFactory.GetAddLineupItemForm(new()));
+			responseModel.UpdateLineup = GetNamedAction(nameof(LineupRedactionController.GetLineupRedaction), $"Upavit lineup", "update_lineup");
 
-			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsRedactionController.GetContactsRedaction), "Upravit kontakty", "updateContacts");
+			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsRedactionController.GetContactsRedaction), "Upravit kontakty", "update_contacts");
 
 			responseModel.AddAction(GetQueriedAppAction(nameof(TranslationsController.GetTranslations), "translations_change",
 				new Dictionary<string, string> {

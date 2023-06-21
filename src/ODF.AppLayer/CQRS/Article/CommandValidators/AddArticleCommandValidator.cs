@@ -8,7 +8,7 @@ namespace ODF.AppLayer.CQRS.Article.CommandValidators
 {
 	public class AddArticleCommandValidator : AbstractValidator<AddArticleCommand>
 	{
-		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddArticleCommand> context, CancellationToken cancellationToken)
+		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddArticleCommand> context, CancellationToken cancellation = default)
 		{
 			RuleFor(article => article.TitleTransaltionCode)
 				.NotEmpty()
@@ -30,7 +30,7 @@ namespace ODF.AppLayer.CQRS.Article.CommandValidators
 				.NotNull()
 				.WithMessage("a TeXT jE KdE?");
 
-			return await base.ValidateAsync(context, cancellationToken);
+			return await base.ValidateAsync(context, cancellation);
 		}
 	}
 }

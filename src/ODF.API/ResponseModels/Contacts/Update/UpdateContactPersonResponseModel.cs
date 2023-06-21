@@ -5,7 +5,11 @@ namespace ODF.API.ResponseModels.Contacts.Update
 {
 	public class UpdateContactPersonResponseModel : BaseUpdateResponseModel
 	{
-		public UpdateContactPersonResponseModel(Form? form = null) : base(form: form)
+		public UpdateContactPersonResponseModel() : base()
+		{
+		}
+
+		public UpdateContactPersonResponseModel(Form form) : base(form)
 		{
 		}
 	}

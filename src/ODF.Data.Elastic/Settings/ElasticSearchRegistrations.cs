@@ -26,8 +26,8 @@ namespace ODF.Data.Elastic.Settings
 		/// <returns></returns>
 		public static IServiceCollection ConfigureElasticsearch(this IServiceCollection services, IConfiguration configuration)
 		{
-			var elasticConf = configuration.GetSection(nameof(ElasticsearchSettings)).Get<ElasticsearchSettings>()
-				?? throw new ArgumentNullException(nameof(ElasticsearchSettings));
+			var elasticConf = configuration.GetSection(nameof(ElasticsearchSettings)).Get<ElasticsearchSettings>();
+			_ = elasticConf ?? throw new ArgumentException(nameof(elasticConf));
 
 			var connectionPool = new StaticConnectionPool(elasticConf.Nodes.Select(node => new Uri(node)));
 
@@ -242,6 +242,10 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 1, Text ="Resource not found.", TranslationCode = "app_base_notfound" },
 				new(){ IsSystem = true, LanguageId = 2, Text ="Ressource nicht gefunden.", TranslationCode = "app_base_notfound" },
 
+				new(){ IsSystem = true, LanguageId = 0, Text ="Uživatel nenalezen", TranslationCode = "error_login_wrong_user" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="User not found", TranslationCode = "error_login_wrong_user" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Benutzer nicht gefunden", TranslationCode = "error_login_wrong_user" },
+
 				new(){ IsSystem = true, LanguageId = 0, Text ="Špatné heslo", TranslationCode = "error_login_wrong_pw" },
 				new(){ IsSystem = true, LanguageId = 1, Text ="Wrong password", TranslationCode = "error_login_wrong_pw" },
 				new(){ IsSystem = true, LanguageId = 2, Text ="Falsches Passwort", TranslationCode = "error_login_wrong_pw" },
@@ -310,7 +314,7 @@ namespace ODF.Data.Elastic.Settings
 
 					if (res.ServerError is not null)
 					{
-						throw new Exception(JsonConvert.SerializeObject(res.ServerError));
+						throw new ElasticsearchClientException(JsonConvert.SerializeObject(res.ServerError));
 					}
 				}
 			});

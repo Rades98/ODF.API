@@ -23,18 +23,28 @@ namespace ODF.AppLayer.CQRS.User.CommandValidators
 		}
 
 		//TODO add middleware for rate limit login action
-		public override async Task<ValidationResult> ValidateAsync(ValidationContext<LoginUserCommand> context, CancellationToken cancellationToken)
+		public override async Task<ValidationResult> ValidateAsync(ValidationContext<LoginUserCommand> context, CancellationToken cancellation = default)
 		{
-			var transaltions = await _translationsProvider.GetTranslationsAsync(context.InstanceToValidate.CountryCode, cancellationToken);
+			var transaltions = await _translationsProvider.GetTranslationsAsync(context.InstanceToValidate.CountryCode, cancellation);
 
-			var user = await _userRepo.GetUserAsync(context.InstanceToValidate.UserName, cancellationToken);
-			bool pwValid = PasswordHasher.Check(user.PasswordHash, context.InstanceToValidate.Password).Verified;
+			var user = await _userRepo.GetUserAsync(context.InstanceToValidate.UserName, cancellation);
 
-			RuleFor(command => command.Password)
-				.Must(x => pwValid)
-				.WithMessage(transaltions.Get("error_login_wrong_pw"));
+			RuleFor(command => command.UserName)
+					.Must(x => user is not null)
+					.WithMessage(transaltions.Get("error_login_wrong_user"));
 
-			return await base.ValidateAsync(context, cancellationToken);
+			if (user is not null)
+			{
+				bool pwValid = PasswordHasher.Check(user.PasswordHash, context.InstanceToValidate.Password).Verified;
+
+				RuleFor(command => command.Password)
+					.Must(x => pwValid)
+					.WithMessage(transaltions.Get("error_login_wrong_pw"));
+			}
+
+
+
+			return await base.ValidateAsync(context, cancellation);
 		}
 	}
 }

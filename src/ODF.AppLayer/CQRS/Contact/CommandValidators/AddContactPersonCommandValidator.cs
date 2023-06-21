@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.Contact.Commands;
@@ -17,9 +17,9 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 			_contactRepo = contactRepo ?? throw new ArgumentNullException(nameof(contactRepo));
 		}
 
-		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddContactPersonCommand> context, CancellationToken cancellationToken)
+		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddContactPersonCommand> context, CancellationToken cancellation = default)
 		{
-			var contact = await _contactRepo.GetAsync(cancellationToken);
+			var contact = await _contactRepo.GetAsync(cancellation);
 
 			RuleFor(command => command.Name)
 				.NotEmpty()
@@ -46,7 +46,7 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 				.NotNull()
 				.WithMessage("Dej chudákovi obrázek :)");
 
-			return await base.ValidateAsync(context, cancellationToken);
+			return await base.ValidateAsync(context, cancellation);
 		}
 	}
 }

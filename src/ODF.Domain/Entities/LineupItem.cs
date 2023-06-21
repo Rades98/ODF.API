@@ -4,6 +4,8 @@ namespace ODF.Domain.Entities
 {
 	public class LineupItem
 	{
+		public Guid Id { get; set; }
+
 		public DateTime DateTime { get; set; }
 
 		public string Place { get; set; } = string.Empty;

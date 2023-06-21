@@ -13,7 +13,7 @@ namespace ODF.API.Middleware
 		private readonly ApiSettings _apiSettings;
 
 		private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { Error = (sender, args) => { args.ErrorContext.Handled = true; } };
-		private static Regex SelfReg = new(@"(?:(!:[""]_self).)*(?:[""]_self).*[}}\]}]$", RegexOptions.Compiled);
+		private static Regex SelfReg = new(@"(?:(!:[""]_self).)*(?:[""]_self).*[}}\]}]$", RegexOptions.Compiled, TimeSpan.FromSeconds(20));
 
 		public ResponseSelfMiddleware(RequestDelegate next, IOptions<ApiSettings> apiSettings)
 		{

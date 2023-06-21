@@ -1,34 +1,32 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.Contact.Commands;
 using ODF.AppLayer.Repos;
+using ODF.Domain.Extensions;
 
 namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 {
 	public class AddBankAccountCommandValidator : AbstractValidator<AddBankAccountCommand>
 	{
 		private readonly IContactRepo _contactRepo;
-		private static readonly Regex CzIBAN = new(@"^(?:CZ|cz)(?:\d{22}|\d{2}[ ]{1}(?:\d{4}[ ]){4}\d{4})$", RegexOptions.Compiled);
-
 		public AddBankAccountCommandValidator(IContactRepo contactRepo)
 		{
 			_contactRepo = contactRepo ?? throw new ArgumentNullException(nameof(contactRepo));
 		}
 
-		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddBankAccountCommand> context, CancellationToken cancellationToken)
+		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddBankAccountCommand> context, CancellationToken cancellation = default)
 		{
-			var contact = await _contactRepo.GetAsync(cancellationToken);
+			var contact = await _contactRepo.GetAsync(cancellation);
 
 			var ibans = contact.BankAccounts.Select(ba => ba.IBAN);
 			var accouuntIds = contact.BankAccounts.Select(ba => ba.AccountId);
 
 			RuleFor(command => command.IBAN)
-				.Must(CzIBAN.IsMatch)
+				.Must(BankAccountExtensions.ValidateIban)
 				.WithMessage("Zadaný IBAN nesplňuje podmínky CZXXXXXXXXXXXXXXXXXXXXXX, případně czXX XXXX XXXX XXXX XXXX XXXX");
 
 			RuleFor(command => command.IBAN)
@@ -49,7 +47,7 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 				.NotEmpty()
 				.WithMessage("Banka musí být vyplněna");
 
-			return await base.ValidateAsync(context, cancellationToken);
+			return await base.ValidateAsync(context, cancellation);
 		}
 	}
 }

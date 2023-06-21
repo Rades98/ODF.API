@@ -16,18 +16,21 @@ namespace ODF.Data.Redis.Settings
 		public static IServiceCollection ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
 		{
 			var redisSettings = configuration.GetSection(nameof(RedisSettings)).Get<RedisSettings>()
-				?? throw new ArgumentNullException(nameof(RedisSettings));
+				?? throw new ArgumentException(nameof(RedisSettings));
+
+			var apiSettings = configuration.GetSection(nameof(ApiSettings)).Get<ApiSettings>()
+				?? throw new ArgumentException(nameof(ApiSettings));
 
 			services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer
 				.Connect(redisSettings.Url)
-				.Seed(configuration));
+				.Seed(apiSettings.AdminPw));
 
 			services.AddTransient<IUserRepo, UserRepo>();
 
 			return services;
 		}
 
-		private static ConnectionMultiplexer Seed(this ConnectionMultiplexer connectionMultiplexer, IConfiguration configuration)
+		private static ConnectionMultiplexer Seed(this ConnectionMultiplexer connectionMultiplexer, string pw)
 		{
 			var db = connectionMultiplexer.GetDatabase();
 			string userName = "admin";
@@ -41,7 +44,7 @@ namespace ODF.Data.Redis.Settings
 					Email = "admin@folklorova.cz",
 					Id = Guid.Parse("5697F910-A490-47E2-B90B-C42C662178CA"),
 					IsAdmin = true,
-					PasswordHash = PasswordHasher.Hash(configuration.Get<ApiSettings>().AdminPw),
+					PasswordHash = PasswordHasher.Hash(pw),
 					IsActive = true,
 				};
 

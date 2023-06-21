@@ -4,6 +4,8 @@ namespace ODF.AppLayer.Dtos
 {
 	public class LineupItemDto
 	{
+		public Guid Id { get; set; }
+
 		public DateTime DateTime { get; set; }
 
 		public string Place { get; set; } = string.Empty;
@@ -13,5 +15,9 @@ namespace ODF.AppLayer.Dtos
 		public string PerformanceName { get; set; } = string.Empty;
 
 		public string Description { get; set; } = string.Empty;
+
+		public string DescriptionTranslationCode { get; set; } = string.Empty;
+
+		public string UserName { get; set; } = string.Empty;
 	}
 }

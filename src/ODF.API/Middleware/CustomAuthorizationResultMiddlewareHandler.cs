@@ -25,33 +25,33 @@ namespace ODF.API.Middleware
 			_adcp = adcp ?? throw new ArgumentNullException(nameof(adcp));
 		}
 
-		public async Task HandleAsync(RequestDelegate next, HttpContext httpContext, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
+		public async Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
 		{
 			if (!authorizeResult.Succeeded)
 			{
-				string? countryCode = httpContext.GetCountryCode() ?? Languages.Czech.GetCountryCode();
+				string? countryCode = context.GetCountryCode() ?? Languages.Czech.GetCountryCode();
 
 				var translations = await _translationsProvider.GetTranslationsAsync(countryCode, default);
 
 				string title = translations.Get("unauthorized_title");
 
-				bool isLoggedIn = httpContext!.IsLoggedIn();
+				bool isLoggedIn = context!.IsLoggedIn();
 
 				string message = isLoggedIn ? translations.Get("unauthorized_msg_logged") : translations.Get("unauthorized_msg_annonymous");
 
-				var loginAction = _adcp.GetNamedAction(httpContext, $"{httpContext.Request.Scheme}://{httpContext.Request.Host}",
+				var loginAction = _adcp.GetNamedAction(context, $"{context.Request.Scheme}://{context.Request.Host}",
 					nameof(UsersController.LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(new(), translations));
 
 				var responseModel = new UnauthorizedExceptionResponseModel(title, message, null, !isLoggedIn ? loginAction : null);
 
 				byte[] bytes = Encoding.UTF8.GetBytes(responseModel.ToString());
-				httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-				httpContext.Response.ContentType = MediaTypeNames.Application.Json;
-				await httpContext.Response.Body.WriteAsync(bytes, default);
+				context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+				context.Response.ContentType = MediaTypeNames.Application.Json;
+				await context.Response.Body.WriteAsync(bytes, default);
 			}
 			else
 			{
-				await DefaultHandler.HandleAsync(next, httpContext, policy, authorizeResult);
+				await DefaultHandler.HandleAsync(next, context, policy, authorizeResult);
 			}
 		}
 	}

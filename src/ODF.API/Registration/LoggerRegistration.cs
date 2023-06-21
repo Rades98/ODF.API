@@ -11,7 +11,7 @@ namespace ODF.API.Registration
 		public static WebApplication SetupLogging(this WebApplication app)
 		{
 			var configuration = app.Configuration;
-			var environment = app.Environment.EnvironmentName;
+			string environment = app.Environment.EnvironmentName;
 
 			Log.Logger = new LoggerConfiguration()
 				.Enrich.FromLogContext()
@@ -40,8 +40,8 @@ namespace ODF.API.Registration
 
 		private static ElasticsearchSinkOptions ConfigureElasticSink(IConfiguration configuration, string environment)
 		{
-			var elasticConf = configuration.GetSection(nameof(ElasticsearchSettings)).Get<ElasticsearchSettings>()
-				?? throw new ArgumentNullException(nameof(ElasticsearchSettings));
+			var elasticConf = configuration.GetSection(nameof(ElasticsearchSettings)).Get<ElasticsearchSettings>();
+			_ = elasticConf ?? throw new ArgumentException(nameof(elasticConf));
 
 			return new ElasticsearchSinkOptions(new Uri(elasticConf.Nodes.First()))
 			{

@@ -4,18 +4,18 @@ using ODF.API.Attributes.Binding;
 
 namespace ODF.API.Filters
 {
-    public class PropertyBindingActionFilterAttribute : ActionFilterAttribute
+	public class PropertyBindingActionFilterAttribute : ActionFilterAttribute
 	{
-		public override void OnActionExecuting(ActionExecutingContext actionContext)
+		public override void OnActionExecuting(ActionExecutingContext context)
 		{
-			foreach (var modelValuePair in actionContext.ActionArguments.ToArray())
+			foreach (var modelValuePair in context.ActionArguments.ToArray())
 			{
 				string parameterName = modelValuePair.Key;
 				object? parameterValue = modelValuePair.Value;
 
-				if (actionContext.ActionArguments.ContainsKey(parameterName))
+				if (context.ActionArguments.ContainsKey(parameterName))
 				{
-					object? parameterBinding = actionContext.ActionArguments[parameterName];
+					object? parameterBinding = context.ActionArguments[parameterName];
 
 					if (parameterBinding is not null)
 					{

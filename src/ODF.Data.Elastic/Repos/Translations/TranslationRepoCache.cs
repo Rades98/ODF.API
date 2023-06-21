@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
-using ODF.AppLayer.Repos;
-using ODF.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
+using ODF.AppLayer.Repos;
+using ODF.Domain.Entities;
 
 namespace ODF.Data.Elastic.Repos.Translations
 {
@@ -41,9 +41,9 @@ namespace ODF.Data.Elastic.Repos.Translations
 
 		public async Task<IEnumerable<Translation>> GetAllAsync(int languageId, CancellationToken cancellationToken)
 		{
-			var cacheKey = $"{nameof(Translation)}s_{languageId}";
+			string cacheKey = $"{nameof(Translation)}s_{languageId}";
 
-			var cachedResponse = _cache.Get(cacheKey);
+			object cachedResponse = _cache.Get(cacheKey);
 
 			if (cachedResponse != null)
 			{
@@ -63,5 +63,8 @@ namespace ODF.Data.Elastic.Repos.Translations
 
 			return response;
 		}
+
+		public Task<bool> DeleteTranslationAsync(string translationIdentifier, CancellationToken cancellationToken)
+			=> _repo.DeleteTranslationAsync(translationIdentifier, cancellationToken);
 	}
 }

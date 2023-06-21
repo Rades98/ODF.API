@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Nest;
 using Newtonsoft.Json;
 using ODF.AppLayer.Repos;
 using ODF.Domain.Entities;
@@ -24,12 +23,12 @@ namespace ODF.Data.Elastic.Repos.Lineups
 
 		public Task<bool> AddLineupItemAsync(LineupItem lineupItem, CancellationToken cancellationToken)
 			=> _repo.AddLineupItemAsync(lineupItem, cancellationToken);
-		
+
 		public async Task<IEnumerable<LineupItem>> GetLineupAsync(CancellationToken cancellationToken)
 		{
-			var cacheKey = $"{nameof(LineupItem)}s";
+			string cacheKey = $"{nameof(LineupItem)}s";
 
-			var cachedResponse = _cache.Get(cacheKey);
+			object cachedResponse = _cache.Get(cacheKey);
 
 			if (cachedResponse != null)
 			{
@@ -49,5 +48,14 @@ namespace ODF.Data.Elastic.Repos.Lineups
 
 			return response;
 		}
+
+		public Task<bool> RemoveLineupItemAsync(Guid id, CancellationToken cancellationToken)
+			=> _repo.RemoveLineupItemAsync(id, cancellationToken);
+
+		public Task<bool> UpdateLineupItemAsync(LineupItem lineupItem, CancellationToken cancellationToken)
+			=> _repo.UpdateLineupItemAsync(lineupItem, cancellationToken);
+
+		public Task<LineupItem> GetAsync(Guid id, CancellationToken cancellationToken)
+			=> _repo.GetAsync(id, cancellationToken);
 	}
 }

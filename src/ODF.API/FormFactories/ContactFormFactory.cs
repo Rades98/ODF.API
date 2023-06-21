@@ -2,7 +2,6 @@
 using ODF.API.Extensions;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Common.Forms;
-using ODF.AppLayer.Dtos.ContactDtos;
 using ODF.Domain.Constants;
 
 namespace ODF.API.FormFactories
@@ -24,7 +23,7 @@ namespace ODF.API.FormFactories
 			return form;
 		}
 
-		public static Form GetUpdateAddressForm(AddressDto address, IEnumerable<ValidationFailure>? errors = null)
+		public static Form GetUpdateAddressForm(UpdateAddressForm address, IEnumerable<ValidationFailure>? errors = null)
 		{
 			var form = new Form();
 
