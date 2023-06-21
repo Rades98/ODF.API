@@ -53,7 +53,7 @@ namespace ODF.Data.Elastic.Repos.Lineups
 			=> _repo.RemoveLineupItemAsync(id, cancellationToken);
 
 		public Task<bool> UpdateLineupItemAsync(LineupItem lineupItem, CancellationToken cancellationToken)
-			=> UpdateLineupItemAsync(lineupItem, cancellationToken);
+			=> _repo.UpdateLineupItemAsync(lineupItem, cancellationToken);
 
 		public Task<LineupItem> GetAsync(Guid id, CancellationToken cancellationToken)
 			=> _repo.GetAsync(id, cancellationToken);

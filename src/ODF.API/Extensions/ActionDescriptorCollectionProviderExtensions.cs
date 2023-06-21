@@ -24,7 +24,7 @@ namespace ODF.API.Extensions
 
 			if (action is null)
 			{
-				throw new IndexOutOfRangeException(nameof(action));
+				throw new ArgumentException(nameof(action));
 			}
 
 			string link = action.AttributeRouteInfo!.Template!.Replace("{countryCode}", countryCode ?? context.GetCountryCode()!);
@@ -40,7 +40,7 @@ namespace ODF.API.Extensions
 
 			if (action is null)
 			{
-				throw new IndexOutOfRangeException(nameof(action));
+				throw new ArgumentException(nameof(action));
 			}
 
 			string link = action.AttributeRouteInfo!.Template!
@@ -69,7 +69,7 @@ namespace ODF.API.Extensions
 
 			if (action is null)
 			{
-				throw new IndexOutOfRangeException(nameof(action));
+				throw new ArgumentException(nameof(action));
 			}
 
 			string link = action.AttributeRouteInfo!.Template!

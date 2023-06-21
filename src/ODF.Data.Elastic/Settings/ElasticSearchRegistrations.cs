@@ -27,7 +27,7 @@ namespace ODF.Data.Elastic.Settings
 		public static IServiceCollection ConfigureElasticsearch(this IServiceCollection services, IConfiguration configuration)
 		{
 			var elasticConf = configuration.GetSection(nameof(ElasticsearchSettings)).Get<ElasticsearchSettings>();
-			_ = elasticConf ?? throw new IndexOutOfRangeException(nameof(elasticConf));
+			_ = elasticConf ?? throw new ArgumentException(nameof(elasticConf));
 
 			var connectionPool = new StaticConnectionPool(elasticConf.Nodes.Select(node => new Uri(node)));
 

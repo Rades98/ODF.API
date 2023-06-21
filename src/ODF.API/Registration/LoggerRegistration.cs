@@ -41,7 +41,7 @@ namespace ODF.API.Registration
 		private static ElasticsearchSinkOptions ConfigureElasticSink(IConfiguration configuration, string environment)
 		{
 			var elasticConf = configuration.GetSection(nameof(ElasticsearchSettings)).Get<ElasticsearchSettings>();
-			_ = elasticConf ?? throw new IndexOutOfRangeException(nameof(elasticConf));
+			_ = elasticConf ?? throw new ArgumentException(nameof(elasticConf));
 
 			return new ElasticsearchSinkOptions(new Uri(elasticConf.Nodes.First()))
 			{
