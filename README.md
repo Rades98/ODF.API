@@ -30,13 +30,13 @@ Configuration -> Data sources -> Add data source
 - Url: http://elasticsearch:9200 - or ur ports specified in .env
 - Auth: Basic auth
 - Basic Auth Details
-- - User: elastic
-- - Password: pw from .env file
+  * User: elastic
+  * Password: pw from .env file
 - Elastic details
-- - Index name: odf-api-development - or production
-- - Time field name: @timestamp
-- - Version: 7.10+
-- - Max concurrent Shard Requests: 5
+  * Index name: odf-api-development - or production
+  * Time field name: @timestamp
+  * Version: 7.10+
+  * Max concurrent Shard Requests: 5
 
 ##### Setting up dashboard
 - Click on '+' (create)
@@ -47,23 +47,3 @@ Configuration -> Data sources -> Add data source
 - Import
 
 CG! U can see my shitty dashboar now! ☺☻
-
-                              \\\\\\\
-                            \\\\\\\\\\\\
-                          \\\\\\\\\\\\\\\
-  -----------,-|           |C>   // )\\\\|
-           ,','|          /    || ,'/////|
----------,','  |         (,    ||   /////
-         ||    |          \\  ||||//''''|
-         ||    |           |||||||     _|
-         ||    |______      `````\____/ \
-         ||    |     ,|         _/_____/ \
-         ||  ,'    ,' |        /          |
-         ||,'    ,'   |       |         \  |
-_________|/    ,'     |      /           | |
-_____________,'      ,',_____|      |    | |
-             |     ,','      |      |    | |
-             |   ,','    ____|_____/    /  |
-             | ,','  __/ |             /   |
-_____________|','   ///_/-------------/   |
-              |===========,'
