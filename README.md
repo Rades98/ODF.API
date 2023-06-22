@@ -38,7 +38,7 @@ Configuration -> Data sources -> Add data source
   * Version: 7.10+
   * Max concurrent Shard Requests: 5
 
-##### Setting up dashboard
+#### Setting up dashboard
 - Click on '+' (create)
 - Import
 - Upload JSON file
