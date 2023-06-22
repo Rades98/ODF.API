@@ -6,7 +6,9 @@ services:
     image: redis:latest
     restart: always
     ports: # Hide in case of production
-      - 6379:6379
+      - 6379:${REDIS_PORT}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PW}
     networks:
       - odf-redis
     volumes:
@@ -14,7 +16,7 @@ services:
       
   elasticsearch:
     ports: # Hide in case of production
-      - 9200:9200
+      - 9200:${ELASTIC_PORT}
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
     container_name: elasticsearch-odf
     restart: always
@@ -36,18 +38,19 @@ services:
     restart: always
     container_name: odf-api
     ports:
-      - "8982:${WEB_API_PORT_HTTP}"
-      # - "8981:${WEB_API_PORT}"
+      - ${WEB_API_PORT_HTTP}:${WEB_API_PORT_HTTP} #DEV
+      # - ${WEB_API_PORT}:${WEB_API_PORT} #PROD
     environment:
       ASPNETCORE_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
-      # ASPNETCORE_HTTPS_PORT: "${WEB_API_PORT}"
-      ASPNETCORE_URLS: "http://*:${WEB_API_PORT_HTTP};" #https://*:${WEB_API_PORT}
+      # ASPNETCORE_HTTPS_PORT: "${WEB_API_PORT}" #PROD
+      ASPNETCORE_URLS: "http://*:${WEB_API_PORT_HTTP};" #https://*:${WEB_API_PORT} swap for PROD
       ApiSettings__ApiUrl: "https://127.0.0.1:${WEB_API_PORT_HTTP}"
       ApiSettings__AdminPw: ${ADMIN_PW}
       ElasticsearchSettings__DefaultIndex: "odf-articles"
-      ElasticsearchSettings__Nodes__0: http://elasticsearch:9200
-      ElasticsearchSettings__Password: "kjKSzpjAeyakMiHesoyAm"
-      RedisSettings__Url: "redis:6379"
+      ElasticsearchSettings__Nodes__0: http://elasticsearch:${ELASTIC_PORT}
+      ElasticsearchSettings__Password: ${ELASTIC_PW}
+      RedisSettings__Url: redis:${REDIS_PORT}
+      RedisSettings__Password: ${REDIS_PW}
      
     volumes:
       - ${DOTNET_SECRETS}:/root/.microsoft/usersecrets
@@ -61,26 +64,12 @@ services:
       - webapi-network
       - grafana_stuff
 
-  # certbot:
-  #   container_name: odf-certbot
-  #   image: certbot/certbot
-  #   volumes:
-  #     - ./var/lib/certbot/certs:/etc/letsencrypt
-  #     - ./var/lib/certbot/www:/var/www/certbot
-  #   command: certonly --webroot --webroot-path=/var/www/certbot ${CERTBOT_EMAIL} --agree-tos --no-eff-email -d ${DOMAIN_NAME} --staging
-  #   depends_on:
-  #     - api
-  #   networks:
-  #     - webapi-network
-
   prometheus:
     image: prom/prometheus
     restart: always
     container_name: odf-prometheus
     volumes:
-      - ./var/lib/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus.yml
-    ports:
-      - 9090:9090 #For dev usage only
+      - ./var/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus.yml
     depends_on:
       - api
     networks:
@@ -122,24 +111,3 @@ volumes:
   elastic_data:
   redis_data:
   grafana_data:
-
-# RTFM
-# IN POWERSHELL
-# cd .\ODF.API\
-# dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\ODF.API.pfx -p kjkszpj
-# dotnet dev-certs https --trust
-# dotnet user-secrets set "Kestrel:Certificates:Development:Password" "kjkszpj"
-# cd ../
-# docker-compose up -d --build  
-# after everything is running, run  docker restart odf-api
-
-#to down
-# docker-compose down --remove-orphans
-
-#API LOGIN: admin : heslopyco
-
-#To see logs type to cmd docker logs odf-api
-
-# Grafana is available on 127.0.0.1:3000
-#admin_user = admin
-#admin_password = lKmTivaSerGjk
