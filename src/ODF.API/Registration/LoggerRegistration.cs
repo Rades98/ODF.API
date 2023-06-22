@@ -13,7 +13,7 @@ namespace ODF.API.Registration
 			var configuration = app.Configuration;
 			string environment = app.Environment.EnvironmentName;
 
-			Log.Logger = new LoggerConfiguration()
+			Log.Logger = new LoggerConfiguration() //Sensitive
 				.Enrich.FromLogContext()
 				.Enrich.WithExceptionDetails()
 				.WriteTo.Debug()

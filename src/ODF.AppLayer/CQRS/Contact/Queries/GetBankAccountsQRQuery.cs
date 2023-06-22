@@ -4,7 +4,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Queries
 {
-	public class GetBankAccountsQRQuery : IQuery<IEnumerable<BankAccountQRDto>>
+	public sealed class GetBankAccountsQRQuery : IQuery<IEnumerable<BankAccountQRDto>>
 	{
 		public GetBankAccountsQRQuery()
 		{

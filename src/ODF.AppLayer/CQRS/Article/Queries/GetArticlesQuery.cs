@@ -4,7 +4,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Queries
 {
-	public class GetArticlesQuery : IQuery<IEnumerable<ArticleDto>>
+	public sealed class GetArticlesQuery : IQuery<IEnumerable<ArticleDto>>
 	{
 		public GetArticlesQuery(int offset, int size, int pageId, string countryCode)
 		{

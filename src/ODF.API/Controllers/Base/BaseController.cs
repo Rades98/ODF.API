@@ -17,7 +17,6 @@ namespace ODF.API.Controllers.Base
 	public abstract class BaseController : Controller
 	{
 		private readonly IMediator _mediator;
-		private readonly ApiSettings _settings;
 		private readonly string _baseUrl;
 		private readonly IActionDescriptorCollectionProvider _adcp;
 		private readonly ITranslationsProvider _translationsProvider;
@@ -31,11 +30,11 @@ namespace ODF.API.Controllers.Base
 		protected BaseController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
 		{
 			_mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-			_settings = apiSettings.Value ?? throw new ArgumentNullException(nameof(apiSettings));
+			_ = apiSettings.Value ?? throw new ArgumentNullException(nameof(apiSettings));
 			_adcp = adcp ?? throw new ArgumentNullException(nameof(adcp));
 			_translationsProvider = translationsProvider ?? throw new ArgumentNullException(nameof(translationsProvider));
 
-			_baseUrl = _settings.ApiUrl;
+			_baseUrl = apiSettings.Value.ApiUrl;
 		}
 
 		internal NamedAction GetNamedAction(string actionIdentifier, string actionName, string rel, Form? actionForm = null, string? countryCode = null)

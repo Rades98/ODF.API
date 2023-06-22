@@ -5,11 +5,15 @@ namespace ODF.API.ResponseModels.Lineup
 {
 	public class UpdateLineupResponseModel : BaseCreateResponseModel
 	{
-		public UpdateLineupResponseModel(string? message = null) : base(message)
+		public UpdateLineupResponseModel(string message) : base(message)
 		{
 		}
 
-		public UpdateLineupResponseModel(Form form, string? message = null) : base(form, message)
+		public UpdateLineupResponseModel(Form form, string message) : base(form, message)
+		{
+		}
+
+		public UpdateLineupResponseModel(Form form) : base(form)
 		{
 		}
 	}

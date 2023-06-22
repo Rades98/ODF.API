@@ -4,7 +4,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class AddContactPersonCommand : ICommand<ValidationDto>
+	public sealed class AddContactPersonCommand : ICommand<ValidationDto>
 	{
 		public AddContactPersonCommand(string email, string title, string name, string surname, IEnumerable<string> roles, string base64Image)
 		{

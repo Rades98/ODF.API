@@ -5,11 +5,15 @@ namespace ODF.API.ResponseModels.Lineup
 {
 	public class DeleteLineupResponseModel : BaseCreateResponseModel
 	{
-		public DeleteLineupResponseModel(string? message = null) : base(message)
+		public DeleteLineupResponseModel(string message) : base(message)
 		{
 		}
 
-		public DeleteLineupResponseModel(Form form, string? message = null) : base(form, message)
+		public DeleteLineupResponseModel(Form form, string message) : base(form, message)
+		{
+		}
+
+		public DeleteLineupResponseModel(Form form) : base(form)
 		{
 		}
 	}

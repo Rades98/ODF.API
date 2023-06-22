@@ -4,7 +4,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Commands
 {
-	public class AddArticleCommand : ICommand<ValidationDto>
+	public sealed class AddArticleCommand : ICommand<ValidationDto>
 	{
 		public AddArticleCommand(string titleTransaltionCode, string title, string textTranslationCode, string text, int pageId, string countryCode, Uri imageUri = null)
 		{

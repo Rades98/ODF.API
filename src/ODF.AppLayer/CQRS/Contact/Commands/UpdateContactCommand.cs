@@ -3,7 +3,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class UpdateContactCommand : ICommand<ValidationDto>
+	public sealed class UpdateContactCommand : ICommand<ValidationDto>
 	{
 		public UpdateContactCommand(string eventName, string eventManager, string email)
 		{

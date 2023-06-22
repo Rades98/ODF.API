@@ -4,7 +4,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class RemoveContactPersonCommand : ICommand<ValidationDto>
+	public sealed class RemoveContactPersonCommand : ICommand<ValidationDto>
 	{
 		public RemoveContactPersonCommand(Guid id)
 		{

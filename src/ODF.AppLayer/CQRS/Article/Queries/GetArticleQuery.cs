@@ -3,7 +3,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Queries
 {
-	public class GetArticleQuery : IQuery<ArticleDto>
+	public sealed class GetArticleQuery : IQuery<ArticleDto>
 	{
 		public GetArticleQuery(int id, string countryCode)
 		{
