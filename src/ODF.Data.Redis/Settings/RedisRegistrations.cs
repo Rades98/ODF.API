@@ -22,7 +22,7 @@ namespace ODF.Data.Redis.Settings
 				?? throw new ArgumentException(nameof(ApiSettings));
 
 			services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer
-				.Connect(redisSettings.Url)
+				.Connect(redisSettings.ConnectionString)
 				.Seed(apiSettings.AdminPw));
 
 			services.AddTransient<IUserRepo, UserRepo>();
@@ -34,9 +34,8 @@ namespace ODF.Data.Redis.Settings
 		{
 			var db = connectionMultiplexer.GetDatabase();
 			string userName = "admin";
-			var existing = db.StringGet(new User().GetRedisKey(userName));
 
-			if (string.IsNullOrEmpty(existing))
+			if (string.IsNullOrEmpty(db.StringGet(new User().GetRedisKey(userName))))
 			{
 				var usr = new User()
 				{
