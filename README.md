@@ -22,11 +22,10 @@ with
 
 to see fancy dashbod which succs at this phase:
 Configuration -> Data sources -> Add data source
-#### Prometheus
+#### Prometheus data source
 - Url: http://prometheus:9090
 
-#### Elastic
-##### Setting up data sources
+#### Elastic data source
 - Url: http://elasticsearch:9200 - or ur ports specified in .env
 - Auth: Basic auth
 - Basic Auth Details
