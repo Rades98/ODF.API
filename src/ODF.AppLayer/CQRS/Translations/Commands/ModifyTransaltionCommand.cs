@@ -2,7 +2,7 @@
 
 namespace ODF.AppLayer.CQRS.Translations.Commands
 {
-	public class ModifyTransaltionCommand : ICommand<bool>
+	public sealed class ModifyTransaltionCommand : ICommand<bool>
 	{
 		public ModifyTransaltionCommand(string countryCode, string translationCode, string text)
 		{

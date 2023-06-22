@@ -9,7 +9,11 @@ namespace ODF.API.ResponseModels.Lineup
 		{
 		}
 
-		public AddLineupResponseModel(Form form, string? message = null) : base(form, message)
+		public AddLineupResponseModel(Form form, string message) : base(form, message)
+		{
+		}
+
+		public AddLineupResponseModel(Form form) : base(form)
 		{
 		}
 	}

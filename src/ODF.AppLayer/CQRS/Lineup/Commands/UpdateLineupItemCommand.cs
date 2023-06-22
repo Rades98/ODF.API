@@ -4,7 +4,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Lineup.Commands
 {
-	public class UpdateLineupItemCommand : ICommand<ValidationDto>
+	public sealed class UpdateLineupItemCommand : ICommand<ValidationDto>
 	{
 		public UpdateLineupItemCommand(Guid id, string place, string interpret, string perfName, string description,
 			string descriptionTranslationCode, DateTime? dateTime, string countryCode, string userName = null)

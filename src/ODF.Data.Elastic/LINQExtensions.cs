@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 
 namespace ODF.Data.Elastic
 {
-	internal static class LINQExtensions
+	internal static class LinqExtensions
 	{
-		internal static Expression<Func<T, bool>> AndAlsoNext<T>(this Expression<Func<T, bool>> left,Expression<Func<T, bool>> right)
+		internal static Expression<Func<T, bool>> AndAlsoNext<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
 		{
 			var param = Expression.Parameter(typeof(T), "x");
 			var body = Expression.AndAlso(

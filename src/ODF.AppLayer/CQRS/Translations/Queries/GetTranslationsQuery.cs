@@ -3,7 +3,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Translations.Queries
 {
-	public class GetTranslationsQuery : IQuery<TranslationsDto>
+	public sealed class GetTranslationsQuery : IQuery<TranslationsDto>
 	{
 		public GetTranslationsQuery(string countryCode, int size, int offset)
 		{

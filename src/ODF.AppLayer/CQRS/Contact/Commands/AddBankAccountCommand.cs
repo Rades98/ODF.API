@@ -3,7 +3,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class AddBankAccountCommand : ICommand<ValidationDto>
+	public sealed class AddBankAccountCommand : ICommand<ValidationDto>
 	{
 		public AddBankAccountCommand(string bank, string accountId, string iban)
 		{

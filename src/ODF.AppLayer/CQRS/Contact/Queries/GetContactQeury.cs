@@ -3,7 +3,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Queries
 {
-	public class GetContactQuery : IQuery<ContactDto>
+	public sealed class GetContactQuery : IQuery<ContactDto>
 	{
 		public GetContactQuery(string countryCode)
 		{

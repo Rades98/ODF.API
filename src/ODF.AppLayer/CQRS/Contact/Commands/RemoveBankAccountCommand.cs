@@ -3,7 +3,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public class RemoveBankAccountCommand : ICommand<ValidationDto>
+	public sealed class RemoveBankAccountCommand : ICommand<ValidationDto>
 	{
 		public RemoveBankAccountCommand(string iban)
 		{

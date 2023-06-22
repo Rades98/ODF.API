@@ -4,7 +4,7 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Lineup.Queries
 {
-	public class GetLineupQuery : IQuery<IEnumerable<LineupItemDto>>
+	public sealed class GetLineupQuery : IQuery<IEnumerable<LineupItemDto>>
 	{
 		public GetLineupQuery(string countryCode)
 		{
