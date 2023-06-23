@@ -18,7 +18,7 @@ namespace ODF.API.Cookies
 		{
 			HttpOnly = false,
 			IsEssential = true,
-			Secure = false,
+			Secure = true,
 			SameSite = SameSiteMode.Strict,
 			Expires = DateTime.UtcNow.AddDays(4)
 		};

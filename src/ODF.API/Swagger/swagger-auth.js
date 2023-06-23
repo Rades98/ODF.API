@@ -1,5 +1,5 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    var loginButton = document.createElement('button');
+    let loginButton = document.createElement('button');
     loginButton.setAttribute('id', 'custom-auth-link');
     loginButton.innerHTML = 'Login';
     loginButton.style.cursor = 'pointer';
@@ -11,7 +11,7 @@
     loginButton.style.cursor = 'pointer';
     loginButton.addEventListener('click', showAuthModal);
 
-    var logoutButton = document.createElement('button');
+    let logoutButton = document.createElement('button');
     logoutButton.setAttribute('id', 'logout-button');
     logoutButton.innerHTML = 'Logout';
     logoutButton.style.cursor = 'pointer';
@@ -26,14 +26,14 @@
     setTimeout(appendTopBar, 1000);
 
     function appendTopBar() {
-        var authBar = document.querySelector('.swagger-ui .main');
+        let authBar = document.querySelector('.swagger-ui .main');
         if (authBar) {
             console.log('Append child');
             authBar.style.display = 'flex';
             authBar.style.justifyContent = 'flex-end';
             authBar.style.alignItems = 'center';
 
-            var spacer = document.createElement('div');
+            let spacer = document.createElement('div');
             spacer.style.flexGrow = '1';
 
             authBar.appendChild(spacer);
@@ -43,9 +43,9 @@
     }
 
     function showAuthModal() {
-        var overlay = createOverlay();
-        var form = createAuthForm();
-        var closeButton = createCloseButton();
+        let overlay = createOverlay();
+        let form = createAuthForm();
+        let closeButton = createCloseButton();
 
         form.appendChild(closeButton);
         overlay.appendChild(form);
@@ -57,7 +57,7 @@
     }
 
     function createOverlay() {
-        var overlay = document.createElement('div');
+        let overlay = document.createElement('div');
         overlay.setAttribute('id', 'auth-overlay');
         overlay.style.position = 'fixed';
         overlay.style.top = '0';
@@ -73,7 +73,7 @@
     }
 
     function createAuthForm() {
-        var formContainer = document.createElement('div');
+        let formContainer = document.createElement('div');
         formContainer.setAttribute('id', 'auth-form-container');
         formContainer.style.backgroundColor = '#f8f8f8';
         formContainer.style.borderRadius = '5px';
@@ -81,16 +81,16 @@
         formContainer.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
         formContainer.style.width = '300px';
 
-        var form = document.createElement('form');
+        let form = document.createElement('form');
         form.setAttribute('id', 'auth-form');
 
-        var usernameLabel = document.createElement('label');
+        let usernameLabel = document.createElement('label');
         usernameLabel.setAttribute('for', 'username');
         usernameLabel.innerHTML = 'Username: ';
         usernameLabel.style.marginBottom = '10px';
         usernameLabel.style.fontWeight = 'bold';
 
-        var usernameInput = document.createElement('input');
+        let usernameInput = document.createElement('input');
         usernameInput.setAttribute('type', 'text');
         usernameInput.setAttribute('id', 'username');
         usernameInput.setAttribute('name', 'username');
@@ -101,13 +101,13 @@
         usernameInput.style.border = '1px solid #ccc';
         usernameInput.style.borderRadius = '3px';
 
-        var passwordLabel = document.createElement('label');
+        let passwordLabel = document.createElement('label');
         passwordLabel.setAttribute('for', 'password');
         passwordLabel.innerHTML = 'Password: ';
         passwordLabel.style.marginBottom = '10px';
         passwordLabel.style.fontWeight = 'bold';
 
-        var passwordInput = document.createElement('input');
+        let passwordInput = document.createElement('input');
         passwordInput.setAttribute('type', 'password');
         passwordInput.setAttribute('id', 'password');
         passwordInput.setAttribute('name', 'password');
@@ -118,7 +118,7 @@
         passwordInput.style.border = '1px solid #ccc';
         passwordInput.style.borderRadius = '3px';
 
-        var submitButton = document.createElement('button');
+        let submitButton = document.createElement('button');
         submitButton.setAttribute('type', 'button');
         submitButton.setAttribute('id', 'auth-submit');
         submitButton.innerHTML = 'Submit';
@@ -142,7 +142,7 @@
     }
 
     function createCloseButton() {
-        var closeButton = document.createElement('button');
+        let closeButton = document.createElement('button');
         closeButton.setAttribute('type', 'button');
         closeButton.innerHTML = 'Close';
         closeButton.style.padding = '5px 10px';
@@ -165,25 +165,19 @@
     });
 
     function login() {
-        var username = document.getElementById('username').value;
-        var password = document.getElementById('password').value;
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open('POST', '/cz/user', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    const swaggerUi = SwaggerUIBundle({
-
-                        requestInterceptor: function (request) {
-                            return request;
-                        }
-                    });
 
                     // Hide the modal dialog
-                    var overlay = document.getElementById('auth-overlay');
+                    let overlay = document.getElementById('auth-overlay');
                     if (overlay) {
                         document.body.removeChild(overlay);
                     }
@@ -198,7 +192,7 @@
             }
         };
 
-        var formData = {
+        let formData = {
             userName: username,
             password: password
         };
@@ -206,7 +200,7 @@
     }
 
     function logout() {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open('DELETE', '/cz/user', true);
 
         xhr.onreadystatechange = function () {
