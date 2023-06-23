@@ -41,7 +41,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetAddBankAcountForm(form, validationResult.Errors);
+				var responseForm = ContactFormComposer.GetAddBankAcountForm(form, validationResult.Errors);
 				return UnprocessableEntity(new CreateContactBankAccResponseModel(responseForm));
 			}
 
@@ -64,7 +64,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetRemoveBankAcountForm(form.IBAN, validationResult.Errors);
+				var responseForm = ContactFormComposer.GetRemoveBankAcountForm(form.IBAN, validationResult.Errors);
 				return UnprocessableEntity(new DeleteContactBankAccResponseModel(responseForm));
 			}
 

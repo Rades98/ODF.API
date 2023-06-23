@@ -42,8 +42,8 @@ namespace ODF.AppLayer.CQRS.Article.QueryHandlers
 		{
 			if (article is not null && Languages.TryParse(countryCode, out var lang))
 			{
-				var title = await _translationRepo.GetTranslationAsync(article.TitleTranslationCode, lang.Id, cancellationToken);
-				var text = await _translationRepo.GetTranslationAsync(article.TextTranslationCode, lang.Id, cancellationToken);
+				string title = await _translationRepo.GetTranslationAsync(article.TitleTranslationCode, lang.Id, cancellationToken);
+				string text = await _translationRepo.GetTranslationAsync(article.TextTranslationCode, lang.Id, cancellationToken);
 
 				if (title is not null && text is not null)
 				{

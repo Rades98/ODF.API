@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
 using ODF.API.Middleware;
 using ODF.API.Registration.SettingModels;
+using ODF.API.Swagger;
 using ODF.AppLayer.Settings;
 using ODF.Data.Elastic.Settings;
 using ODF.Data.Redis.Settings;
@@ -27,7 +28,7 @@ namespace ODF.API.Registration
 						opts.SlidingExpiration = true;
 						opts.Cookie.HttpOnly = false;
 						opts.Cookie.Name = "folklorova-auth_cookie";
-						opts.Cookie.SameSite = SameSiteMode.None;
+						opts.Cookie.SameSite = SameSiteMode.Lax;
 
 					});
 			services.AddDataProtection()
@@ -50,6 +51,8 @@ namespace ODF.API.Registration
 
 			services.Configure<AntiScrappingSettings>(conf.GetSection(nameof(AntiScrappingSettings)));
 			services.Configure<ApiSettings>(conf.GetSection(nameof(ApiSettings)));
+
+			services.SetupSwagger();
 
 			return services;
 		}

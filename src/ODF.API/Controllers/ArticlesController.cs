@@ -14,6 +14,7 @@ using ODF.API.ResponseModels.Contacts.Create;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.CQRS.Article.Commands;
 using ODF.AppLayer.CQRS.Article.Queries;
+using ODF.AppLayer.Dtos;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
 using ODF.Domain;
@@ -47,7 +48,7 @@ namespace ODF.API.Controllers
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ArticleFormFactory.GetAddArticleForm(requestForm, validationResult.Errors);
+				var responseForm = ArticleFormComposer.GetAddArticleForm(requestForm, validationResult.Errors);
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
@@ -94,12 +95,7 @@ namespace ODF.API.Controllers
 			{
 				responseModel.Articles = articles
 					.Where(art => !string.IsNullOrEmpty(art.Text) && !string.IsNullOrEmpty(art.Title))
-					.Select(art =>
-					{
-						var action = GetAppAction(nameof(GetArticle), "");
-						action.Curl.Href = new(action.Curl.Href.ToString().Replace("{articleId}", $"{art.Id}"));
-						return new GetArticleResponseModel(action.Curl.Href.ToString(), "article", action.Curl.Method, art.Title, art.Text, art.ImageUri);
-					});
+					.Select(MapArticle);
 			}
 
 			return Ok(responseModel);
@@ -107,10 +103,17 @@ namespace ODF.API.Controllers
 
 		private NamedAction GetTranslateArticleTextAction(string translationCode, string countryCode)
 			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit text do {countryCode}", "translate_article",
-					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
 
 		private NamedAction GetTranslateArticleTitleAction(string translationCode, string countryCode)
 			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit nadpis do {countryCode}", "translate_article",
-					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
+
+		private GetArticleResponseModel MapArticle(ArticleDto art)
+		{
+			var action = GetAppAction(nameof(GetArticle), "");
+			action.Curl.Href = new(action.Curl.Href.ToString().Replace("{articleId}", $"{art.Id}"));
+			return new GetArticleResponseModel(action.Curl.Href.ToString(), "article", action.Curl.Method, art.Title, art.Text, art.ImageUri);
+		}
 	}
 }

@@ -3,6 +3,7 @@
 	public static class FormValueTypes
 	{
 		public const string Text = "text";
+		public const string LongText = "long-text";
 		public const string Number = "number";
 		public const string Url = "url";
 		public const string TextArray = "textarray";

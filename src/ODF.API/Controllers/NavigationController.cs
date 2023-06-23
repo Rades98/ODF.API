@@ -7,8 +7,8 @@ using ODF.API.Controllers.Base;
 using ODF.API.Controllers.Contacts;
 using ODF.API.Controllers.Lineup;
 using ODF.API.Controllers.Users;
+using ODF.API.Extensions;
 using ODF.API.FormFactories;
-using ODF.API.RequestModels.Navigation;
 using ODF.API.ResponseModels.Navigation;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
@@ -19,7 +19,8 @@ namespace ODF.API.Controllers
 {
 	public class NavigationController : BaseController
 	{
-		public NavigationController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+		public NavigationController(IMediator mediator, IOptions<ApiSettings> apiSettings,
+			IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
 			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
@@ -28,9 +29,9 @@ namespace ODF.API.Controllers
 		[Authorize]
 		[AllowAnonymous]
 		[ProducesResponseType(typeof(NavigationResponseModel), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetNavigation([FromRoute] NavigationRequestModel requestModel, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetNavigation([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(requestModel.CountryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 
 			var responseModel = new NavigationResponseModel();
 			responseModel.AddAction(GetAppAction(nameof(AboutController.GetAbout), "menu_about"));
@@ -40,23 +41,23 @@ namespace ODF.API.Controllers
 			responseModel.MenuItems.Add(GetNamedAction(nameof(AboutController.GetAbout), translations.Get("menu_about"), "aboutMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(AssociationController.GetAssociation), translations.Get("menu_association"), "associationMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(LineupController.GetLineup), translations.Get("menu_lineup"), "lineupMenuItem"));
-			responseModel.MenuItems.Add(GetNamedAction(nameof(DonationController.GetDonation), translations.Get("menu_tickets"), "ticketsMenuItem"));
+			responseModel.MenuItems.Add(GetNamedAction(nameof(DonationController.GetDonation), translations.Get("menu_donation"), "donationMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(ContactsController.GetContacts), translations.Get("menu_contacts"), "contactMenuItem"));
 
-			if (!requestModel.IsLoggedIn)
+			if (!HttpContext.IsLoggedIn())
 			{
-				responseModel.LoginAction = GetNamedAction(nameof(UsersController.LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(new(), translations));
+				responseModel.LoginAction = GetNamedAction(nameof(UserController.LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(new(), translations));
 
-				responseModel.RegisterAction = GetNamedAction(nameof(UsersController.RegisterUser), translations.Get("register_user"), "register",
-					UserFormFactory.GetRegisterForm(new(), translations));
+				responseModel.RegisterAction = GetNamedAction(nameof(UserController.RegisterUser), translations.Get("register_user"), "register",
+					UserFormComposer.GetRegisterForm(new(), translations));
 			}
 			else
 			{
-				responseModel.UserName = requestModel.UserName;
-				responseModel.LogoutAction = GetNamedAction(nameof(UsersController.LogoutUser), translations.Get("logout_user"), "logout");
+				responseModel.UserName = HttpContext.GetUserName();
+				responseModel.LogoutAction = GetNamedAction(nameof(UserController.LogoutUser), translations.Get("logout_user"), "logout");
 			}
 
-			if (requestModel.CountryCode.ToUpper() == Languages.Czech.GetCountryCode().ToUpper() && requestModel.IsAdmin)
+			if (countryCode.ToUpper() == Languages.Czech.GetCountryCode().ToUpper() && HttpContext.IsAdmin())
 			{
 				responseModel.MenuItems.Add(GetNamedAction(nameof(RedactionController.GetRedaction), "Redakce", "redactionMenuItem"));
 			}

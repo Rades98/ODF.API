@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
@@ -12,28 +13,23 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 		{
 
 			RuleFor(command => command.Name)
-				.NotEmpty()
-				.NotNull()
+				.Must(name => !string.IsNullOrEmpty(name))
 				.WithMessage("Člověk nemá jméno? RLY?");
 
 			RuleFor(command => command.Surname)
-				.NotEmpty()
-				.NotNull()
+				.Must(surname => !string.IsNullOrEmpty(surname))
 				.WithMessage("Člověk nemá příjmení?");
 
 			RuleFor(command => command.Roles)
-				.NotEmpty()
-				.NotNull()
+				.Must(roles => roles is not null && roles.Any())
 				.WithMessage("Člověk je tu zbytečně? Bez jediné role?");
 
 			RuleFor(command => command.Email)
-				.NotEmpty()
-				.NotNull()
+				.Must(email => !string.IsNullOrEmpty(email))
 				.WithMessage("Email jako co?");
 
 			RuleFor(command => command.Base64Image)
-				.NotEmpty()
-				.NotNull()
+				.Must(image => !string.IsNullOrEmpty(image))
 				.WithMessage("Dej chudákovi obrázek :)");
 
 			return await base.ValidateAsync(context, cancellation);

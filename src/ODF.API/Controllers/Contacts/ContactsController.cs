@@ -53,7 +53,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var resultForm = ContactFormFactory.GetUpdateContactForm(form, validationResult.Errors);
+				var resultForm = ContactFormComposer.GetUpdateContactForm(form, validationResult.Errors);
 				return UnprocessableEntity(new UpdateContactResponseModel(resultForm));
 			}
 

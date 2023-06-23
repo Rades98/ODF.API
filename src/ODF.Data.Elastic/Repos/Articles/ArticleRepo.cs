@@ -21,11 +21,7 @@ namespace ODF.Data.Elastic.Repos.Articles
 		public async Task<bool> AddArticleAsync(string titleTranslationCode, string textTranslationCode, int pageId, Uri imageUrl, CancellationToken cancellationToken)
 		{
 			var last = await GetLast(cancellationToken);
-			int id = 0;
-			if (last is not null)
-			{
-				id = last.Id + 1;
-			}
+			int id = last is not null ? last.Id + 1 : 0;
 
 			var article = new Article()
 			{
@@ -45,16 +41,12 @@ namespace ODF.Data.Elastic.Repos.Articles
 							.Size(1), cancellationToken)).Documents.FirstOrDefault();
 
 		public async Task<IEnumerable<Article>> GetArticlesPaginatedAsync(int pageId, int size, int offset, CancellationToken cancellationToken)
-		{
-			var res = (await _elasticClient.SearchAsync<Article>(s => s
+			=> (await _elasticClient.SearchAsync<Article>(s => s
 							.Query(fq => fq.Terms(t => t.Field(f => f.PageId).Terms(pageId)))
 							.Sort(s => s.Descending(f => f.Id))
 							.From(offset)
 							.Size(size), cancellationToken))
 							.Documents;
-
-			return res;
-		}
 
 		private async Task<Article> GetLast(CancellationToken cancellationToken)
 			=> (await _elasticClient.SearchAsync<Article>(s => s

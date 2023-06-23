@@ -67,7 +67,7 @@ namespace ODF.API.Controllers.Lineup
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new AddLineupResponseModel(LineupItemFormFactory.GetAddLineupItemForm(form, validationResult.Errors)));
+				return UnprocessableEntity(new AddLineupResponseModel(LineupItemFormComposer.GetAddLineupItemForm(form, validationResult.Errors)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
@@ -92,7 +92,7 @@ namespace ODF.API.Controllers.Lineup
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new UpdateLineupResponseModel(LineupItemFormFactory.GetUdpateLineupItemForm(form, validationResult.Errors)));
+				return UnprocessableEntity(new UpdateLineupResponseModel(LineupItemFormComposer.GetUdpateLineupItemForm(form, validationResult.Errors)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
@@ -115,7 +115,7 @@ namespace ODF.API.Controllers.Lineup
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new DeleteLineupResponseModel(LineupItemFormFactory.GetDeleteLineupItemForm(form, validationResult.Errors)));
+				return UnprocessableEntity(new DeleteLineupResponseModel(LineupItemFormComposer.GetDeleteLineupItemForm(form, validationResult.Errors)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));

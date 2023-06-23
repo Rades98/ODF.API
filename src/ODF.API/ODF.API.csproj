@@ -16,6 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Swagger\swagger-auth.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
@@ -32,6 +38,7 @@
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>

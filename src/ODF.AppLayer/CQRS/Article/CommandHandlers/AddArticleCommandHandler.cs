@@ -27,12 +27,12 @@ namespace ODF.AppLayer.CQRS.Article.CommandHandlers
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))
 			{
-				string title = await _translationRepo.GetTranslationOrDefaultTextAsync(request.TitleTransaltionCode, request.Title, lang.Id, cancellationToken);
-				string text = await _translationRepo.GetTranslationOrDefaultTextAsync(request.TextTransaltionCode, request.Text, lang.Id, cancellationToken);
+				bool titleOk = await _translationRepo.AddTranslationAsync(request.TitleTransaltionCode, request.Title, lang.Id, cancellationToken);
+				bool textOk = await _translationRepo.AddTranslationAsync(request.TextTransaltionCode, request.Text, lang.Id, cancellationToken);
 
 				_logger.LogInformation("Creating article with {titleTransCode} and {textTransCode}", request.TitleTransaltionCode, request.TextTransaltionCode);
 
-				if (title is not null && text is not null)
+				if (titleOk && textOk)
 				{
 					return new() { IsOk = await _repo.AddArticleAsync(request.TitleTransaltionCode, request.TextTransaltionCode, request.PageId, request.ImageUri, cancellationToken) };
 				}

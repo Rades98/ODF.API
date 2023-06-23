@@ -19,13 +19,8 @@ namespace ODF.Data.Elastic.Repos.Lineups
 			_elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
 		}
 
-
 		public async Task<bool> AddLineupItemAsync(LineupItem lineupItem, CancellationToken cancellationToken)
-		{
-			var res = await _elasticClient.IndexAsync(lineupItem, i => i, cancellationToken);
-
-			return res.IsValid;
-		}
+			=> (await _elasticClient.IndexAsync(lineupItem, i => i, cancellationToken)).IsValid;
 
 		public async Task<IEnumerable<LineupItem>> GetLineupAsync(CancellationToken cancellationToken)
 			=> (await _elasticClient.SearchAsync<LineupItem>()).Documents;
@@ -34,8 +29,8 @@ namespace ODF.Data.Elastic.Repos.Lineups
 			=> (await _elasticClient.DeleteByQueryAsync<LineupItem>(q => q
 					.Query(rq => rq
 						.Match(m => m
-						.Field(f => f.Id)
-						.Query(id.ToString()))
+							.Field(f => f.Id)
+							.Query(id.ToString()))
 					), cancellationToken
 				)).IsValid;
 
@@ -44,20 +39,25 @@ namespace ODF.Data.Elastic.Repos.Lineups
 			var scriptParams = new Dictionary<string, object>();
 			StringBuilder script = new StringBuilder();
 
-			lineupItem.PerformanceName.AddIfEdited(scriptParams, script);
-			lineupItem.UserName.AddIfEdited(scriptParams, script);
-			lineupItem.Interpret.AddIfEdited(scriptParams, script);
-			lineupItem.Place.AddIfEdited(scriptParams, script);
-			lineupItem.DateTime.AddIfEdited(scriptParams, script);
+			lineupItem.PerformanceName.AddToScriptWithParamIsfEdited(nameof(lineupItem.PerformanceName), scriptParams, script);
+			lineupItem.UserName.AddToScriptWithParamIsfEdited(lineupItem.UserName, scriptParams, script);
+			lineupItem.Interpret.AddToScriptWithParamIsfEdited(nameof(lineupItem.Interpret), scriptParams, script);
+			lineupItem.Place.AddToScriptWithParamIsfEdited(nameof(lineupItem.Place), scriptParams, script);
+			lineupItem.DateTime.AddToScriptWithParamIsfEdited(nameof(lineupItem.DateTime), scriptParams, script);
 
-			var res = await _elasticClient.UpdateByQueryAsync<LineupItem>(s => s
-					.MatchAll()
+			return (await _elasticClient.UpdateByQueryAsync<LineupItem>(s => s
+					.Query(q => q
+						.Bool(bq => bq
+							.Filter(
+								fq => fq.Terms(t => t.Field(f => f.Id).Terms(lineupItem.Id))
+							)
+						)
+					)
+					.Size(1)
 					.Script(s => s
 						.Source(script.ToString())
 						.Params(scriptParams))
-					.Refresh(true), cancellationToken);
-
-			return res.IsValid;
+					.Refresh(true), cancellationToken)).IsValid;
 		}
 
 		public async Task<LineupItem> GetAsync(Guid id, CancellationToken cancellationToken)

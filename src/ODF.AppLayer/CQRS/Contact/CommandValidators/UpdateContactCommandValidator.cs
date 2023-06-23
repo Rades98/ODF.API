@@ -12,8 +12,8 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 		public override async Task<ValidationResult> ValidateAsync(ValidationContext<UpdateContactCommand> context, CancellationToken cancellation = default)
 		{
 			RuleFor(contact => contact.Email)
-				.Must(cont => context.InstanceToValidate.Email.ValidateEmail())
-				.WithMessage("Byl zadán nevalidní e=mail");
+				.Must(email => string.IsNullOrEmpty(email) || email.ValidateEmail())
+				.WithMessage("Byl zadán nevalidní e-mail");
 
 			return await base.ValidateAsync(context, cancellation);
 		}

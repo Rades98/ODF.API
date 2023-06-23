@@ -35,11 +35,11 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 					return ValidationDto.Invalid;
 				}
 
-				string desc = await _translationRepo.GetTranslationOrDefaultTextAsync(request.DescriptionTranslationCode, request.Description, lang.Id, cancellationToken);
+				bool descOk = await _translationRepo.AddTranslationAsync(request.DescriptionTranslationCode, request.Description, lang.Id, cancellationToken);
 
 				_logger.LogInformation("Creating lineup item with {perfName} and {desc}", request.PerformanceName, request.DescriptionTranslationCode);
 
-				if (desc is not null)
+				if (descOk)
 				{
 					var lineupItem = new LineupItem()
 					{

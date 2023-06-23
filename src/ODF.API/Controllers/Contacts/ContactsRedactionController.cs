@@ -34,22 +34,22 @@ namespace ODF.API.Controllers.Contacts
 			var responseModel = new GetContactRedactionNavigationResponseModel();
 
 			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsController.UpdateContact), "Upravit kontakt",
-				"updateContact", ContactFormFactory.GetUpdateContactForm(contact.ToForm()));
+				"updateContact", ContactFormComposer.GetUpdateContactForm(contact.ToForm()));
 
 			responseModel.UpdateAddress = GetNamedAction(nameof(ContactAddressController.UpdateAddress), "Upravit adresu",
-				"updateAddress", ContactFormFactory.GetUpdateAddressForm(contact.Address.ToForm()));
+				"updateAddress", ContactFormComposer.GetUpdateAddressForm(contact.Address.ToForm()));
 
 			// Bank acc
 			responseModel.AddBankAccount = GetNamedAction(nameof(ContactBankAccountsController.AddBankAccount),
-				"Přidat bankovní účet", "addBankAccount", ContactFormFactory.GetAddBankAcountForm(new()));
+				"Přidat bankovní účet", "addBankAccount", ContactFormComposer.GetAddBankAcountForm(new()));
 
 			responseModel.RemoveBankAccountActions = contact.BankAccounts.Select(bankAcc
 				=> GetNamedAction(nameof(ContactBankAccountsController.RemoveBankAccount),
 				$"Smazat bankovní účet {bankAcc.IBAN}", "removeBankAccount",
-				ContactFormFactory.GetRemoveBankAcountForm(bankAcc.IBAN)));
+				ContactFormComposer.GetRemoveBankAcountForm(bankAcc.IBAN)));
 
 			responseModel.AddContactPerson = GetNamedAction(nameof(ContactPersonsController.AddContactPerson),
-				"Přidat kontaktní osobu", "addContactPerson", ContactFormFactory.GetAddContactPersonForm());
+				"Přidat kontaktní osobu", "addContactPerson", ContactFormComposer.GetAddContactPersonForm());
 
 			// Contact persons
 			responseModel.ContactPersons = contact.ContactPersons.Select(person => new GetContactPersonRedactionResponseModel()
@@ -57,12 +57,13 @@ namespace ODF.API.Controllers.Contacts
 				Title = person.Title,
 				Name = person.Name,
 				Surname = person.Surname,
+				Email = person.Email,
 
 				DeleteContactPerson = GetNamedAction(nameof(ContactPersonsController.RemoveContactPerson),
-					"Smazat", "removeContactPerson", ContactFormFactory.GetRemoveContactPersonForm(person.Id)),
+					"Smazat", "removeContactPerson", ContactFormComposer.GetRemoveContactPersonForm(person.Id)),
 
 				UpdateContactPerson = GetNamedAction(nameof(ContactPersonsController.UpdateContactPerson),
-					"Upravit", "updateContactPerson", ContactFormFactory.GetUpdateContactPersonForm(new()
+					"Upravit", "updateContactPerson", ContactFormComposer.GetUpdateContactPersonForm(new()
 					{
 						Base64Image = person.Base64Image,
 						Email = person.Email,

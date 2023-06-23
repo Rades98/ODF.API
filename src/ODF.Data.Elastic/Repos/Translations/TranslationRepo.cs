@@ -27,7 +27,7 @@ namespace ODF.Data.Elastic.Repos.Translations
 				Text = text,
 			};
 
-			return (await _elasticClient.IndexAsync(translation, i => i, cancellationToken)).IsValid;
+			return (await _elasticClient.IndexAsync<Translation>(translation, i => i, cancellationToken)).IsValid;
 		}
 
 		public async Task<IEnumerable<Translation>> GetPagedAsync(int size, int offset, int languageId, CancellationToken cancellationToken)
@@ -44,26 +44,9 @@ namespace ODF.Data.Elastic.Repos.Translations
 
 		public async Task<string> GetTranslationAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
 		{
-			var translation = await GetAsync(translationIdentifier, languageId, cancellationToken);
+			var trans = await GetAsync(translationIdentifier, languageId, cancellationToken);
 
-			if (translation is null)
-			{
-				return string.Empty;
-			}
-
-			return translation.Text;
-		}
-
-		public async Task<string> GetTranslationOrDefaultTextAsync(string translationIdentifier, string defaultTranslation, int languageId, CancellationToken cancellationToken)
-		{
-			var translation = await GetAsync(translationIdentifier, languageId, cancellationToken);
-
-			if (translation is null && await AddTranslationAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken))
-			{
-				return defaultTranslation;
-			}
-
-			return null;
+			return trans?.Text ?? string.Empty;
 		}
 
 		public async Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
@@ -95,8 +78,6 @@ namespace ODF.Data.Elastic.Repos.Translations
 
 			if (translation is not null)
 			{
-				var scriptParams = new Dictionary<string, object> { { "Text", text } };
-
 				return (await _elasticClient.UpdateByQueryAsync<Translation>(s => s
 					.Query(q => q
 						.Bool(bq => bq
@@ -109,7 +90,7 @@ namespace ODF.Data.Elastic.Repos.Translations
 					.Size(1)
 					.Script(s => s
 						.Source("ctx._source.text = params.Text;")
-						.Params(scriptParams))
+						.Params(p => p.Add("Text", text)))
 						.Refresh(true)
 					)).IsValid;
 			}
@@ -118,18 +99,17 @@ namespace ODF.Data.Elastic.Repos.Translations
 		}
 
 		private async Task<Translation> GetAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
-			=> (await _elasticClient.SearchAsync<Translation>(s => s
+		{
+			var trans = await _elasticClient.SearchAsync<Translation>(s => s
 							.Query(q => q
-								.Bool(bq => bq
-									.Filter(
-										fq => fq.Terms(t => t.Field(f => f.TranslationCode).Terms(translationIdentifier)),
-										fq => fq.Terms(t => t.Field(f => f.LanguageId).Terms(languageId))
-									)
-								)
-							)
-							.Size(1), cancellationToken)).Documents.FirstOrDefault();
+								.QueryString(qs => qs.Fields(f => f.Field(fi => fi.TranslationCode)).Query(translationIdentifier)))
+							.Size(5), cancellationToken);
+
+			return trans.Documents.FirstOrDefault(t => t.LanguageId == languageId);
+		}
+
 		public async Task<bool> DeleteTranslationAsync(string translationIdentifier, CancellationToken cancellationToken)
-		=> (await _elasticClient.DeleteByQueryAsync<Translation>(q => q
+			=> (await _elasticClient.DeleteByQueryAsync<Translation>(q => q
 					.Query(rq => rq
 						.Match(m => m
 						.Field(f => f.TranslationCode)

@@ -33,7 +33,7 @@ namespace ODF.API.Controllers.Lineup
 			var responseModel = new GetLineupRedactionResponseModel();
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
-					LineupItemFormFactory.GetAddLineupItemForm(new()));
+					LineupItemFormComposer.GetAddLineupItemForm(new()));
 
 			responseModel.LineupItems = lineupItems
 				.OrderBy(ord => ord.DateTime)
@@ -45,9 +45,9 @@ namespace ODF.API.Controllers.Lineup
 					PerformanceName = x.PerformanceName,
 					Time = x.DateTime.ToString("HH:mm"),
 					DeleteLineupItem = GetNamedAction(nameof(LineupController.DeleteLineupItem), $"Odebrat z programu", "remove_lineup_item",
-						LineupItemFormFactory.GetDeleteLineupItemForm(new() { Id = x.Id })),
+						LineupItemFormComposer.GetDeleteLineupItemForm(new() { Id = x.Id })),
 					UpdateLineupItem = GetNamedAction(nameof(LineupController.UpdateLineupItem), $"Upravit", "update_ineup_item",
-						LineupItemFormFactory.GetUdpateLineupItemForm(x.ToUpdateForm())),
+						LineupItemFormComposer.GetUdpateLineupItemForm(x.ToUpdateForm())),
 				});
 
 			return Ok(responseModel);

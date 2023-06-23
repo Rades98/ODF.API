@@ -14,6 +14,9 @@ namespace ODF.API.ResponseModels.Contacts.Redaction
 		[JsonProperty("surname", Required = Required.Always)]
 		public string? Surname { get; set; }
 
+		[JsonProperty("email", Required = Required.Always)]
+		public string? Email { get; set; }
+
 		[JsonProperty("updateContactPerson", Required = Required.Always)]
 		public NamedAction? UpdateContactPerson { get; set; }
 

@@ -6,7 +6,7 @@ using ODF.Domain.Constants;
 
 namespace ODF.API.FormFactories
 {
-	public static class ArticleFormFactory
+	public static class ArticleFormComposer
 	{
 		public static Form GetAddArticleForm(AddArticleRequestForm requestform, IEnumerable<ValidationFailure>? errors = null)
 		{

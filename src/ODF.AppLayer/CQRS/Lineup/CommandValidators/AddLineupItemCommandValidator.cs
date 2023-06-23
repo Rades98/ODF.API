@@ -5,20 +5,25 @@ using FluentValidation;
 using FluentValidation.Results;
 using ODF.AppLayer.CQRS.Lineup.Commands;
 using ODF.AppLayer.Repos;
+using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Lineup.CommandValidators
 {
 	public class AddLineupItemCommandValidator : AbstractValidator<AddLineupItemCommand>
 	{
 		private readonly IUserRepo _userRepo;
+		private readonly ITranslationRepo _translationRepo;
 
-		public AddLineupItemCommandValidator(IUserRepo userRepo)
+		public AddLineupItemCommandValidator(IUserRepo userRepo, ITranslationRepo translationRepo)
 		{
 			_userRepo = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
+			_translationRepo = translationRepo ?? throw new ArgumentNullException(nameof(translationRepo));
 		}
 
 		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddLineupItemCommand> context, CancellationToken cancellation = default)
 		{
+			bool transCodeExists = (await _translationRepo.GetTranslationAsync(context.InstanceToValidate.DescriptionTranslationCode, Languages.Czech.Id, cancellation)) is not null;
+
 			if (!string.IsNullOrEmpty(context.InstanceToValidate.UserName))
 			{
 				var user = await _userRepo.GetUserAsync(context.InstanceToValidate.UserName, cancellation);
@@ -55,6 +60,10 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandValidators
 				.NotNull()
 				.NotEmpty()
 				.WithMessage("Překladová proměnná pro popis musí být vyplněna");
+
+			RuleFor(command => command.DescriptionTranslationCode)
+				.Must(code => !transCodeExists)
+				.WithMessage("Název překladové proměnné už je obsazen");
 
 			RuleFor(command => command.Interpret)
 				.NotNull()

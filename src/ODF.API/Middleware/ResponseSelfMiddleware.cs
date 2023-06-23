@@ -13,7 +13,7 @@ namespace ODF.API.Middleware
 		private readonly ApiSettings _apiSettings;
 
 		private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { Error = (sender, args) => { args.ErrorContext.Handled = true; } };
-		private static Regex SelfReg = new(@"(?:(!:[""]_self).)*(?:[""]_self).*[}}\]}]$", RegexOptions.Compiled, TimeSpan.FromSeconds(20));
+		private static Regex SelfReg = new(@"""_self""\s*:\s*{[^}]*}\s*[}][,]\s+""actions""\s*:\s*[[][^]]*", RegexOptions.Compiled, TimeSpan.FromSeconds(20));
 
 		public ResponseSelfMiddleware(RequestDelegate next, IOptions<ApiSettings> apiSettings)
 		{
@@ -48,7 +48,6 @@ namespace ODF.API.Middleware
 			}
 		}
 
-		//This stuff with regex and shit is some sort of hack.. would be nice if it was refactored once - but not today :D
 		private string GetModifiedResponse(string response, HttpContext httpContext)
 		{
 			if (!httpContext.IsApiRequest())
@@ -71,8 +70,9 @@ namespace ODF.API.Middleware
 			responseBody._self.Curl.Method = method;
 			responseBody._self.Curl.Rel = "self";
 			responseBody._self.ActionName = "_self";
+			string stringResposne = JsonConvert.SerializeObject(responseBody);
 
-			return SelfReg.Replace(response, JsonConvert.SerializeObject(responseBody));
+			return SelfReg.Replace(response, stringResposne[1..^1]);
 		}
 	}
 }

@@ -6,7 +6,7 @@ using ODF.Domain.Constants;
 
 namespace ODF.API.FormFactories
 {
-	public static class ContactFormFactory
+	public static class ContactFormComposer
 	{
 		public static Form GetUpdateContactForm(UpdateContactForm contact, IEnumerable<ValidationFailure>? errors = null)
 		{

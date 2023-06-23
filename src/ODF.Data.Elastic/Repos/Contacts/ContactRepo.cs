@@ -19,7 +19,6 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			_elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
 		}
 
-
 		public async Task<Contact> GetAsync(CancellationToken cancellationToken)
 		{
 			var response = await _elasticClient.SearchAsync<Contact>(s => s
@@ -36,39 +35,18 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			var scriptParams = new Dictionary<string, object>();
 			StringBuilder script = new StringBuilder();
 
-			if (!string.IsNullOrEmpty(street))
-			{
-				scriptParams.Add(nameof(Address.Street), street);
-				script.Append($"ctx._source.address.street = params.Street;");
-			}
+			street.AddToScriptWithParamIsfEdited(nameof(Address.Street), scriptParams, script, "ctx._source.address");
+			city.AddToScriptWithParamIsfEdited(nameof(Address.City), scriptParams, script, "ctx._source.address");
+			postalCode.AddToScriptWithParamIsfEdited(nameof(Address.PostalCode), scriptParams, script, "ctx._source.address");
+			country.AddToScriptWithParamIsfEdited(nameof(Address.Country), scriptParams, script, "ctx._source.address");
 
-			if (!string.IsNullOrEmpty(city))
-			{
-				scriptParams.Add(nameof(Address.City), city);
-				script.Append("ctx._source.address.city = params.City;");
-			}
-
-			if (!string.IsNullOrEmpty(postalCode))
-			{
-				scriptParams.Add(nameof(Address.PostalCode), postalCode);
-				script.Append("ctx._source.address.postalCode = params.PostalCode;");
-			}
-
-			if (!string.IsNullOrEmpty(country))
-			{
-				scriptParams.Add(nameof(Address.Country), country);
-				script.Append("ctx._source.address.country = params.Country;");
-			}
-
-			var response = await _elasticClient.UpdateByQueryAsync<Contact>(s => s
+			return (await _elasticClient.UpdateByQueryAsync<Contact>(s => s
 					.MatchAll()
 					.Script(s => s
 						.Source(script.ToString())
 						.Params(scriptParams))
 					.Refresh(true), cancellationToken
-					);
-
-			return response.IsValid;
+					)).IsValid;
 		}
 
 		public async Task<bool> UpdateContactAsync(string eventName, string eventManager, string email, CancellationToken cancellationToken)
@@ -76,64 +54,23 @@ namespace ODF.Data.Elastic.Repos.Contacts
 			var scriptParams = new Dictionary<string, object>();
 			StringBuilder script = new StringBuilder();
 
-			if (!string.IsNullOrEmpty(eventName))
-			{
-				scriptParams.Add(nameof(Contact.EventName), eventName);
-				script.Append("ctx._source.eventName = params.EventName;");
-			}
+			eventName.AddToScriptWithParamIsfEdited(nameof(Contact.EventName), scriptParams, script);
+			eventManager.AddToScriptWithParamIsfEdited(nameof(Contact.EventManager), scriptParams, script);
+			email.AddToScriptWithParamIsfEdited(nameof(Contact.Email), scriptParams, script);
 
-			if (!string.IsNullOrEmpty(eventManager))
-			{
-				scriptParams.Add(nameof(Contact.EventManager), eventManager);
-				script.Append("ctx._source.eventManager = params.EventManager;");
-			}
-
-			if (!string.IsNullOrEmpty(email))
-			{
-				scriptParams.Add(nameof(Contact.Email), email);
-				script.Append("ctx._source.email = params.Email;");
-			}
-
-			var response = await _elasticClient.UpdateByQueryAsync<Contact>(s => s
+			return (await _elasticClient.UpdateByQueryAsync<Contact>(s => s
 					.MatchAll()
 					.Script(s => s
 						.Source(script.ToString())
 						.Params(scriptParams))
 					.Refresh(true), cancellationToken
-					);
-
-			if (response.IsValid)
-			{
-				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
-
-				bool eventNameOk = true, eventManagerOk = true, emailOk = true;
-
-				if (!string.IsNullOrEmpty(eventName))
-				{
-					eventNameOk = actual.EventName == eventName;
-				}
-
-				if (!string.IsNullOrEmpty(eventManager))
-				{
-					eventManagerOk = actual.EventManager == eventManager;
-				}
-
-				if (!string.IsNullOrEmpty(email))
-				{
-					emailOk = actual.Email == email;
-				}
-
-				return eventNameOk && eventManagerOk && emailOk;
-			}
-
-			return false;
+					)).IsValid;
 		}
 
 		#region bank acc
 
 		public async Task<bool> AddBankAccountAsync(string bank, string accountId, string iban, CancellationToken cancellationToken)
-		{
-			var response = await _elasticClient.UpdateByQueryAsync<Contact>(s => s
+			=> (await _elasticClient.UpdateByQueryAsync<Contact>(s => s
 					.MatchAll()
 					.Script(s => s
 						.Source("if (ctx._source.bankAccounts == null) { ctx._source.bankAccounts = new ArrayList(); } ctx._source.bankAccounts.add(params.elem);")
@@ -141,21 +78,10 @@ namespace ODF.Data.Elastic.Repos.Contacts
 						.Add("elem", new BankAccount { AccountId = accountId, Bank = bank, IBAN = iban }))
 					)
 					.Refresh(true), cancellationToken
-					);
-
-			if (response.IsValid)
-			{
-				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
-
-				return actual.BankAccounts.Any(acc => acc.IBAN == iban);
-			}
-
-			return false;
-		}
+					)).IsValid;
 
 		public async Task<bool> RemoveBankAccountAsync(string iban, CancellationToken cancellationToken)
-		{
-			var response = await _elasticClient.UpdateByQueryAsync<Contact>(s => s
+			=> (await _elasticClient.UpdateByQueryAsync<Contact>(s => s
 					.MatchAll()
 					.Script(s => s
 						.Source("ctx._source.bankAccounts.removeIf(a -> a.iBAN == params.iban);")
@@ -163,17 +89,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 						.Add("iban", iban))
 					)
 					.Refresh(true), cancellationToken
-					);
-
-			if (response.IsValid)
-			{
-				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
-
-				return !actual.BankAccounts.Any(acc => acc.IBAN == iban);
-			}
-
-			return false;
-		}
+					)).IsValid;
 
 		#endregion bank acc
 
@@ -183,19 +99,12 @@ namespace ODF.Data.Elastic.Repos.Contacts
 		public async Task<bool> AddContactPersonAsync(ContactPerson person, CancellationToken cancellationToken)
 		{
 			var last = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.FirstOrDefault();
-
-			if (last is null)
-			{
-				return false;
-			}
-
-			int lastOrder = last.ContactPersons.OrderBy(x => x.Order.Value).LastOrDefault()?.Order ?? 1;
+			int lastOrder = last is null ? 0 : last.ContactPersons.OrderBy(x => x.Order.Value).LastOrDefault()?.Order ?? 1;
 
 			person.Order = lastOrder + 1;
-			var id = Guid.NewGuid();
-			person.Id = id;
+			person.Id = Guid.NewGuid();
 
-			var response = await _elasticClient.UpdateByQueryAsync<Contact>(s => s
+			return (await _elasticClient.UpdateByQueryAsync<Contact>(s => s
 					.MatchAll()
 					.Script(s => s
 						.Source("if (ctx._source.contactPersons == null) { ctx._source.contactPersons = new ArrayList(); } ctx._source.contactPersons.add(params.elem);")
@@ -203,48 +112,47 @@ namespace ODF.Data.Elastic.Repos.Contacts
 						.Add("elem", person))
 					)
 					.Refresh(true), cancellationToken
-					);
-
-			if (response.IsValid)
-			{
-				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
-
-				return actual.ContactPersons.Any(cp => cp.Id == id);
-			}
-
-			return false;
+					)).IsValid;
 		}
 
 		public async Task<bool> UpdateContactPersonAsync(ContactPerson person, CancellationToken cancellationToken)
 		{
+			var actualPerson = (await GetAsync(cancellationToken)).ContactPersons.FirstOrDefault(psn => psn.Id == person.Id);
+
 			var scriptParams = new Dictionary<string, object>();
 			StringBuilder script = new StringBuilder("for (item in ctx._source.contactPersons) {if (item.id == params.Id) {");
 			scriptParams.Add(nameof(ContactPerson.Id), person.Id);
 
-			person.Email.AddIfEdited(scriptParams, script);
-			person.Title.AddIfEdited(scriptParams, script);
-			person.Email.AddIfEdited(scriptParams, script);
-			person.Surname.AddIfEdited(scriptParams, script);
-			person.Base64Image.AddIfEdited(scriptParams, script);
-			person.Order.AddIfEdited(scriptParams, script);
-			person.Roles.AddIfEdited(scriptParams, script);
+			var allRoles = person.Roles;
+
+			if (allRoles.Any())
+			{
+				actualPerson.Roles.ToList().AddRange(person.Roles.ToList());
+				allRoles = actualPerson.Roles.Distinct();
+			}
+
+			person.Name.AddToScriptWithParamIsfEdited(nameof(person.Name), scriptParams, script, "item");
+			person.Title.AddToScriptWithParamIsfEdited(nameof(person.Title), scriptParams, script, "item");
+			person.Email.AddToScriptWithParamIsfEdited(nameof(person.Email), scriptParams, script, "item");
+			person.Surname.AddToScriptWithParamIsfEdited(nameof(person.Surname), scriptParams, script, "item");
+			person.Base64Image.AddToScriptWithParamIsfEdited(nameof(person.Base64Image), scriptParams, script, "item");
+			person.Order.AddToScriptWithParamIsfEdited(nameof(person.Order), scriptParams, script, "item");
+			allRoles.AddToScriptWithParamIsfEdited(nameof(person.Roles), scriptParams, script, "item");
 
 			script.Append("} }");
 
-			var response = await _elasticClient.UpdateByQueryAsync<Contact>(s => s
+			return (await _elasticClient.UpdateByQueryAsync<Contact>(s => s
 					.MatchAll()
+					.Size(1)
 					.Script(s => s
 						.Source(script.ToString())
 						.Params(scriptParams))
 					.Refresh(true), cancellationToken
-					);
-
-			return response.IsValid;
+					)).IsValid;
 		}
 
 		public async Task<bool> RemoveContactPersonAsync(Guid id, CancellationToken cancellationToken)
-		{
-			var response = await _elasticClient.UpdateByQueryAsync<Contact>(s => s
+			=> (await _elasticClient.UpdateByQueryAsync<Contact>(s => s
 					.MatchAll()
 					.Script(s => s
 						.Source("ctx._source.contactPersons.removeIf(a -> a.id == params.Id);")
@@ -252,20 +160,8 @@ namespace ODF.Data.Elastic.Repos.Contacts
 						.Add("Id", id))
 					)
 					.Refresh(true), cancellationToken
-					);
-
-			if (response.IsValid)
-			{
-				var actual = (await _elasticClient.SearchAsync<Contact>(s => s.Size(1), cancellationToken)).Documents.First();
-
-				return !actual.ContactPersons.Any(cp => cp.Id == id);
-			}
-
-			return false;
-		}
+					)).IsValid;
 
 		#endregion contact person
-
-
 	}
 }

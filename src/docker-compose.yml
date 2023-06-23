@@ -44,7 +44,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
       # ASPNETCORE_HTTPS_PORT: "${WEB_API_PORT}" #PROD
       ASPNETCORE_URLS: "http://*:${WEB_API_PORT_HTTP};" #https://*:${WEB_API_PORT} swap for PROD
-      ApiSettings__ApiUrl: "https://127.0.0.1:${WEB_API_PORT_HTTP}"
+      ApiSettings__ApiUrl: ${WEB_API_RESPONSE_PATH}
       ApiSettings__AdminPw: ${ADMIN_PW}
       ElasticsearchSettings__DefaultIndex: "odf-articles"
       ElasticsearchSettings__Nodes__0: http://elasticsearch:${ELASTIC_PORT}

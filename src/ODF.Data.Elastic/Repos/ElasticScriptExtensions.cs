@@ -2,46 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ODF.Domain.Extensions;
 
 namespace ODF.Data.Elastic.Repos
 {
 	internal static class ElasticScriptExtensions
 	{
-		internal static void AddIfEdited(this object value, Dictionary<string, object> scriptParams, StringBuilder script)
+		internal static void AddToScriptWithParamIsfEdited(this object value, string propName, Dictionary<string, object> scriptParams, StringBuilder script, string prefix = null)
 		{
+			string sourceKind = prefix ?? "ctx._source";
+			string normalizedPropName = propName.ToCamelCase();
+
 			if (value is string stringVal)
 			{
 				if (!string.IsNullOrEmpty(stringVal))
 				{
-					scriptParams.Add(nameof(stringVal), stringVal);
-					script.Append($"item.email = params.{nameof(stringVal)};");
+					scriptParams.Add(normalizedPropName, stringVal);
+					script.Append($"{sourceKind}.{normalizedPropName} = params.{normalizedPropName};");
 				}
 			}
 			else if (value is int?)
 			{
-				var intVal = (int?)value;
+				int? intVal = (int?)value;
 				if (intVal is not null)
 				{
-					scriptParams.Add(nameof(intVal), intVal);
-					script.Append($"item.order = params.{nameof(intVal)};");
+					scriptParams.Add(normalizedPropName, intVal);
+					script.Append($"{sourceKind}.{normalizedPropName} = params.{normalizedPropName};");
 				}
 			}
 			else if (value is IEnumerable<string> enumerable)
 			{
 				if (enumerable.Any())
 				{
-					scriptParams.Add(nameof(enumerable), enumerable);
-					script.Append($"item.roles = params.{nameof(enumerable)};");
+					scriptParams.Add(normalizedPropName, enumerable);
+					script.Append($"{sourceKind}.{normalizedPropName} = params.{normalizedPropName};");
 				}
 			}
 			else if (value is DateTime dateTime)
 			{
-				scriptParams.Add(nameof(dateTime), dateTime.ToString("yyyy-MM-ddTHH:mm:ss"));
-				script.Append($"ctx._source.dateTime = params.{nameof(dateTime)};");
+				scriptParams.Add(normalizedPropName, dateTime.ToString("yyyy-MM-ddTHH:mm:ss"));
+				script.Append($"{sourceKind}.{normalizedPropName} = params.{normalizedPropName};");
 			}
 			else
 			{
-				throw new ArgumentException("No conversion provided", nameof(value));
+				throw new ArgumentException("No conversion provided", normalizedPropName);
 			}
 		}
 	}

@@ -55,13 +55,13 @@ namespace ODF.API.Controllers
 
 		private NamedAction GetAddArticleAction(string sectionTranslation, int pageNum)
 				=> GetNamedAction(nameof(ArticlesController.AddArticle), $"Přidat článek do {sectionTranslation}", "add_article",
-						ArticleFormFactory.GetAddArticleForm(new()
+						ArticleFormComposer.GetAddArticleForm(new()
 						{
 							Title = "",
 							PageId = pageNum,
 							Text = "",
-							TextTranslationCode = $"page{pageNum}_text_{{id}}",
-							TitleTranslationCode = $"page{pageNum}_title_{{id}}"
+							TextTranslationCode = $"page{pageNum}text{{id}}",
+							TitleTranslationCode = $"page{pageNum}title{{id}}"
 						}));
 	}
 }

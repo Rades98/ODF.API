@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
+using ODF.API.Cookies;
 using ODF.API.Extensions;
 using ODF.API.Registration.SettingModels;
 
@@ -12,6 +13,8 @@ namespace ODF.API.Middleware
 		private readonly IDistributedCache _cache;
 		private readonly ILogger<RateLimitMiddleware> _logger;
 		private readonly AntiScrappingSettings _scrapOpts;
+		private const string CookieRateLimitName = "Add%Block!ahdjhkj&sf";
+
 
 		public RateLimitMiddleware(RequestDelegate next, IDistributedCache cache, ILogger<RateLimitMiddleware> logger, IOptions<AntiScrappingSettings> scrapOpts)
 		{
@@ -25,29 +28,39 @@ namespace ODF.API.Middleware
 		{
 			CancellationToken cancellationToken = default;
 
-			string key = $"{httpContext.Request.Path}_{httpContext.Connection.RemoteIpAddress}";
+			string? cookie;
+
+			httpContext.Request.Cookies.TryGetValue(CookieRateLimitName, out cookie);
+
+			if (cookie is null)
+			{
+				cookie = Guid.NewGuid().ToString();
+				httpContext.Response.Cookies.Append(CookieRateLimitName, cookie, CookieProps.BaseCookieOpts);
+			}
+
+			string key = $"{httpContext.Request.Path}_{cookie}";
 			var clientStatistics = await _cache.GetCachedValueAsyn<ClientStatistics>(key, cancellationToken) ?? new() { LastSuccessfulResponseTime = DateTime.Now };
 
-			var blockedIp = await _cache.GetCachedValueAsyn<BlockedIp>($"block_{httpContext.Connection.RemoteIpAddress}", cancellationToken);
+			var blockedIp = await _cache.GetCachedValueAsyn<Blocked>($"block_{cookie}", cancellationToken);
 
 			if (blockedIp is not null && blockedIp.AllertCount >= _scrapOpts.WarningCount)
 			{
-				_logger.LogWarning("Some boii has been banned for scrapping from {ip}", httpContext.Connection.RemoteIpAddress);
+				_logger.LogWarning("Some boii has been banned for scrapping from {ip} with cookie: {cookie}", httpContext.Connection.RemoteIpAddress, cookie);
 				httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 				await httpContext.Response.WriteAsync($"U were warned.. now u r banned for cca {_scrapOpts.DurationMin} mins (͡ ° ͜ʖ ͡ °) FUCK OFF DUDE!!", cancellationToken);
 
 				return;
 			}
 
-			if (DateTime.Now < clientStatistics.LastSuccessfulResponseTime.AddSeconds(2) &&
+			if (DateTime.Now < clientStatistics.LastSuccessfulResponseTime.AddSeconds(_scrapOpts.MaxCallsPerPageSecs) &&
 				clientStatistics.NumberofRequestsCompletedSuccessfully >= _scrapOpts.MaxCallsPerPage)
 			{
-				_logger.LogWarning("Some boii is scrapping {path} from {ip}", httpContext.Request.Path, httpContext.Connection.RemoteIpAddress);
+				_logger.LogWarning("Some boii is scrapping {path} from {ip} with cookie: {cookie}", httpContext.Request.Path, httpContext.Connection.RemoteIpAddress, cookie);
 
 				httpContext.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
 				await httpContext.Response.WriteAsync($"Stop scrapping me, please, it hurts. :(", cancellationToken);
 
-				await UpdateBlockingAsync(httpContext.Connection.RemoteIpAddress!.ToString(), cancellationToken);
+				await UpdateBlockingAsync(cookie!.ToString(), cancellationToken);
 
 				return;
 			}
@@ -85,22 +98,22 @@ namespace ODF.API.Middleware
 
 		private async Task UpdateBlockingAsync(string key, CancellationToken cancellationToken)
 		{
-			var blockedIp = await _cache.GetCachedValueAsyn<BlockedIp>($"block_{key}", cancellationToken);
+			var blocked = await _cache.GetCachedValueAsyn<Blocked>($"block_{key}", cancellationToken);
 
-			if (blockedIp is not null)
+			if (blocked is not null)
 			{
-				blockedIp.AllertCount += 1;
+				blocked.AllertCount += 1;
 			}
 			else
 			{
-				blockedIp = new()
+				blocked = new()
 				{
-					Ip = key,
+					Value = key,
 					AllertCount = 1
 				};
 			}
 
-			await _cache.SetCachedValueAsync($"block_{key}", blockedIp, new() { AbsoluteExpiration = DateTime.Now.AddMinutes(_scrapOpts.DurationMin) }, cancellationToken);
+			await _cache.SetCachedValueAsync($"block_{key}", blocked, new() { AbsoluteExpiration = DateTime.Now.AddMinutes(_scrapOpts.DurationMin) }, cancellationToken);
 		}
 
 		private sealed record ClientStatistics()
@@ -109,9 +122,9 @@ namespace ODF.API.Middleware
 			public int NumberofRequestsCompletedSuccessfully { get; set; }
 		}
 
-		private sealed record BlockedIp()
+		private sealed record Blocked()
 		{
-			public string Ip { get; set; } = string.Empty;
+			public string Value { get; set; } = string.Empty;
 
 			public int AllertCount { get; set; }
 		}

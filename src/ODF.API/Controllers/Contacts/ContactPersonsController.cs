@@ -40,7 +40,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetUpdateContactPersonForm(form, validationResult.Errors);
+				var responseForm = ContactFormComposer.GetUpdateContactPersonForm(form, validationResult.Errors);
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
@@ -64,7 +64,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetAddContactPersonForm(form, validationResult.Errors);
+				var responseForm = ContactFormComposer.GetAddContactPersonForm(form, validationResult.Errors);
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
@@ -87,7 +87,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormFactory.GetRemoveContactPersonForm(form.Id, validationResult.Errors);
+				var responseForm = ContactFormComposer.GetRemoveContactPersonForm(form.Id, validationResult.Errors);
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 

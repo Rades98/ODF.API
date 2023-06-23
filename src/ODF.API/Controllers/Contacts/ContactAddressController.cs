@@ -39,7 +39,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new UpdateContactAddressResponseModel(ContactFormFactory.GetUpdateAddressForm(form)));
+				return UnprocessableEntity(new UpdateContactAddressResponseModel(ContactFormComposer.GetUpdateAddressForm(form)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci adresy"));

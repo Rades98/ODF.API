@@ -33,9 +33,6 @@ namespace ODF.Data.Elastic.Repos.Translations
 		public Task<string> GetTranslationAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken)
 			=> _repo.GetTranslationAsync(translationIdentifier, languageId, cancellationToken);
 
-		public Task<string> GetTranslationOrDefaultTextAsync(string translationIdentifier, string defaultTranslation, int languageId, CancellationToken cancellationToken)
-			=> _repo.GetTranslationOrDefaultTextAsync(translationIdentifier, defaultTranslation, languageId, cancellationToken);
-
 		public Task<long> GetTranslationsCountAsync(int languageId, CancellationToken cancellationToken)
 			=> _repo.GetTranslationsCountAsync(languageId, cancellationToken);
 

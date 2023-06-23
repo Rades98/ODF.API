@@ -40,7 +40,7 @@ namespace ODF.API.Middleware
 				string message = isLoggedIn ? translations.Get("unauthorized_msg_logged") : translations.Get("unauthorized_msg_annonymous");
 
 				var loginAction = _adcp.GetNamedAction(context, $"{context.Request.Scheme}://{context.Request.Host}",
-					nameof(UsersController.LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(new(), translations));
+					nameof(UserController.LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(new(), translations));
 
 				var responseModel = new UnauthorizedExceptionResponseModel(title, message, null, !isLoggedIn ? loginAction : null);
 

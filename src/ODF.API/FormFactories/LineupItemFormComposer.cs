@@ -6,7 +6,7 @@ using ODF.Domain.Constants;
 
 namespace ODF.API.FormFactories
 {
-	public static class LineupItemFormFactory
+	public static class LineupItemFormComposer
 	{
 		public static Form GetAddLineupItemForm(AddLineupItemForm form, IEnumerable<ValidationFailure>? errors = null)
 		{

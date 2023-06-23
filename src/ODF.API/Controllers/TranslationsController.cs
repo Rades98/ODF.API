@@ -40,13 +40,13 @@ namespace ODF.API.Controllers
 				var model = new GetTranslationResponseModel(tr.TranslationCode, tr.Text);
 
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit AJ překlad", "transalation_en_submit",
-					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = Languages.English.GetCountryCode(), TranslationCode = model.TranslationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.English.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit DE překlad", "transalation_de_submit",
-					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = Languages.Deutsch.GetCountryCode(), TranslationCode = model.TranslationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.Deutsch.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit CZ překlad", "transalation_cz_submit",
-					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = Languages.Czech.GetCountryCode(), TranslationCode = model.TranslationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.Czech.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
 				return model;
 			});
@@ -82,7 +82,7 @@ namespace ODF.API.Controllers
 			if (result)
 			{
 				var responseModel = new UpdateTranslationResponseModel(
-					TranslationFormFactory.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = form.TranslationCode, Text = form.Text }),
+					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = form.TranslationCode, Text = form.Text }),
 					$"Proměnná {form.TranslationCode} byla úspěšně přeložena pro {form.CountryCode}: {form.Text}.");
 
 				return Ok(responseModel);

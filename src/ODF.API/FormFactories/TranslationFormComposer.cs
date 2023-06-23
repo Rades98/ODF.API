@@ -6,7 +6,7 @@ using ODF.Domain.Constants;
 
 namespace ODF.API.FormFactories
 {
-	public static class TranslationFormFactory
+	public static class TranslationFormComposer
 	{
 		public static Form GetChangeTranslationForm(ChangeTranslationForm changeTrans, IEnumerable<ValidationFailure>? errors = null)
 		{

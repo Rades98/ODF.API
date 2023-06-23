@@ -138,9 +138,9 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 1, Text ="Festival program", TranslationCode = "menu_lineup"},
 				new(){ IsSystem = true, LanguageId = 2, Text ="Festivalprogramm", TranslationCode = "menu_lineup"},
 
-				new(){ IsSystem = true, LanguageId = 0, Text ="Vstupenky", TranslationCode = "menu_tickets"},
-				new(){ IsSystem = true, LanguageId = 1, Text ="Tickets", TranslationCode = "menu_tickets"},
-				new(){ IsSystem = true, LanguageId = 2, Text ="Tickets", TranslationCode = "menu_tickets"},
+				new(){ IsSystem = true, LanguageId = 0, Text ="Donate", TranslationCode = "menu_donation"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Donate", TranslationCode = "menu_donation"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Donate", TranslationCode = "menu_donation"},
 
 				new(){ IsSystem = true, LanguageId = 0, Text ="Kontakt", TranslationCode = "menu_contacts"},
 				new(){ IsSystem = true, LanguageId = 1, Text ="Contact", TranslationCode = "menu_contacts"},
@@ -185,6 +185,10 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 0, Text ="Přihlášení se nezdařilo", TranslationCode = "login_failed_title"},
 				new(){ IsSystem = true, LanguageId = 1, Text ="Login failed", TranslationCode = "login_failed_title"},
 				new(){ IsSystem = true, LanguageId = 2, Text ="Fehler bei der Anmeldung", TranslationCode = "login_failed_title"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Přihlášení proběhlo úspěšně", TranslationCode = "login_succes_title"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Login was successful", TranslationCode = "login_succes_title"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Die Anmeldung war erfolgreich", TranslationCode = "login_succes_title"},
 
 				new(){ IsSystem = true, LanguageId = 0, Text ="Zkontrolujte, že jste zadali správné údaje k účtu", TranslationCode = "login_failed_msg"},
 				new(){ IsSystem = true, LanguageId = 1, Text ="Check that you have entered the correct account information", TranslationCode = "login_failed_msg"},

@@ -2,11 +2,11 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using ODF.API.Filters;
 using ODF.API.HealthChecks;
 using ODF.API.Middleware;
 using ODF.API.Registration;
 using ODF.API.Registration.SpecificOptions;
+using ODF.API.Swagger;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Serilog;
@@ -24,12 +24,10 @@ builder.Services.RegisterAppServices(builder.Configuration, builder.Environment)
 				.AddDistributedMemoryCache()
 				.AddMemoryCache()
 				.AddEndpointsApiExplorer()
-				.AddSwaggerGen()
 				.AddCors()
 				.AddHttpContextAccessor()
 				.AddControllers(opts =>
 				{
-					opts.Filters.Add<PropertyBindingActionFilterAttribute>();
 					opts.Conventions.Add(new RouteTokenTransformerConvention(new CamelCaseRouteTransformer()));
 				});
 
@@ -55,8 +53,7 @@ ServiceLocator.Instance = app.Services;
 
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+	app.SetupSwagger();
 	app.UseCors(x => x
 	.AllowAnyMethod()
 	.AllowAnyHeader()
@@ -87,7 +84,6 @@ else
 	.WithOrigins("https://folklorova.cz"));
 
 	app.UseHttpsRedirection();
-
 	app.UseWhen(
 		delegate (HttpContext httpContext)
 		{
@@ -111,6 +107,7 @@ app.MapControllers();
 app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigation", true, true));
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+//app.UseMiddleware<AuthCookieRevokeMiddleware>();
 app.UseMiddleware<CountryCodeMiddleWare>();
 app.UseMiddleware<RateLimitMiddleware>();
 app.UseMiddleware<ResponseSelfMiddleware>();

@@ -6,6 +6,8 @@
 
 		public int MaxCallsPerPage { get; set; }
 
+		public int MaxCallsPerPageSecs { get; set; }
+
 		public int WarningCount { get; set; }
 	}
 }

@@ -9,7 +9,7 @@ using ODF.Domain.Extensions;
 
 namespace ODF.API.FormFactories
 {
-	public static class UserFormFactory
+	public static class UserFormComposer
 	{
 		public static Form GetLoginForm(
 			LoginUserForm userRequestForm,

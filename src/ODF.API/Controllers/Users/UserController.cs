@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
+using ODF.API.Cookies;
 using ODF.API.Extensions;
 using ODF.API.FormFactories;
 using ODF.API.RequestModels.Forms.User;
@@ -19,9 +20,9 @@ using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Users
 {
-	public class UsersController : BaseController
+	public class UserController : BaseController
 	{
-		public UsersController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+		public UserController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
 			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
@@ -40,25 +41,18 @@ namespace ODF.API.Controllers.Users
 			{
 				var claimsIdentity = new ClaimsIdentity(userResult.User.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-				var authProperties = new AuthenticationProperties
-				{
-					AllowRefresh = true,
-					ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
-					IsPersistent = true,
-				};
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), CookieProps.AuthProps);
 
-				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
-				var responseModel = new UserResponseModel(userResult.User.UserName);
+				var responseModel = new UserResponseModel(userResult.User.UserName, translations.Get("login_succes_title"));
 				responseModel.AddAction(GetAppAction(nameof(NavigationController.GetNavigation), "nav"));
 
 				return Ok(responseModel);
 			}
 
-			var loginAction = GetNamedAction(nameof(LoginUser), translations.Get("login_user"), "login", UserFormFactory.GetLoginForm(form, translations, errors: userResult.Errors));
+			var loginAction = GetNamedAction(nameof(LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(form, translations, errors: userResult.Errors));
 
 			var registerAction = GetNamedAction(nameof(RegisterUser), translations.Get("register_user"), "register",
-				UserFormFactory.GetRegisterForm(new(), translations));
+				UserFormComposer.GetRegisterForm(new(), translations));
 
 			return Unauthorized(new UnauthorizedExceptionResponseModel(translations.Get("login_failed_title"), translations.Get("login_failed_msg"), loginAction, registerAction));
 		}
@@ -78,8 +72,11 @@ namespace ODF.API.Controllers.Users
 
 			if (HttpContext.IsLoggedIn())
 			{
+				var responseModel = new UserResponseModel(HttpContext.GetUserName(), translations.Get("logout_succes"));
+				responseModel.AddAction(GetAppAction(nameof(NavigationController.GetNavigation), "nav"));
 				await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-				return Accepted(translations.Get("logout_succes"));
+
+				return Ok(responseModel);
 			}
 
 			return UnprocessableEntity(translations.Get("logout_fail"));

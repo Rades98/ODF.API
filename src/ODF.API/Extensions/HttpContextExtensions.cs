@@ -72,6 +72,7 @@ namespace ODF.API.Extensions
 				httpContext.Request.Path == new PathString("/metrics") ||
 				httpContext.Request.Path.ToString().Contains(".ico") ||
 				httpContext.Request.Path.ToString().Contains("ui") ||
+				httpContext.Request.Path.ToString().Contains("swagger") ||
 				httpContext.Request.Path.ToString().Contains("health")
 			);
 	}

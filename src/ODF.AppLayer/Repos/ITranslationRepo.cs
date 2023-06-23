@@ -7,8 +7,6 @@ namespace ODF.AppLayer.Repos
 {
 	public interface ITranslationRepo
 	{
-		Task<string> GetTranslationOrDefaultTextAsync(string translationIdentifier, string defaultTranslation, int languageId, CancellationToken cancellationToken);
-
 		Task<string> GetTranslationAsync(string translationIdentifier, int languageId, CancellationToken cancellationToken);
 
 		Task<bool> AddTranslationAsync(string translationIdentifier, string text, int languageId, CancellationToken cancellationToken);
