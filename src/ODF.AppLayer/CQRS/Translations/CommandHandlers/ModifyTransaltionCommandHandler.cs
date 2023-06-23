@@ -2,13 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ODF.AppLayer.CQRS.Translations.Commands;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 using ODF.AppLayer.Repos;
 using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Translations.CommandHandlers
 {
-	internal class ModifyTransaltionCommandHandler : ICommandHandler<ModifyTransaltionCommand, bool>
+	internal class ModifyTransaltionCommandHandler : ICommandHandler<ModifyTransaltionCommand, ValidationDto>
 	{
 		private readonly ITranslationRepo _repo;
 
@@ -17,14 +18,14 @@ namespace ODF.AppLayer.CQRS.Translations.CommandHandlers
 			_repo = repo ?? throw new ArgumentNullException(nameof(repo));
 		}
 
-		public async Task<bool> Handle(ModifyTransaltionCommand request, CancellationToken cancellationToken)
+		public async Task<ValidationDto> Handle(ModifyTransaltionCommand request, CancellationToken cancellationToken)
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))
 			{
-				return await _repo.UpdateOrInsertTransaltionAsync(request.TranslationCode, request.Text, lang.Id, cancellationToken);
+				return new() { IsOk = await _repo.UpdateOrInsertTransaltionAsync(request.TranslationCode, request.Text, lang.Id, cancellationToken) };
 			}
 
-			return false;
+			return ValidationDto.Invalid;
 		}
 	}
 }

@@ -42,7 +42,7 @@ namespace ODF.API.Controllers
 			responseModel.MenuItems.Add(GetNamedAction(nameof(AssociationController.GetAssociation), translations.Get("menu_association"), "associationMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(LineupController.GetLineup), translations.Get("menu_lineup"), "lineupMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(DonationController.GetDonation), translations.Get("menu_donation"), "donationMenuItem"));
-			responseModel.MenuItems.Add(GetNamedAction(nameof(ContactsController.GetContacts), translations.Get("menu_contacts"), "contactMenuItem"));
+			responseModel.MenuItems.Add(GetNamedAction(nameof(ContactController.GetContacts), translations.Get("menu_contacts"), "contactMenuItem"));
 
 			if (!HttpContext.IsLoggedIn())
 			{

@@ -16,9 +16,9 @@ using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Contacts
 {
-	public class ContactsRedactionController : BaseController
+	public class ContactRedactionController : BaseController
 	{
-		public ContactsRedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+		public ContactRedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
 			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}
@@ -33,7 +33,7 @@ namespace ODF.API.Controllers.Contacts
 
 			var responseModel = new GetContactRedactionNavigationResponseModel();
 
-			responseModel.UpdateContacts = GetNamedAction(nameof(ContactsController.UpdateContact), "Upravit kontakt",
+			responseModel.UpdateContacts = GetNamedAction(nameof(ContactController.UpdateContact), "Upravit kontakt",
 				"updateContact", ContactFormComposer.GetUpdateContactForm(contact.ToForm()));
 
 			responseModel.UpdateAddress = GetNamedAction(nameof(ContactAddressController.UpdateAddress), "Upravit adresu",

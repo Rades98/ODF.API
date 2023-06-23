@@ -28,7 +28,7 @@ namespace ODF.API.Controllers
 
 			var responseModel = new AboutResponseModel(translations.Get("about_info"), translations.Get("about_header"));
 
-			responseModel.AddAction(GetQueriedAppAction(nameof(ArticlesController.GetArticles), "about_articles", PaginationConsts.DefaultPaginationSetting));
+			responseModel.AddAction(GetQueriedAppAction(nameof(ArticleController.GetArticles), "about_articles", PaginationConsts.DefaultPaginationSetting));
 
 			return Ok(responseModel);
 		}

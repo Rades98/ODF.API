@@ -19,9 +19,9 @@ using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers.Contacts
 {
-	public class ContactsController : BaseController
+	public class ContactController : BaseController
 	{
-		public ContactsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+		public ContactController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
 			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 			ApiSettings = apiSettings;

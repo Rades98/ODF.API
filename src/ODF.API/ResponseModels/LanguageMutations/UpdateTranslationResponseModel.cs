@@ -1,17 +1,16 @@
-﻿using Newtonsoft.Json;
-using ODF.API.ResponseModels.Base;
+﻿using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common.Forms;
 
 namespace ODF.API.ResponseModels.LanguageMutations
 {
-	public class UpdateTranslationResponseModel : BaseResponseModel
+	public class UpdateTranslationResponseModel : BaseUpdateResponseModel
 	{
-		public UpdateTranslationResponseModel(Form form, string message) : base(form)
+		public UpdateTranslationResponseModel(Form form, string message) : base(form, message)
 		{
-			Message = message;
 		}
 
-		[JsonProperty("message", Required = Required.Always)]
-		public string Message { get; }
+		public UpdateTranslationResponseModel(Form form) : base(form)
+		{
+		}
 	}
 }

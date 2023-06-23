@@ -23,9 +23,9 @@ using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
-	public class ArticlesController : BaseController
+	public class ArticleController : BaseController
 	{
-		public ArticlesController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
+		public ArticleController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
 			: base(mediator, apiSettings, adcp, translationsProvider)
 		{
 		}

@@ -77,15 +77,21 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> ChangeTranslation(string countryCode, [FromBody] ChangeTranslationForm form, CancellationToken cancellationToken)
 		{
-			bool result = await Mediator.Send(new ModifyTransaltionCommand(form.CountryCode, form.TranslationCode, form.Text), cancellationToken);
+			var validationResult = await Mediator.Send(new ModifyTransaltionCommand(form.CountryCode, form.TranslationCode, form.Text), cancellationToken);
 
-			if (result)
+			if (validationResult.IsOk)
 			{
 				var responseModel = new UpdateTranslationResponseModel(
 					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = form.TranslationCode, Text = form.Text }),
 					$"Proměnná {form.TranslationCode} byla úspěšně přeložena pro {form.CountryCode}: {form.Text}.");
 
 				return Ok(responseModel);
+			}
+
+			if (validationResult.Errors.Any())
+			{
+				var responseModel = new UpdateTranslationResponseModel(TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = form.TranslationCode, Text = form.Text }));
+				return UnprocessableEntity(responseModel);
 			}
 
 			return InternalServerError(new ExceptionResponseModel($"Při překladu {form.TranslationCode} pro {form.CountryCode} na hodnotu {form.Text} došlo k chybě."));
