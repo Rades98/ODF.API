@@ -125,7 +125,7 @@ namespace ODF.Data.Elastic.Repos.Contacts
 
 			var allRoles = person.Roles;
 
-			if (allRoles.Any())
+			if (allRoles.Any() && actualPerson is not null)
 			{
 				actualPerson.Roles.ToList().AddRange(person.Roles.ToList());
 				allRoles = actualPerson.Roles.Distinct();

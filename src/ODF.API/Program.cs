@@ -49,8 +49,6 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-ServiceLocator.Instance = app.Services;
-
 if (app.Environment.IsDevelopment())
 {
 	app.SetupSwagger();
@@ -107,7 +105,7 @@ app.MapControllers();
 app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigation", true, true));
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-//app.UseMiddleware<AuthCookieRevokeMiddleware>();
+app.UseMiddleware<AuthCookieRevokeMiddleware>();
 app.UseMiddleware<CountryCodeMiddleWare>();
 app.UseMiddleware<RateLimitMiddleware>();
 app.UseMiddleware<ResponseSelfMiddleware>();
