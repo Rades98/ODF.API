@@ -8,16 +8,16 @@ using ODF.AppLayer.Repos;
 
 namespace ODF.AppLayer.CQRS.Translations.CommandValidators
 {
-	public class ModifyTransaltionCommandValidator : AbstractValidator<ModifyTransaltionCommand>
+	public class UpdateTransaltionCommandValidator : AbstractValidator<UpdateTransaltionCommand>
 	{
 		private readonly ITranslationRepo _translationRepo;
 
-		public ModifyTransaltionCommandValidator(ITranslationRepo translationRepo)
+		public UpdateTransaltionCommandValidator(ITranslationRepo translationRepo)
 		{
 			_translationRepo = translationRepo ?? throw new ArgumentNullException(nameof(translationRepo));
 		}
 
-		public override async Task<ValidationResult> ValidateAsync(ValidationContext<ModifyTransaltionCommand> context, CancellationToken cancellation = default)
+		public override async Task<ValidationResult> ValidateAsync(ValidationContext<UpdateTransaltionCommand> context, CancellationToken cancellation = default)
 		{
 			string existing = await _translationRepo.GetTranslationAsync(context.InstanceToValidate.TranslationCode, 0, cancellation);
 			RuleFor(trans => trans.TranslationCode)

@@ -10,12 +10,12 @@ namespace ODF.AppLayer.CQRS.Article.CommandValidators
 	{
 		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddArticleCommand> context, CancellationToken cancellation = default)
 		{
-			RuleFor(article => article.TitleTransaltionCode)
+			RuleFor(article => article.TitleTranslationCode)
 				.NotEmpty()
 				.NotNull()
 				.WithMessage("Není vyplněn název překladové proměnné pro nadpis");
 
-			RuleFor(article => article.TextTransaltionCode)
+			RuleFor(article => article.TextTranslationCode)
 				.NotEmpty()
 				.NotNull()
 				.WithMessage("Není vyplněn název překladové proměnné pro text");

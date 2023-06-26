@@ -2,7 +2,7 @@
 {
 	public class FormMember
 	{
-		public FormMember(string name, string propName, string type, object? value, bool isEditable = false, string? errorMessage = null)
+		public FormMember(string name, string propName, string type, object? value, bool isEditable = false, string? errorMessage = null, AppAction? dataSourceLink = null)
 		{
 			Name = name;
 			PropName = propName;
@@ -10,6 +10,7 @@
 			PropValue = value;
 			IsEditable = isEditable;
 			ErrorMessage = errorMessage;
+			DataSourceLink = dataSourceLink;
 		}
 
 		public string Name { get; }
@@ -23,5 +24,7 @@
 		public bool IsEditable { get; }
 
 		public string? ErrorMessage { get; set; }
+
+		public AppAction? DataSourceLink { get; set; }
 	}
 }

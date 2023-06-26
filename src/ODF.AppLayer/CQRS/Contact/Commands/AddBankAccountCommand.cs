@@ -1,9 +1,10 @@
-﻿using ODF.AppLayer.Dtos.Validation;
+﻿using ODF.AppLayer.CQRS.Interfaces.Contact;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public sealed class AddBankAccountCommand : ICommand<ValidationDto>
+	public sealed class AddBankAccountCommand : ICommand<ValidationDto>, IAddBankAccount
 	{
 		public AddBankAccountCommand(string bank, string accountId, string iban)
 		{

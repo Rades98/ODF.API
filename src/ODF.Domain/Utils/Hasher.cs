@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace ODF.Domain.Utils
 {
-	public static class PasswordHasher
+	public static class Hasher
 	{
 		private const int SaltSize = 16; // 128 bit 
 		private const int KeySize = 32; // 256 bit
@@ -49,6 +50,21 @@ namespace ODF.Domain.Utils
 			bool verified = keyToCheck.SequenceEqual(key);
 
 			return (verified, needsUpgrade);
+		}
+
+		public static string GetMailHashString(string inputString)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (byte b in GetMailHash(inputString))
+				sb.Append(b.ToString("X2"));
+
+			return sb.ToString();
+		}
+
+		private static byte[] GetMailHash(string inputString)
+		{
+			using HashAlgorithm algorithm = SHA256.Create();
+			return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 				.WithMessage("PSČ musí být vyplněno");
 
 			RuleFor(command => command.PostalCode)
-				.Must(AddressExtensions.ValidatePostalCode)
+				.Must(StringExtensions.ValidatePostalCode)
 				.WithMessage("PSČ musí být ve formátu XXX XX nebo XXXXX");
 
 			RuleFor(command => command.City)

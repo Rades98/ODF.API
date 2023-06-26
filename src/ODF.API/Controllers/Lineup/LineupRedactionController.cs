@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.Extensions.MappingExtensions;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.ResponseModels.Lineup.Redaction;
 using ODF.API.ResponseModels.Redaction;
 using ODF.AppLayer.CQRS.Lineup.Queries;
@@ -33,7 +33,7 @@ namespace ODF.API.Controllers.Lineup
 			var responseModel = new GetLineupRedactionResponseModel();
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
-					LineupItemFormComposer.GetAddLineupItemForm(new()));
+					LineupItemFormComposer.GetAddLineupItemForm(new(), usersDataSource: GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source")));
 
 			responseModel.LineupItems = lineupItems
 				.OrderBy(ord => ord.DateTime)
@@ -47,7 +47,7 @@ namespace ODF.API.Controllers.Lineup
 					DeleteLineupItem = GetNamedAction(nameof(LineupController.DeleteLineupItem), $"Odebrat z programu", "remove_lineup_item",
 						LineupItemFormComposer.GetDeleteLineupItemForm(new() { Id = x.Id })),
 					UpdateLineupItem = GetNamedAction(nameof(LineupController.UpdateLineupItem), $"Upravit", "update_ineup_item",
-						LineupItemFormComposer.GetUdpateLineupItemForm(x.ToUpdateForm())),
+						LineupItemFormComposer.GetUdpateLineupItemForm(x.ToUpdateForm(), usersDataSource: GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source"))),
 				});
 
 			return Ok(responseModel);

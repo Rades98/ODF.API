@@ -27,6 +27,8 @@ namespace ODF.Data.Redis.Settings
 
 			services.AddTransient<IUserRepo, UserRepo>();
 
+			services.AddSingleton(redisSettings);
+
 			return services;
 		}
 
@@ -43,7 +45,26 @@ namespace ODF.Data.Redis.Settings
 					Email = "admin@folklorova.cz",
 					Id = Guid.Parse("5697F910-A490-47E2-B90B-C42C662178CA"),
 					IsAdmin = true,
-					PasswordHash = PasswordHasher.Hash(pw),
+					PasswordHash = Hasher.Hash(pw),
+					IsActive = true,
+				};
+
+				string usrSerialized = JsonConvert.SerializeObject(usr);
+
+				db.StringSetAsync(usr.GetRedisKey(usr.UserName), usrSerialized);
+			}
+
+			userName = "FS kokot";
+
+			if (string.IsNullOrEmpty(db.StringGet(new User().GetRedisKey(userName))))
+			{
+				var usr = new User()
+				{
+					UserName = userName,
+					Email = "fskokot@seznam.cz",
+					Id = Guid.Parse("5697F910-A490-47E2-B90B-C42C662178CA"),
+					IsAdmin = true,
+					PasswordHash = Hasher.Hash(pw),
 					IsActive = true,
 				};
 

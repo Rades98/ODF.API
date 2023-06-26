@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.RequestModels.Forms.Lineup;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.Lineup;
@@ -67,7 +67,8 @@ namespace ODF.API.Controllers.Lineup
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new AddLineupResponseModel(LineupItemFormComposer.GetAddLineupItemForm(form, validationResult.Errors)));
+				return UnprocessableEntity(new AddLineupResponseModel(LineupItemFormComposer.GetAddLineupItemForm(form,
+					validationResult.Errors, GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source"))));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
@@ -92,7 +93,9 @@ namespace ODF.API.Controllers.Lineup
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new UpdateLineupResponseModel(LineupItemFormComposer.GetUdpateLineupItemForm(form, validationResult.Errors)));
+				return UnprocessableEntity(new UpdateLineupResponseModel(
+					LineupItemFormComposer.GetUdpateLineupItemForm(form, validationResult.Errors,
+					GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source"))));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));

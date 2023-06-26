@@ -13,7 +13,7 @@ namespace ODF.API.Middleware
 		private readonly ApiSettings _apiSettings;
 
 		private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { Error = (sender, args) => { args.ErrorContext.Handled = true; } };
-		private static Regex SelfReg = new(@"""_self""\s*:\s*{[^}]*}\s*[}][,]\s+""actions""\s*:\s*[[][^]]*", RegexOptions.Compiled, TimeSpan.FromSeconds(20));
+		private static Regex SelfReg = new(@"""_self""\s*:\s*{[^}]*}}", RegexOptions.Compiled, TimeSpan.FromSeconds(20));
 
 		public ResponseSelfMiddleware(RequestDelegate next, IOptions<ApiSettings> apiSettings)
 		{
@@ -69,7 +69,6 @@ namespace ODF.API.Middleware
 			responseBody._self.Curl.Href = new Uri($"{_apiSettings.ApiUrl}{link}");
 			responseBody._self.Curl.Method = method;
 			responseBody._self.Curl.Rel = "self";
-			responseBody._self.ActionName = "_self";
 			string stringResposne = JsonConvert.SerializeObject(responseBody);
 
 			return SelfReg.Replace(response, stringResposne[1..^1]);

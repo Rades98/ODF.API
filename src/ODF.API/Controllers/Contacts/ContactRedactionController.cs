@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
 using ODF.API.Extensions.MappingExtensions;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.ResponseModels.Contacts.Redaction;
 using ODF.API.ResponseModels.Redaction;
 using ODF.AppLayer.CQRS.Contact.Queries;
@@ -46,7 +46,7 @@ namespace ODF.API.Controllers.Contacts
 			responseModel.RemoveBankAccountActions = contact.BankAccounts.Select(bankAcc
 				=> GetNamedAction(nameof(ContactBankAccountsController.RemoveBankAccount),
 				$"Smazat bankovní účet {bankAcc.IBAN}", "removeBankAccount",
-				ContactFormComposer.GetRemoveBankAcountForm(bankAcc.IBAN)));
+				ContactFormComposer.GetRemoveBankAcountForm(new() { IBAN = bankAcc.IBAN })));
 
 			responseModel.AddContactPerson = GetNamedAction(nameof(ContactPersonsController.AddContactPerson),
 				"Přidat kontaktní osobu", "addContactPerson", ContactFormComposer.GetAddContactPersonForm());
@@ -60,7 +60,7 @@ namespace ODF.API.Controllers.Contacts
 				Email = person.Email,
 
 				DeleteContactPerson = GetNamedAction(nameof(ContactPersonsController.RemoveContactPerson),
-					"Smazat", "removeContactPerson", ContactFormComposer.GetRemoveContactPersonForm(person.Id)),
+					"Smazat", "removeContactPerson", ContactFormComposer.GetRemoveContactPersonForm(new() { Id = person.Id })),
 
 				UpdateContactPerson = GetNamedAction(nameof(ContactPersonsController.UpdateContactPerson),
 					"Upravit", "updateContactPerson", ContactFormComposer.GetUpdateContactPersonForm(new()

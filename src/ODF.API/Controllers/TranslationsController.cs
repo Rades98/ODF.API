@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.RequestModels.Forms;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.LanguageMutations;
@@ -42,10 +42,10 @@ namespace ODF.API.Controllers
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit AJ překlad", "transalation_en_submit",
 					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.English.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
-				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit DE překlad", "transalation_de_submit",
+				model.ChangeDeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit DE překlad", "transalation_de_submit",
 					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.Deutsch.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
-				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit CZ překlad", "transalation_cz_submit",
+				model.ChangeEnTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit CZ překlad", "transalation_cz_submit",
 					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.Czech.GetCountryCode(), TranslationCode = model.TranslationCode }));
 
 				return model;
@@ -75,9 +75,9 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(BadRequestExceptionResponseModel), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> ChangeTranslation(string countryCode, [FromBody] ChangeTranslationForm form, CancellationToken cancellationToken)
+		public async Task<IActionResult> ChangeTranslation(string countryCode, [FromBody] UpdateTranslationForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new ModifyTransaltionCommand(form.CountryCode, form.TranslationCode, form.Text), cancellationToken);
+			var validationResult = await Mediator.Send(new UpdateTransaltionCommand(form.CountryCode, form.TranslationCode, form.Text), cancellationToken);
 
 			if (validationResult.IsOk)
 			{

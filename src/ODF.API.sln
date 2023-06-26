@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Data.Redis", "ODF.Data.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Domain", "ODF.Domain\ODF.Domain.csproj", "{4ABBA344-7171-4942-A58E-9C8C12F6EF58}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PotencialMicroservices", "PotencialMicroservices", "{66993F3B-8CAA-4188-B299-7631AEB5FDDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailingService", "PotencialMicroservices\MailingService\MailingService.csproj", "{0CB7B94E-3507-4F00-A474-BB77326B1049}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +43,16 @@ Global
 		{4ABBA344-7171-4942-A58E-9C8C12F6EF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ABBA344-7171-4942-A58E-9C8C12F6EF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ABBA344-7171-4942-A58E-9C8C12F6EF58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CB7B94E-3507-4F00-A474-BB77326B1049}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CB7B94E-3507-4F00-A474-BB77326B1049}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CB7B94E-3507-4F00-A474-BB77326B1049}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CB7B94E-3507-4F00-A474-BB77326B1049}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0CB7B94E-3507-4F00-A474-BB77326B1049} = {66993F3B-8CAA-4188-B299-7631AEB5FDDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C42CE8E6-2C77-4631-B9A9-05D340391566}

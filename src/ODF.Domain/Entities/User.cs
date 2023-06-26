@@ -20,5 +20,9 @@ namespace ODF.Domain.Entities
 		public string LastName { get; set; } = string.Empty;
 
 		public bool IsActive { get; set; } = false;
+
+		public string ChangeHash { get; set; } = string.Empty;
+
+		public DateTime ChangeHashValidTo { get; set; } = DateTime.Now;
 	}
 }

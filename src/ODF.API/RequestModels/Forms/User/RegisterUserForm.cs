@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using ODF.AppLayer.CQRS.Interfaces.User;
 
 namespace ODF.API.RequestModels.Forms.User
 {
-	public class RegisterUserForm
+	public class RegisterUserForm : IRegisterUser
 	{
 		[JsonProperty("userName", Required = Required.Always)]
 		public string UserName { get; set; } = string.Empty;

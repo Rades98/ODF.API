@@ -4,7 +4,7 @@ namespace ODF.API.ResponseModels.Base
 {
 	internal interface IBaseResponseModel
 	{
-		NamedAction _self { get; set; }
+		AppAction _self { get; set; }
 
 		List<AppAction> Actions { get; }
 

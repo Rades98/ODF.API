@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using ODF.AppLayer.CQRS.Interfaces.Article;
 
 namespace ODF.API.RequestModels.Forms
 {
-	public class AddArticleRequestForm
+	public class AddArticleRequestForm : IAddArticle
 	{
 		[JsonProperty("title", Required = Required.Always)]
 		public string Title { get; set; } = string.Empty;
@@ -19,7 +20,7 @@ namespace ODF.API.RequestModels.Forms
 		[JsonProperty("pageId", Required = Required.Always)]
 		public int PageId { get; set; }
 
-		[JsonProperty("imageUrl", Required = Required.AllowNull)]
-		public Uri? ImageUrl { get; set; }
+		[JsonProperty("imageUri", Required = Required.AllowNull)]
+		public Uri? ImageUri { get; set; }
 	}
 }

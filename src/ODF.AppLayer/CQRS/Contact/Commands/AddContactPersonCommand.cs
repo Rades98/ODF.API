@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using ODF.AppLayer.CQRS.Interfaces.Contact;
 using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public sealed class AddContactPersonCommand : ICommand<ValidationDto>
+	public sealed class AddContactPersonCommand : ICommand<ValidationDto>, IAddContactPerson
 	{
 		public AddContactPersonCommand(string email, string title, string name, string surname, IEnumerable<string> roles, string base64Image)
 		{
