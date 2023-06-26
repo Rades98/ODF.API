@@ -20,12 +20,12 @@ namespace ODF.API.ResponseModels.Base
 
 		public BaseResponseModel(string url, string method, string rel, Form? form = null)
 		{
-			_self = new(url, "_self", rel, method, form);
+			_self = new(url, rel, method, form);
 			Actions ??= new();
 		}
 
 		[JsonProperty(nameof(_self), Required = Required.Always)]
-		public NamedAction _self { get; set; } = new("https://odfapi.odf", "", "", "");
+		public AppAction _self { get; set; } = new("https://odfapi.odf", "_self", "");
 
 		[JsonProperty("actions")]
 		public List<AppAction> Actions { get; set; }

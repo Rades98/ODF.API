@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.RequestModels.Forms.Contacts;
 using ODF.API.ResponseModels.Contacts.Create;
 using ODF.API.ResponseModels.Contacts.Delete;
@@ -64,7 +64,7 @@ namespace ODF.API.Controllers.Contacts
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ContactFormComposer.GetRemoveBankAcountForm(form.IBAN, validationResult.Errors);
+				var responseForm = ContactFormComposer.GetRemoveBankAcountForm(form, validationResult.Errors);
 				return UnprocessableEntity(new DeleteContactBankAccResponseModel(responseForm));
 			}
 

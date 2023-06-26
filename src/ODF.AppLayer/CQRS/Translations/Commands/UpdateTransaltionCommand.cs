@@ -1,11 +1,12 @@
-﻿using ODF.AppLayer.Dtos.Validation;
+﻿using ODF.AppLayer.CQRS.Interfaces.Translations;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Translations.Commands
 {
-	public sealed class ModifyTransaltionCommand : ICommand<ValidationDto>
+	public sealed class UpdateTransaltionCommand : ICommand<ValidationDto>, IUpdateTranslation
 	{
-		public ModifyTransaltionCommand(string countryCode, string translationCode, string text)
+		public UpdateTransaltionCommand(string countryCode, string translationCode, string text)
 		{
 			CountryCode = countryCode;
 			TranslationCode = translationCode;

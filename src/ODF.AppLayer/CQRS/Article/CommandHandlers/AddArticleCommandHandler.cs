@@ -27,14 +27,14 @@ namespace ODF.AppLayer.CQRS.Article.CommandHandlers
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))
 			{
-				bool titleOk = await _translationRepo.AddTranslationAsync(request.TitleTransaltionCode, request.Title, lang.Id, cancellationToken);
-				bool textOk = await _translationRepo.AddTranslationAsync(request.TextTransaltionCode, request.Text, lang.Id, cancellationToken);
+				bool titleOk = await _translationRepo.AddTranslationAsync(request.TitleTranslationCode, request.Title, lang.Id, cancellationToken);
+				bool textOk = await _translationRepo.AddTranslationAsync(request.TextTranslationCode, request.Text, lang.Id, cancellationToken);
 
-				_logger.LogInformation("Creating article with {titleTransCode} and {textTransCode}", request.TitleTransaltionCode, request.TextTransaltionCode);
+				_logger.LogInformation("Creating article with {titleTransCode} and {textTransCode}", request.TitleTranslationCode, request.TextTranslationCode);
 
 				if (titleOk && textOk)
 				{
-					return new() { IsOk = await _repo.AddArticleAsync(request.TitleTransaltionCode, request.TextTransaltionCode, request.PageId, request.ImageUri, cancellationToken) };
+					return new() { IsOk = await _repo.AddArticleAsync(request.TitleTranslationCode, request.TextTranslationCode, request.PageId, request.ImageUri, cancellationToken) };
 				}
 			}
 

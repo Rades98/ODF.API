@@ -1,10 +1,11 @@
 ﻿using System;
+using ODF.AppLayer.CQRS.Interfaces.Lineup;
 using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Lineup.Commands
 {
-	public sealed class AddLineupItemCommand : ICommand<ValidationDto>
+	public sealed class AddLineupItemCommand : ICommand<ValidationDto>, IAddLineupItem
 	{
 		public AddLineupItemCommand(string place, string interpret, string perfName, string description,
 			string descriptionTranslationCode, DateTime dateTime, string countryCode, string userName = null)

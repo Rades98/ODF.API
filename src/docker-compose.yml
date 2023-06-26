@@ -45,6 +45,7 @@ services:
       # ASPNETCORE_HTTPS_PORT: "${WEB_API_PORT}" #PROD
       ASPNETCORE_URLS: "http://*:${WEB_API_PORT_HTTP};" #https://*:${WEB_API_PORT} swap for PROD
       ApiSettings__ApiUrl: ${WEB_API_RESPONSE_PATH}
+      ApiSettings__FrontEndUrl: ${FE_URL}
       ApiSettings__AdminPw: ${ADMIN_PW}
       ElasticsearchSettings__DefaultIndex: "odf-articles"
       ElasticsearchSettings__Nodes__0: http://elasticsearch:${ELASTIC_PORT}

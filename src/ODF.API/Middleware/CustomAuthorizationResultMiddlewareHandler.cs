@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using ODF.API.Controllers.Users;
 using ODF.API.Extensions;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;

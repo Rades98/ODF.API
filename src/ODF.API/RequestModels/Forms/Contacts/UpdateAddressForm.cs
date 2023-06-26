@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using ODF.AppLayer.CQRS.Interfaces.Contact;
 
 namespace ODF.API.RequestModels.Forms.Contacts
 {
-	public class UpdateAddressForm
+	public class UpdateAddressForm : IUpdateContactAddress
 	{
 		[JsonProperty("street", Required = Required.AllowNull)]
 		public string Street { get; set; } = string.Empty;

@@ -1,9 +1,10 @@
-﻿using ODF.AppLayer.Dtos.Validation;
+﻿using ODF.AppLayer.CQRS.Interfaces.Contact;
+using ODF.AppLayer.Dtos.Validation;
 using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Contact.Commands
 {
-	public sealed class UpdateContactAddressCommand : ICommand<ValidationDto>
+	public sealed class UpdateContactAddressCommand : ICommand<ValidationDto>, IUpdateContactAddress
 	{
 		public UpdateContactAddressCommand(string street, string city, string postalCode, string country)
 		{

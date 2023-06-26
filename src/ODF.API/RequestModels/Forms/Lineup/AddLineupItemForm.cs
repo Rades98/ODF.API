@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using ODF.AppLayer.CQRS.Interfaces.Lineup;
 
 namespace ODF.API.RequestModels.Forms.Lineup
 {
-	public class AddLineupItemForm
+	public class AddLineupItemForm : IAddLineupItem
 	{
 		[JsonProperty("place", Required = Required.Always)]
 		public string Place { get; set; } = string.Empty;

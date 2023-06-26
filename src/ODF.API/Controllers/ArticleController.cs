@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Attributes.HtttpMethodAttributes;
 using ODF.API.Controllers.Base;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.RequestModels.Forms;
 using ODF.API.ResponseModels.Articles;
 using ODF.API.ResponseModels.Common;
@@ -39,7 +39,7 @@ namespace ODF.API.Controllers
 		public async Task<IActionResult> AddArticle([FromBody] AddArticleRequestForm requestForm, [FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var validationResult = await Mediator.Send(new AddArticleCommand(requestForm.TitleTranslationCode, requestForm.Title,
-				requestForm.TextTranslationCode, requestForm.Text, requestForm.PageId, countryCode, requestForm.ImageUrl), cancellationToken);
+				requestForm.TextTranslationCode, requestForm.Text, requestForm.PageId, countryCode, requestForm.ImageUri), cancellationToken);
 
 			if (!validationResult.IsOk)
 			{

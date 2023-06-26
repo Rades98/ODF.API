@@ -26,7 +26,7 @@ namespace ODF.AppLayer.CQRS.Contact.CommandValidators
 			var accouuntIds = contact.BankAccounts.Select(ba => ba.AccountId);
 
 			RuleFor(command => command.IBAN)
-				.Must(BankAccountExtensions.ValidateIban)
+				.Must(StringExtensions.ValidateIban)
 				.WithMessage("Zadaný IBAN nesplňuje podmínky CZXXXXXXXXXXXXXXXXXXXXXX, případně czXX XXXX XXXX XXXX XXXX XXXX");
 
 			RuleFor(command => command.IBAN)

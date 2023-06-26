@@ -9,6 +9,7 @@ using ODF.API.Swagger;
 using ODF.AppLayer.Settings;
 using ODF.Data.Elastic.Settings;
 using ODF.Data.Redis.Settings;
+using ODF.Domain.Constants;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Registration
@@ -19,7 +20,7 @@ namespace ODF.API.Registration
 		{
 			services.ConfigureElasticsearch(conf)
 					.ConfigureRedis(conf)
-					.AddAppLayerServices();
+					.AddAppLayerServices(conf);
 
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 					.AddCookie(opts =>
@@ -44,7 +45,7 @@ namespace ODF.API.Registration
 			{
 				opts.EnableForHttps = true;
 				opts.Providers.Add<GzipCompressionProvider>();
-				opts.ExcludedMimeTypes = _excludedMimeTypes;
+				opts.ExcludedMimeTypes = MimeTypes.ExcludedMimeTypes;
 			});
 
 			services.AddTransient<IAuthorizationMiddlewareResultHandler, CustomAuthorizationResultMiddlewareHandler>();
@@ -56,68 +57,5 @@ namespace ODF.API.Registration
 
 			return services;
 		}
-
-		private static List<string> _excludedMimeTypes = new()
-		{
-			"application/javascript",
-			"application/msword",
-			"application/octet-stream",
-			"application/ogg",
-			"application/pdf",
-			"application/rtf",
-			"application/vnd.apple.installer+xml",
-			"application/vnd.mozilla.xul+xml",
-			"application/vnd.ms-excel",
-			"application/vnd.ms-fontobject",
-			"application/vnd.ms-powerpoint",
-			"application/vnd.oasis.opendocument.presentation",
-			"application/vnd.oasis.opendocument.spreadsheet",
-			"application/vnd.oasis.opendocument.text",
-			"application/vnd.openxmlformats-officedocument.presentationml.presentation",
-			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-			"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-			"application/vnd.visio",
-			"application/x-csh",
-			"application/x-sh",
-			"application/x-shockwave-flash",
-			"application/xhtml+xml",
-			"application/xml",
-			"audio/3gpp",
-			"audio/3gpp2",
-			"audio/aac",
-			"audio/midi",
-			"audio/x-midi",
-			"audio/mpeg",
-			"audio/ogg",
-			"audio/opus",
-			"audio/wav",
-			"audio/webm",
-			"font/otf",
-			"font/ttf",
-			"font/woff",
-			"font/woff2",
-			"image/bmp",
-			"image/gif",
-			"image/jpeg",
-			"image/png",
-			"image/svg+xml",
-			"image/tiff",
-			"image/vnd.microsoft.icon",
-			"image/webp",
-			"text/calendar",
-			"text/css",
-			"text/csv",
-			"text/html",
-			"text/javascript",
-			"text/plain",
-			"text/xml",
-			"video/3gpp",
-			"video/3gpp2",
-			"video/mp2t",
-			"video/mpeg",
-			"video/ogg",
-			"video/webm",
-			"video/x-msvideo",
-		};
 	}
 }

@@ -27,7 +27,7 @@ namespace ODF.API.Controllers
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 			var responseModel = new AssociationResponseModel(translations.Get("association_info"), translations.Get("association_header"));
 
-			responseModel.AddAction(GetQueriedAppAction(nameof(ArticleController.GetArticles), "about_articles", PaginationConsts.DefaultPaginationSetting));
+			responseModel.AddAction(GetQueriedAppAction(nameof(ArticleController.GetArticles), "about_articles", PaginationConsts.DefaultPaginationSetting(1)));
 
 			return Ok(responseModel);
 		}

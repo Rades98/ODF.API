@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.Cookies;
 using ODF.API.Extensions;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.RequestModels.Forms.User;
 using ODF.API.ResponseModels.Exceptions;
 using ODF.API.ResponseModels.User;
@@ -58,10 +58,44 @@ namespace ODF.API.Controllers.Users
 		}
 
 		[HttpPut(Name = nameof(RegisterUser))]
-		public async Task<IActionResult> RegisterUser([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> RegisterUser([FromRoute] string countryCode, [FromBody] RegisterUserForm form, CancellationToken cancellationToken)
 		{
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
-			return Ok(translations.Get("work_in_progress"));
+
+			var validationResult = await Mediator.Send(new RegisterUserCommand(
+				countryCode, form.UserName, form.Password, form.Password2,
+				form.Email, form.FirstName, $"{FrontEndUrl}/user-activation/{{hash}}",
+				form.LastName), cancellationToken);
+
+			if (validationResult.IsOk)
+			{
+				return Ok(new UserRegisterResponseModel(translations.Get("registration_ok")));
+			}
+			if (validationResult.Errors.Any())
+			{
+				return UnprocessableEntity(new UserRegisterResponseModel(UserFormComposer.GetRegisterForm(form, translations, validationResult.Errors)));
+			}
+
+			return InternalServerError(new ExceptionResponseModel(translations.Get("registration_failed")));
+		}
+
+		[HttpPost("activation", Name = nameof(ActivateRegistration))]
+		public async Task<IActionResult> ActivateRegistration([FromRoute] string countryCode, [FromBody] ActivateUserForm form, CancellationToken cancellationToken)
+		{
+			var validationResult = await Mediator.Send(new ActivateUserCommand(form.Hash, countryCode), cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+
+			if (validationResult.IsOk)
+			{
+				return Ok(new UserActivationResponseModel(translations.Get("registration_activation_ok")));
+			}
+
+			if (validationResult.Errors.Any())
+			{
+				return UnprocessableEntity(new UserRegisterResponseModel(UserFormComposer.GetActivateUserForm(form, validationResult.Errors)));
+			}
+
+			return InternalServerError(new ExceptionResponseModel(translations.Get("registration_activation_failed")));
 		}
 
 		[Authorize]

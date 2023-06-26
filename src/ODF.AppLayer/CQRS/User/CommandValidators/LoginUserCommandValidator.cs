@@ -35,14 +35,16 @@ namespace ODF.AppLayer.CQRS.User.CommandValidators
 
 			if (user is not null)
 			{
-				bool pwValid = PasswordHasher.Check(user.PasswordHash, context.InstanceToValidate.Password).Verified;
+				bool pwValid = Hasher.Check(user.PasswordHash, context.InstanceToValidate.Password).Verified;
 
 				RuleFor(command => command.Password)
 					.Must(x => pwValid)
 					.WithMessage(transaltions.Get("error_login_wrong_pw"));
+
+				RuleFor(command => command.UserName)
+					.Must(x => user.IsActive)
+					.WithMessage(transaltions.Get("error_login_inactive_user"));
 			}
-
-
 
 			return await base.ValidateAsync(context, cancellation);
 		}

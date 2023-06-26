@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Email Confirmation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        /* Color Scheme */
+        :root {
+            --primary-color: #20123A;
+            --secondary-color: #c15454;
+            --background-color: #F9F6F2;
+            --text-color: #000000;
+        }
+
+        /* Logo */
+        .logo {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* Font */
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+
+        /* Reset Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Global Styles */
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: var(--background-color);
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 36px 24px 0;
+            border-top: 3px solid var(--secondary-color);
+            background-color: #ffffff;
+        }
+
+        /* Heading Styles */
+        .heading {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 48px;
+            color: var(--primary-color);
+        }
+
+        /* Content Styles */
+        .content {
+            padding: 24px;
+            font-size: 16px;
+            line-height: 24px;
+            color: var(--text-color);
+        }
+
+        /* Button Styles */
+        .button {
+            display: inline-block;
+            padding: 16px 36px;
+            font-size: 16px;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            background-color: var(--secondary-color);
+        }
+
+        /* Footer Styles */
+        .footer {
+            padding: 24px;
+            font-size: 16px;
+            line-height: 24px;
+            border-bottom: 3px solid var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* Notice Styles */
+        .notice {
+            padding: 12px 24px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" bgcolor="#F9F6F2">
+                <table border="0" cellpadding="0" cellspacing="0" class="container">
+                    <tr>
+                        <td align="center">
+                            <img src="https://folklorova.cz/assets/odf_logo.png" alt="Logo" class="logo">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" bgcolor="#ffffff">
+                            <h1 class="heading">{header}</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" bgcolor="#ffffff" class="content">
+                            <p>{info}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" bgcolor="#ffffff">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td align="center" bgcolor="#ffffff">
+                                        <a href="{activationUrl}" target="_blank" class="button" style="background-color: #c15454;">{confirmButtonText}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" bgcolor="#ffffff" class="content">
+                            <p>{notWorkMessage}</p>
+                            <p><a href="{activationUrl}" target="_blank">{activationUrl}</a></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" bgcolor="#ffffff" class="footer">
+                            <p>{regards},<br> FolklorOVA</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#F9F6F2" style="padding: 24px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td align="center" bgcolor="#F9F6F2" class="notice">
+                            <p>{deleteNoticeIfSpam}</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

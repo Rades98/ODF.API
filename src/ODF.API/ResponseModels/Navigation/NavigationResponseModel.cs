@@ -28,5 +28,11 @@ namespace ODF.API.ResponseModels.Navigation
 
 		[JsonProperty("register", Required = Required.AllowNull)]
 		public NamedAction? RegisterAction { get; set; }
+
+		[JsonProperty("activateUser", Required = Required.Always)]
+		public AppAction? ActivateUserAction { get; set; }
+
+		[JsonProperty("userPage", Required = Required.AllowNull)]
+		public NamedAction? UserPageAction { get; set; }
 	}
 }

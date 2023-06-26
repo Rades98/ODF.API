@@ -9,16 +9,16 @@ using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Translations.CommandHandlers
 {
-	internal class ModifyTransaltionCommandHandler : ICommandHandler<ModifyTransaltionCommand, ValidationDto>
+	internal class UpdateTransaltionCommandHandler : ICommandHandler<UpdateTransaltionCommand, ValidationDto>
 	{
 		private readonly ITranslationRepo _repo;
 
-		public ModifyTransaltionCommandHandler(ITranslationRepo repo)
+		public UpdateTransaltionCommandHandler(ITranslationRepo repo)
 		{
 			_repo = repo ?? throw new ArgumentNullException(nameof(repo));
 		}
 
-		public async Task<ValidationDto> Handle(ModifyTransaltionCommand request, CancellationToken cancellationToken)
+		public async Task<ValidationDto> Handle(UpdateTransaltionCommand request, CancellationToken cancellationToken)
 		{
 			if (Languages.TryParse(request.CountryCode, out var lang))
 			{

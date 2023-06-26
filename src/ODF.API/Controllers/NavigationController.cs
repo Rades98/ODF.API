@@ -8,7 +8,7 @@ using ODF.API.Controllers.Contacts;
 using ODF.API.Controllers.Lineup;
 using ODF.API.Controllers.Users;
 using ODF.API.Extensions;
-using ODF.API.FormFactories;
+using ODF.API.FormComposers;
 using ODF.API.ResponseModels.Navigation;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
@@ -44,12 +44,16 @@ namespace ODF.API.Controllers
 			responseModel.MenuItems.Add(GetNamedAction(nameof(DonationController.GetDonation), translations.Get("menu_donation"), "donationMenuItem"));
 			responseModel.MenuItems.Add(GetNamedAction(nameof(ContactController.GetContacts), translations.Get("menu_contacts"), "contactMenuItem"));
 
+			responseModel.ActivateUserAction = GetAppAction(nameof(UserController.ActivateRegistration), "activate_user", UserFormComposer.GetActivateUserForm(new()));
+
 			if (!HttpContext.IsLoggedIn())
 			{
 				responseModel.LoginAction = GetNamedAction(nameof(UserController.LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(new(), translations));
 
 				responseModel.RegisterAction = GetNamedAction(nameof(UserController.RegisterUser), translations.Get("register_user"), "register",
 					UserFormComposer.GetRegisterForm(new(), translations));
+
+				//TODO responseModel.UserPageAction = 
 			}
 			else
 			{

@@ -254,6 +254,10 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 1, Text ="Wrong password", TranslationCode = "error_login_wrong_pw" },
 				new(){ IsSystem = true, LanguageId = 2, Text ="Falsches Passwort", TranslationCode = "error_login_wrong_pw" },
 
+				new(){ IsSystem = true, LanguageId = 0, Text ="Zadaný uživatel není aktivní, prosím aktivujte jej odkazem v e-mailu", TranslationCode = "error_login_inactive_user" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="The specified user is not active, please activate it with the link in the e-mail", TranslationCode = "error_login_inactive_user" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Der angegebene Benutzer ist nicht aktiv, bitte aktivieren Sie ihn über den Link in der E-Mail", TranslationCode = "error_login_inactive_user" },
+
 				new(){ IsSystem = true, LanguageId = 0, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
 				new(){ IsSystem = true, LanguageId = 1, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
 				new(){ IsSystem = true, LanguageId = 2, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
@@ -297,6 +301,82 @@ namespace ODF.Data.Elastic.Settings
 				new() { IsSystem = true, LanguageId = 0, Text = "Neznámá chyba při odhlášení", TranslationCode = "logout_fail" },
 				new() { IsSystem = true, LanguageId = 1, Text = "Unknown error while logging out", TranslationCode = "logout_fail" },
 				new() { IsSystem = true, LanguageId = 2, Text = "Unbekannter Fehler beim Abmelden", TranslationCode = "logout_fail" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Uživatelské jméno již je používáno", TranslationCode = "error_register_name_in_use" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Username is already in use", TranslationCode = "error_register_name_in_use" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Benutzername ist bereits in Benutzung", TranslationCode = "error_register_name_in_use" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="K tomuto e-mailu již existuje registrace", TranslationCode = "error_register_email_in_use" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="There is already a registration for this email", TranslationCode = "error_register_email_in_use" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Für diese E-Mail besteht bereits eine Registrierung", TranslationCode = "error_register_email_in_use" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Zadejte validní e-mail", TranslationCode = "error_register_email_invalid" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Please enter a valid email", TranslationCode = "error_register_email_invalid" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Bitte geben Sie eine gültige Email-Adresse ein", TranslationCode = "error_register_email_invalid" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Hesla se neshodují", TranslationCode = "error_register_pw_missmatch" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Passwords do not match", TranslationCode = "error_register_pw_missmatch" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Passwörter stimmen nicht überein", TranslationCode = "error_register_pw_missmatch" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Heslo nesplňuje požadavky (minimálně 1 velké písmeno, minimálně 1 číslo a minimálně 8 znaků)", TranslationCode = "error_register_pw_invalid" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Password does not meet the requirements (at least 1 capital letter, at least 1 number and at least 8 characters)", TranslationCode = "error_register_pw_invalid" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Passwort entspricht nicht den Anforderungen (mindestens 1 Großbuchstabe, mindestens 1 Zahl und mindestens 8 Zeichen)", TranslationCode = "error_register_pw_invalid" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Prosím, vyplňte jméno", TranslationCode = "error_register_name_invalid" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Fill the name, please", TranslationCode = "error_register_name_invalid" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Bitte geben Sie den Namen ein", TranslationCode = "error_register_name_invalid" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Při registraci došlo k chybě", TranslationCode = "registration_failed" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="An error occurred during registration", TranslationCode = "registration_failed" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Bei der Registrierung ist ein Fehler aufgetreten", TranslationCode = "registration_failed" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Registrace proběhla úspěšně. Do e-mailu Vám byl zaslán odkaz k ativaci ůčtu.", TranslationCode = "registration_ok" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Registration was successful. A link to activate your account has been sent to your e-mail.", TranslationCode = "registration_ok" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Die Registrierung war erfolgreich. Ein Link zur Aktivierung Ihres Kontos wurde an Ihre E-Mail-Adresse gesendet.", TranslationCode = "registration_ok" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Potvrdit registraci", TranslationCode = "registration_html_confirm" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Confirm registration", TranslationCode = "registration_html_confirm" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Registrierung bestätigen", TranslationCode = "registration_html_confirm" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Pokud Vám tento e-mail přišel nevyžádaně, ignorujte jej, prosím. Za vzniklé nepříjemnosti se omlouváme.", TranslationCode = "registration_html_spamnotice" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="If you received this email unsolicited, please ignore it. We apologize for the inconvenience caused.", TranslationCode = "registration_html_spamnotice" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Wenn Sie diese E-Mail unaufgefordert erhalten haben, ignorieren Sie sie bitte. Wir entschuldigen uns für die entstandenen Unannehmlichkeiten.", TranslationCode = "registration_html_spamnotice" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Potvrzení registrace pro uživatele {0}", TranslationCode = "registration_html_header" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Confirmation of registration for user {0}", TranslationCode = "registration_html_header" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Bestätigung der Registrierung für Benutzer {0}", TranslationCode = "registration_html_header" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Děkujeme za Vaši registraci na našem festivalovém webu. Pro dokončení Vaší registrace a možnost užívání vašeho účtu je třeba registraci dokončit kliknutím na tlačítko níže.", TranslationCode = "registration_html_info" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Thank you for registering on our festival website. To complete your registration and be able to use your account, you need to complete the registration by clicking the button below.", TranslationCode = "registration_html_info" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Vielen Dank für Ihre Registrierung auf unserer Festival-Website. Um Ihre Registrierung abzuschließen und Ihr Konto nutzen zu können, müssen Sie die Registrierung abschließen, indem Sie auf die Schaltfläche unten klicken.", TranslationCode = "registration_html_info" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Pokud tlačítko nefunguje, zkopírujte následující odkaz a vložte jej do Vašeho prohlížeče.", TranslationCode = "registration_html_infoerr" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="If the button does not work, copy the following link and paste it into your browser.", TranslationCode = "registration_html_infoerr" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Sollte die Schaltfläche nicht funktionieren, kopieren Sie den folgenden Link und fügen Sie ihn in Ihren Browser ein.", TranslationCode = "registration_html_infoerr" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="S přáním příjemného zbytku dne", TranslationCode = "registration_html_regards" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Wishing you a pleasant rest of the day", TranslationCode = "registration_html_regards" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Ich wünsche Ihnen einen angenehmen Rest des Tages", TranslationCode = "registration_html_regards" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Potvrzení registrace na webu folklorova.cz", TranslationCode = "registration_email_header" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Confirmation of registration on the folklorova.cz website", TranslationCode = "registration_email_header" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Bestätigung der Registrierung auf der Website folklorova.cz", TranslationCode = "registration_email_header" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Aktivace účtu proběhla úspěšně", TranslationCode = "registration_activation_ok" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Account activation was successful", TranslationCode = "registration_activation_ok" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Die Kontoaktivierung war erfolgreich", TranslationCode = "registration_activation_ok" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Aktivace účtu selhala", TranslationCode = "registration_activation_failed" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Account activation failed", TranslationCode = "registration_activation_failed" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Die Kontoaktivierung ist fehlgeschlagen", TranslationCode = "registration_activation_failed" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Nepovedlo se nalézt účet odpovídající odkazu.", TranslationCode = "error_activate_wrong_hash" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="An account matching the link could not be found.", TranslationCode = "error_activate_wrong_hash" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Es konnte kein Konto gefunden werden, das mit dem Link übereinstimmt.", TranslationCode = "error_activate_wrong_hash" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Platnost odkazu vypršela.", TranslationCode = "error_activate_hash_too_old" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="The link has expired.", TranslationCode = "error_activate_hash_too_old" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Der Link ist abgelaufen.", TranslationCode = "error_activate_hash_too_old" },
 			};
 
 			sysTrans.ForEach(tran =>
