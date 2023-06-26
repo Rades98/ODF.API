@@ -7,13 +7,13 @@ using Microsoft.Extensions.Options;
 
 namespace MailingService.Client
 {
-	internal class ClientProvider : IClientProvider
+	internal sealed class ClientProvider : IClientProvider
 	{
 		public SmtpClient SmtpClient => _client;
 		public MailAddress AddrFrom => _addrFrom;
 
-		private SmtpClient _client;
-		private MailAddress _addrFrom;
+		private readonly SmtpClient _client;
+		private readonly MailAddress _addrFrom;
 
 		public ClientProvider(IOptions<EmailSettings> settings)
 		{
