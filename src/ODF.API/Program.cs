@@ -113,7 +113,7 @@ app.MapControllers();
 
 app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigation", true, true));
 
-//TODO move to some other location
+//TODO move to some other location like create chatting controller
 app.MapPost("{countryCode}/sendMsgToAll", [Authorize(Roles = UserRoles.Admin)] async ([FromQuery] string countryCode, [FromQuery] string msg, IHubContext<ChatHub> hubContext, CancellationToken ct) =>
 {
 	await hubContext.Clients.All.SendAsync("ReceiveBroadcastMessage", msg, cancellationToken: ct);
