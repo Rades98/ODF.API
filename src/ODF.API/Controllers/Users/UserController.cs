@@ -49,8 +49,6 @@ namespace ODF.API.Controllers.Users
 				return Ok(responseModel);
 			}
 
-			var loginAction = GetNamedAction(nameof(LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(form, translations, errors: userResult.Errors));
-
 			var registerAction = GetNamedAction(nameof(RegisterUser), translations.Get("register_user"), "register",
 				UserFormComposer.GetRegisterForm(new(), translations));
 

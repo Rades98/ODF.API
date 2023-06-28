@@ -49,6 +49,9 @@ namespace ODF.Data.Elastic.Repos.Lineups
 			return response;
 		}
 
+		public Task<IEnumerable<LineupItem>> GetLineupAsync(string userName, CancellationToken cancellationToken)
+			=> _repo.GetLineupAsync(userName, cancellationToken);
+
 		public Task<bool> RemoveLineupItemAsync(Guid id, CancellationToken cancellationToken)
 			=> _repo.RemoveLineupItemAsync(id, cancellationToken);
 
@@ -57,8 +60,5 @@ namespace ODF.Data.Elastic.Repos.Lineups
 
 		public Task<LineupItem> GetAsync(Guid id, CancellationToken cancellationToken)
 			=> _repo.GetAsync(id, cancellationToken);
-
-		public Task<IEnumerable<LineupItem>> GetLineupAsync(string userName, CancellationToken cancellationToken)
-			=> _repo.GetLineupAsync(userName, cancellationToken);
 	}
 }
