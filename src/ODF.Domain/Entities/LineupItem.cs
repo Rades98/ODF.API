@@ -17,5 +17,7 @@ namespace ODF.Domain.Entities
 		public string DescriptionTranslation { get; set; } = string.Empty;
 
 		public string? UserName { get; set; }
+
+		public string? UserNote { get; set; }
 	}
 }

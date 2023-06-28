@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common;
 
 namespace ODF.API.ResponseModels.LanguageMutations
 {
-	public class LanguageModel : ApiModel
+	public class LanguageModel : BaseResponseModel
 	{
 		public LanguageModel(string name, string countryCode)
 		{

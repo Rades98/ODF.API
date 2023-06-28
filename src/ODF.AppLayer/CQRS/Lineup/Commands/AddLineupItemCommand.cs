@@ -8,7 +8,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 	public sealed class AddLineupItemCommand : ICommand<ValidationDto>, IAddLineupItem
 	{
 		public AddLineupItemCommand(string place, string interpret, string perfName, string description,
-			string descriptionTranslationCode, DateTime dateTime, string countryCode, string userName = null)
+			string descriptionTranslationCode, DateTime dateTime, string countryCode, string userName = null, string userNote = null)
 		{
 			Place = place;
 			Interpret = interpret;
@@ -18,6 +18,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 			DateTime = dateTime;
 			CountryCode = countryCode;
 			UserName = userName;
+			UserNote = userNote;
 		}
 
 		public string Place { get; }
@@ -35,5 +36,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 		public string CountryCode { get; }
 
 		public string UserName { get; } = null;
+
+		public string UserNote { get; }
 	}
 }

@@ -1,10 +1,10 @@
-﻿using System.Data;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using ODF.API.Controllers.Base;
 using ODF.API.ResponseModels.Donations;
+using ODF.API.ResponseModels.Exceptions;
 using ODF.AppLayer.CQRS.Contact.Queries;
 using ODF.AppLayer.Extensions;
 using ODF.AppLayer.Services.Interfaces;
@@ -20,12 +20,21 @@ namespace ODF.API.Controllers
 		}
 
 		[HttpGet(Name = nameof(GetDonation))]
+		[ProducesResponseType(typeof(DonationResponseModel), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> GetDonation([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
 			var result = await Mediator.Send(new GetBankAccountsQRQuery(), cancellationToken);
 
-			var responseModel = new DonationResponseModel(result.Select(x => x.ToString()), translations.Get("donations_header"), translations.Get("donations_text"));
+			var qrData = Enumerable.Empty<string>();
+
+			if (result.Any())
+			{
+				qrData = result.Select(x => x.ToString());
+			}
+
+			var responseModel = new DonationResponseModel(qrData, translations.Get("donations_header"), translations.Get("donations_text"));
 			return Ok(responseModel);
 		}
 	}

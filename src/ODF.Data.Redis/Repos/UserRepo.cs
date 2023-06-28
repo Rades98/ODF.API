@@ -53,7 +53,7 @@ namespace ODF.Data.Redis.Repos
 			return names;
 		}
 
-		public async Task<string> RegisterAsync(string userName, string email, bool isAdmin, string passwordHash, CancellationToken cancellationToken)
+		public async Task<string> RegisterAsync(string userName, string email, bool isAdmin, string passwordHash, string firstName, string lastName, CancellationToken cancellationToken)
 		{
 			string changeHash = Hasher.GetMailHashString($"{RegistrationHash.HashPrefix}{userName}");
 
@@ -64,7 +64,9 @@ namespace ODF.Data.Redis.Repos
 				IsAdmin = isAdmin,
 				PasswordHash = passwordHash,
 				ChangeHashValidTo = DateTime.UtcNow.AddDays(2),
-				ChangeHash = changeHash
+				ChangeHash = changeHash,
+				FirstName = firstName,
+				LastName = lastName,
 			};
 
 			if (await _redisDb.StringSetAsync(usr.GetRedisKey(userName), JsonConvert.SerializeObject(usr)))
@@ -81,6 +83,7 @@ namespace ODF.Data.Redis.Repos
 			if (usr is not null)
 			{
 				usr.IsActive = true;
+				usr.ChangeHashValidTo = DateTime.UtcNow;
 
 				return await _redisDb.StringSetAsync(usr.GetRedisKey(userName), JsonConvert.SerializeObject(usr));
 			}

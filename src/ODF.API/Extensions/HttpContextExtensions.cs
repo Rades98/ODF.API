@@ -70,9 +70,8 @@ namespace ODF.API.Extensions
 		public static bool IsApiRequest(this HttpContext httpContext)
 			=> !(httpContext.Request.Path == new PathString("/") ||
 				httpContext.Request.Path == new PathString("/metrics") ||
-				httpContext.Request.Path.ToString().Contains(".ico") ||
-				httpContext.Request.Path.ToString().Contains("ui") ||
 				httpContext.Request.Path.ToString().Contains("swagger") ||
+				httpContext.Request.Path.ToString().Contains("signal") ||
 				httpContext.Request.Path.ToString().Contains("health")
 			);
 	}

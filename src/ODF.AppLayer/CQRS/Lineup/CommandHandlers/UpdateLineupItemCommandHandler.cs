@@ -48,6 +48,7 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandHandlers
 					PerformanceName = request.PerformanceName,
 					Place = request.Place.Trim(),
 					UserName = request.UserName,
+					UserNote = request.UserNote
 				};
 
 				return new() { IsOk = await _repo.UpdateLineupItemAsync(lineupItem, cancellationToken) };

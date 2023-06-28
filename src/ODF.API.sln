@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ODF.Domain", "ODF.Domain\OD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PotencialMicroservices", "PotencialMicroservices", "{66993F3B-8CAA-4188-B299-7631AEB5FDDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailingService", "PotencialMicroservices\MailingService\MailingService.csproj", "{0CB7B94E-3507-4F00-A474-BB77326B1049}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailingService", "PotencialMicroservices\MailingService\MailingService.csproj", "{0CB7B94E-3507-4F00-A474-BB77326B1049}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

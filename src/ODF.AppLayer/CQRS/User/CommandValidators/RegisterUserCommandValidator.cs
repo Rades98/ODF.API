@@ -34,6 +34,10 @@ namespace ODF.AppLayer.CQRS.User.CommandValidators
 				.Must(name => !userNames.Contains(name))
 				.WithMessage(transaltions.Get("error_register_name_in_use"));
 
+			RuleFor(command => command.UserName)
+				.Must(name => !name.Contains(" "))
+				.WithMessage(transaltions.Get("error_register_name_whitespace"));
+
 			RuleFor(command => command.Email)
 				.Must(email => !userEmails.Contains(email))
 				.WithMessage(transaltions.Get("error_register_email_in_use"));

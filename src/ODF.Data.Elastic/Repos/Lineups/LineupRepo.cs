@@ -25,6 +25,17 @@ namespace ODF.Data.Elastic.Repos.Lineups
 		public async Task<IEnumerable<LineupItem>> GetLineupAsync(CancellationToken cancellationToken)
 			=> (await _elasticClient.SearchAsync<LineupItem>()).Documents;
 
+		public async Task<IEnumerable<LineupItem>> GetLineupAsync(string userName, CancellationToken cancellationToken)
+			=> (await _elasticClient.SearchAsync<LineupItem>(s => s
+							.Query(q => q
+								.Bool(bq => bq
+									.Filter(
+										fq => fq.Terms(t => t.Field(f => f.UserName).Terms(userName))
+									)
+								)
+							)
+							, cancellationToken)).Documents;
+
 		public async Task<bool> RemoveLineupItemAsync(Guid id, CancellationToken cancellationToken)
 			=> (await _elasticClient.DeleteByQueryAsync<LineupItem>(q => q
 					.Query(rq => rq

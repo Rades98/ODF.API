@@ -14,5 +14,10 @@ namespace ODF.API.ResponseModels.User
 		{
 
 		}
+
+		public UserActivationResponseModel(Form form) : base(form)
+		{
+
+		}
 	}
 }

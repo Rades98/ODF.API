@@ -54,10 +54,13 @@ namespace ODF.API.Controllers.Users
 			var registerAction = GetNamedAction(nameof(RegisterUser), translations.Get("register_user"), "register",
 				UserFormComposer.GetRegisterForm(new(), translations));
 
-			return Unauthorized(new UnauthorizedExceptionResponseModel(translations.Get("login_failed_title"), translations.Get("login_failed_msg"), loginAction, registerAction));
+			return Unauthorized(new UnauthorizedExceptionResponseModel(translations.Get("login_failed_title"), translations.Get("login_failed_msg"), registerAction));
 		}
 
 		[HttpPut(Name = nameof(RegisterUser))]
+		[ProducesResponseType(typeof(UserRegisterResponseModel), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(UserRegisterResponseModel), StatusCodes.Status422UnprocessableEntity)]
+		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> RegisterUser([FromRoute] string countryCode, [FromBody] RegisterUserForm form, CancellationToken cancellationToken)
 		{
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
@@ -80,6 +83,9 @@ namespace ODF.API.Controllers.Users
 		}
 
 		[HttpPost("activation", Name = nameof(ActivateRegistration))]
+		[ProducesResponseType(typeof(UserActivationResponseModel), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(UserActivationResponseModel), StatusCodes.Status422UnprocessableEntity)]
+		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> ActivateRegistration([FromRoute] string countryCode, [FromBody] ActivateUserForm form, CancellationToken cancellationToken)
 		{
 			var validationResult = await Mediator.Send(new ActivateUserCommand(form.Hash, countryCode), cancellationToken);
@@ -92,7 +98,7 @@ namespace ODF.API.Controllers.Users
 
 			if (validationResult.Errors.Any())
 			{
-				return UnprocessableEntity(new UserRegisterResponseModel(UserFormComposer.GetActivateUserForm(form, validationResult.Errors)));
+				return UnprocessableEntity(new UserActivationResponseModel(UserFormComposer.GetActivateUserForm(form, validationResult.Errors)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel(translations.Get("registration_activation_failed")));
@@ -100,6 +106,8 @@ namespace ODF.API.Controllers.Users
 
 		[Authorize]
 		[HttpDelete(Name = nameof(LogoutUser))]
+		[ProducesResponseType(typeof(UserResponseModel), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> LogoutUser([FromRoute] string countryCode, CancellationToken cancellationToken)
 		{
 			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
@@ -113,7 +121,11 @@ namespace ODF.API.Controllers.Users
 				return Ok(responseModel);
 			}
 
-			return UnprocessableEntity(translations.Get("logout_fail"));
+			return UnprocessableEntity(new ExceptionResponseModel(translations.Get("logout_fail")));
 		}
+
+		//change pw
+
+		//change e-mail
 	}
 }

@@ -18,6 +18,8 @@ using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
+	[Authorize(Roles = UserRoles.Admin)]
+	[CountryCodeFilter("cz")]
 	public class RedactionController : BaseController
 	{
 		public RedactionController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
@@ -26,8 +28,6 @@ namespace ODF.API.Controllers
 		}
 
 		[HttpGet(Name = nameof(GetRedaction))]
-		[Authorize(Roles = UserRoles.Admin)]
-		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]

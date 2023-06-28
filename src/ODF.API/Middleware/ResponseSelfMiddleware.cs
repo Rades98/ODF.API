@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ODF.API.Extensions;
-using ODF.API.ResponseModels.Base;
+using ODF.API.ResponseModels.Common;
 using ODF.Domain.SettingModels;
 
 namespace ODF.API.Middleware
@@ -55,7 +55,7 @@ namespace ODF.API.Middleware
 				return response;
 			}
 
-			var responseBody = JsonConvert.DeserializeObject<BaseResponseModel>(response, _jsonSerializerSettings);
+			var responseBody = JsonConvert.DeserializeObject<ApiModel>(response, _jsonSerializerSettings);
 
 			if (responseBody is null)
 			{
@@ -66,9 +66,9 @@ namespace ODF.API.Middleware
 
 			var link = httpContext.Request.Path;
 
-			responseBody._self.Curl.Href = new Uri($"{_apiSettings.ApiUrl}{link}");
-			responseBody._self.Curl.Method = method;
-			responseBody._self.Curl.Rel = "self";
+			responseBody.Self.Curl.Href = new Uri($"{_apiSettings.ApiUrl}{link}");
+			responseBody.Self.Curl.Method = method;
+			responseBody.Self.Curl.Rel = "self";
 			string stringResposne = JsonConvert.SerializeObject(responseBody);
 
 			return SelfReg.Replace(response, stringResposne[1..^1]);
