@@ -138,6 +138,14 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 1, Text ="Festival program", TranslationCode = "menu_lineup"},
 				new(){ IsSystem = true, LanguageId = 2, Text ="Festivalprogramm", TranslationCode = "menu_lineup"},
 
+				new(){ IsSystem = true, LanguageId = 0, Text ="Program", TranslationCode = "user_menu_lineup"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Festival program", TranslationCode = "user_menu_lineup"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Festivalprogramm", TranslationCode = "user_menu_lineup"},
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Subskripce", TranslationCode = "user_menu_subscription"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Subscriptions", TranslationCode = "user_menu_subscription"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Abonnements", TranslationCode = "user_menu_subscription"},
+
 				new(){ IsSystem = true, LanguageId = 0, Text ="Donate", TranslationCode = "menu_donation"},
 				new(){ IsSystem = true, LanguageId = 1, Text ="Donate", TranslationCode = "menu_donation"},
 				new(){ IsSystem = true, LanguageId = 2, Text ="Donate", TranslationCode = "menu_donation"},
@@ -305,6 +313,10 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 0, Text ="Uživatelské jméno již je používáno", TranslationCode = "error_register_name_in_use" },
 				new(){ IsSystem = true, LanguageId = 1, Text ="Username is already in use", TranslationCode = "error_register_name_in_use" },
 				new(){ IsSystem = true, LanguageId = 2, Text ="Benutzername ist bereits in Benutzung", TranslationCode = "error_register_name_in_use" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="Uživatelské jméno nemůže obsahovat prázdné znaky", TranslationCode = "error_register_name_whitespace" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Username cannot contain spaces", TranslationCode = "error_register_name_whitespace" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Der Benutzername darf keine Leerzeichen enthalten", TranslationCode = "error_register_name_whitespace" },
 
 				new(){ IsSystem = true, LanguageId = 0, Text ="K tomuto e-mailu již existuje registrace", TranslationCode = "error_register_email_in_use" },
 				new(){ IsSystem = true, LanguageId = 1, Text ="There is already a registration for this email", TranslationCode = "error_register_email_in_use" },

@@ -7,7 +7,7 @@ namespace ODF.Domain
 {
 	public class Language
 	{
-		private RegionInfo _regionInfo { get; }
+		private readonly RegionInfo _regionInfo;
 
 		public Language(int id, CultureInfo culture, string name)
 		{

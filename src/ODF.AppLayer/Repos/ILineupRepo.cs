@@ -10,6 +10,8 @@ namespace ODF.AppLayer.Repos
 	{
 		Task<IEnumerable<LineupItem>> GetLineupAsync(CancellationToken cancellationToken);
 
+		Task<IEnumerable<LineupItem>> GetLineupAsync(string userName, CancellationToken cancellationToken);
+
 		Task<bool> AddLineupItemAsync(LineupItem lineupItem, CancellationToken cancellationToken);
 
 		Task<bool> RemoveLineupItemAsync(Guid id, CancellationToken cancellationToken);

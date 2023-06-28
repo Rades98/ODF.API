@@ -19,5 +19,7 @@ namespace ODF.AppLayer.CQRS.Interfaces.Lineup
 		DateTime? DateTime { get; }
 
 		string UserName { get; }
+
+		string UserNote { get; }
 	}
 }

@@ -46,6 +46,8 @@ namespace ODF.API.Controllers
 
 			responseModel.ActivateUserAction = GetAppAction(nameof(UserController.ActivateRegistration), "activate_user", UserFormComposer.GetActivateUserForm(new()));
 
+			responseModel.SignalHubChatUrl = SignalHubUrl;
+
 			if (!HttpContext.IsLoggedIn())
 			{
 				responseModel.LoginAction = GetNamedAction(nameof(UserController.LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(new(), translations));
@@ -53,7 +55,7 @@ namespace ODF.API.Controllers
 				responseModel.RegisterAction = GetNamedAction(nameof(UserController.RegisterUser), translations.Get("register_user"), "register",
 					UserFormComposer.GetRegisterForm(new(), translations));
 
-				//TODO responseModel.UserPageAction = 
+				responseModel.UserPageAction = GetNamedAction(nameof(UserMenuController.GetMenu), HttpContext.GetUserName(), "userMenuItem");
 			}
 			else
 			{

@@ -18,6 +18,8 @@ using ODF.Domain.SettingModels;
 
 namespace ODF.API.Controllers
 {
+	[Authorize(Roles = UserRoles.Admin)]
+	[CountryCodeFilter("cz")]
 	public class TranslationsController : BaseController
 	{
 		public TranslationsController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
@@ -26,8 +28,6 @@ namespace ODF.API.Controllers
 		}
 
 		[HttpGet(Name = nameof(GetTranslations))]
-		[Authorize(Roles = UserRoles.Admin)]
-		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(GetTranslationsResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> GetTranslations([FromRoute] string countryCode, int size, int offset, CancellationToken cancellationToken)
@@ -69,8 +69,6 @@ namespace ODF.API.Controllers
 		}
 
 		[HttpPost(Name = nameof(ChangeTranslation))]
-		[Authorize(Roles = UserRoles.Admin)]
-		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateTranslationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(BadRequestExceptionResponseModel), StatusCodes.Status400BadRequest)]

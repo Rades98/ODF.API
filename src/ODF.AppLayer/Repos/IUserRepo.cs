@@ -11,7 +11,7 @@ namespace ODF.AppLayer.Repos
 
 		public Task<User> GetUserByHashAsync(string hash, CancellationToken cancellationToken);
 
-		public Task<string> RegisterAsync(string userName, string email, bool isAdmin, string passwordHash, CancellationToken cancellationToken);
+		public Task<string> RegisterAsync(string userName, string email, bool isAdmin, string passwordHash, string firstName, string lastName, CancellationToken cancellationToken);
 
 		public Task<bool> ChangePasswordAsync(string oldPwHash, string oldPwSalt, string newPwHash, string newPwSalt, CancellationToken cancellationToken);
 

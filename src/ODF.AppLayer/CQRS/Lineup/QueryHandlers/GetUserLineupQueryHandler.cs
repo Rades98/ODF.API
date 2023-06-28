@@ -10,20 +10,20 @@ using ODF.Domain;
 
 namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 {
-	internal class GetLineupQueryHandler : IQueryHandler<GetLineupQuery, IEnumerable<LineupItemDto>>
+	internal class GetUserLineupQueryHandler : IQueryHandler<GetUserLineupQuery, IEnumerable<LineupItemDto>>
 	{
 		private readonly ITranslationRepo _translationRepo;
 		private readonly ILineupRepo _lineupRepo;
 
-		public GetLineupQueryHandler(ITranslationRepo translationRepo, ILineupRepo lineupRepo)
+		public GetUserLineupQueryHandler(ITranslationRepo translationRepo, ILineupRepo lineupRepo)
 		{
 			_lineupRepo = lineupRepo ?? throw new ArgumentNullException(nameof(lineupRepo));
 			_translationRepo = translationRepo ?? throw new ArgumentNullException(nameof(translationRepo));
 		}
 
-		public async Task<IEnumerable<LineupItemDto>> Handle(GetLineupQuery request, CancellationToken cancellationToken)
+		public async Task<IEnumerable<LineupItemDto>> Handle(GetUserLineupQuery request, CancellationToken cancellationToken)
 		{
-			var lineupItems = await _lineupRepo.GetLineupAsync(cancellationToken);
+			var lineupItems = await _lineupRepo.GetLineupAsync(request.UserName, cancellationToken);
 
 			var result = new List<LineupItemDto>();
 
@@ -43,5 +43,7 @@ namespace ODF.AppLayer.CQRS.Lineup.QueryHandlers
 
 			return result;
 		}
+
+
 	}
 }

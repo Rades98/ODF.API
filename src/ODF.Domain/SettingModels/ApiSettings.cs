@@ -7,5 +7,7 @@
 		public string AdminPw { get; set; } = string.Empty;
 
 		public string FrontEndUrl { get; set; } = string.Empty;
+
+		public string SignalChatHubPath { get; set; } = "/signalhub/chat";
 	}
 }

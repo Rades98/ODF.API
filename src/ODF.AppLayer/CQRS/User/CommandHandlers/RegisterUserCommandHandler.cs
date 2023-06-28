@@ -27,7 +27,7 @@ namespace ODF.AppLayer.CQRS.User.CommandHandlers
 
 		public async Task<ValidationDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
 		{
-			string hash = await _userRepo.RegisterAsync(request.UserName, request.Email, false, Hasher.Hash(request.Password), cancellationToken);
+			string hash = await _userRepo.RegisterAsync(request.UserName, request.Email, false, Hasher.Hash(request.Password), request.FirstName, request.LastName, cancellationToken);
 
 			if (!string.IsNullOrEmpty(hash))
 			{

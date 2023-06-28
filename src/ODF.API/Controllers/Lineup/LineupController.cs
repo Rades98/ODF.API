@@ -58,7 +58,7 @@ namespace ODF.API.Controllers.Lineup
 		{
 			var validationResult = await Mediator.Send(new AddLineupItemCommand(
 				form.Place, form.Interpret, form.PerformanceName,
-				form.Description, form.DescriptionTranslationCode, form.DateTime, countryCode), cancellationToken);
+				form.Description, form.DescriptionTranslationCode, form.DateTime, countryCode, form.UserName, form.UserNote), cancellationToken);
 
 			if (validationResult.IsOk)
 			{

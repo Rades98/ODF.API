@@ -18,9 +18,9 @@ namespace ODF.API.Controllers
 		{
 		}
 
-
 		[HttpGet("user", Name = nameof(GetUsers))]
 		[Authorize(Roles = UserRoles.Admin)]
+		[ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
 		[CountryCodeFilter("cz")]
 		public async Task<IActionResult> GetUsers(CancellationToken cancellationToken)
 		{

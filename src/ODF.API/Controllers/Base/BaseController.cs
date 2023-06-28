@@ -19,6 +19,7 @@ namespace ODF.API.Controllers.Base
 		private readonly IMediator _mediator;
 		private readonly string _baseUrl;
 		private readonly string _feUrl;
+		private readonly Uri _signalHubUrl;
 		private readonly IActionDescriptorCollectionProvider _adcp;
 		private readonly ITranslationsProvider _translationsProvider;
 
@@ -26,6 +27,8 @@ namespace ODF.API.Controllers.Base
 
 		public string ApiBaseUrl => _baseUrl;
 		public string FrontEndUrl => _feUrl;
+
+		public Uri SignalHubUrl => _signalHubUrl;
 
 		public ITranslationsProvider TranslationsProvider => _translationsProvider;
 
@@ -38,6 +41,7 @@ namespace ODF.API.Controllers.Base
 
 			_baseUrl = apiSettings.Value.ApiUrl;
 			_feUrl = apiSettings.Value.FrontEndUrl;
+			_signalHubUrl = new(_baseUrl + apiSettings.Value.SignalChatHubPath);
 		}
 
 		internal NamedAction GetNamedAction(string actionIdentifier, string actionName, string rel, Form? actionForm = null, string? countryCode = null)

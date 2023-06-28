@@ -14,18 +14,15 @@ namespace ODF.API.ResponseModels.Base
 
 		public BaseResponseModel(Form form)
 		{
-			_self.Curl.Form = form;
+			Self.Curl.Form = form;
 			Actions ??= new();
 		}
 
 		public BaseResponseModel(string url, string method, string rel, Form? form = null)
 		{
-			_self = new(url, rel, method, form);
+			Self = new(url, rel, method, form);
 			Actions ??= new();
 		}
-
-		[JsonProperty(nameof(_self), Required = Required.Always)]
-		public AppAction _self { get; set; } = new("https://odfapi.odf", "_self", "");
 
 		[JsonProperty("actions")]
 		public List<AppAction> Actions { get; set; }

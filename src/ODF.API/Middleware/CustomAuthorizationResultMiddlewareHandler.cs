@@ -42,7 +42,7 @@ namespace ODF.API.Middleware
 				var loginAction = _adcp.GetNamedAction(context, $"{context.Request.Scheme}://{context.Request.Host}",
 					nameof(UserController.LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(new(), translations));
 
-				var responseModel = new UnauthorizedExceptionResponseModel(title, message, null, !isLoggedIn ? loginAction : null);
+				var responseModel = new UnauthorizedExceptionResponseModel(title, message, !isLoggedIn ? loginAction : null);
 
 				byte[] bytes = Encoding.UTF8.GetBytes(responseModel.ToString());
 				context.Response.StatusCode = StatusCodes.Status401Unauthorized;

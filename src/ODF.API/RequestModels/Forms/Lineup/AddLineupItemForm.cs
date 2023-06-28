@@ -25,5 +25,8 @@ namespace ODF.API.RequestModels.Forms.Lineup
 
 		[JsonProperty("userName", Required = Required.AllowNull)]
 		public string? UserName { get; set; }
+
+		[JsonProperty("userNote", Required = Required.AllowNull)]
+		public string? UserNote { get; set; }
 	}
 }

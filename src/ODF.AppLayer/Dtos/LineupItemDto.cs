@@ -19,5 +19,7 @@ namespace ODF.AppLayer.Dtos
 		public string DescriptionTranslationCode { get; set; } = string.Empty;
 
 		public string UserName { get; set; } = string.Empty;
+
+		public string UserNote { get; set; } = string.Empty;
 	}
 }

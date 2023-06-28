@@ -34,5 +34,8 @@ namespace ODF.API.ResponseModels.Navigation
 
 		[JsonProperty("userPage", Required = Required.AllowNull)]
 		public NamedAction? UserPageAction { get; set; }
+
+		[JsonProperty("signalHubChatUrl", Required = Required.Always)]
+		public Uri? SignalHubChatUrl { get; set; }
 	}
 }

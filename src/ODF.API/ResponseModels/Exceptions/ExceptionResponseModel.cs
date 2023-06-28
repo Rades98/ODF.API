@@ -1,16 +1,16 @@
 ﻿using Newtonsoft.Json;
+using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common;
 
 namespace ODF.API.ResponseModels.Exceptions
 {
-	public class ExceptionResponseModel : ApiModel
+	public class ExceptionResponseModel : BaseResponseModel
 	{
-		public ExceptionResponseModel(string title, string? message = null, NamedAction? self = null, NamedAction? altAction = null)
+		public ExceptionResponseModel(string title, string? message = null, NamedAction? altAction = null)
 		{
 			Title = title;
 			Message = message;
 			AlternativeAction = altAction;
-			_self = self;
 		}
 
 		[JsonProperty("title", Required = Required.Always)]
@@ -23,8 +23,5 @@ namespace ODF.API.ResponseModels.Exceptions
 		public NamedAction? AlternativeAction { get; }
 
 		public override string ToString() => JsonConvert.SerializeObject(this);
-
-		[JsonProperty(nameof(_self), Required = Required.Always)]
-		public NamedAction? _self { get; }
 	}
 }

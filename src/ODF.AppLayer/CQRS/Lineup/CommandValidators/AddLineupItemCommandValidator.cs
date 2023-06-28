@@ -22,7 +22,7 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandValidators
 
 		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddLineupItemCommand> context, CancellationToken cancellation = default)
 		{
-			bool transCodeExists = (await _translationRepo.GetTranslationAsync(context.InstanceToValidate.DescriptionTranslationCode, Languages.Czech.Id, cancellation)) is not null;
+			bool transCodeExists = !string.IsNullOrEmpty((await _translationRepo.GetTranslationAsync(context.InstanceToValidate.DescriptionTranslationCode, Languages.Czech.Id, cancellation)));
 
 			if (!string.IsNullOrEmpty(context.InstanceToValidate.UserName))
 			{

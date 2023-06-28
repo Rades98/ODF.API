@@ -8,7 +8,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 	public sealed class UpdateLineupItemCommand : ICommand<ValidationDto>, IUpdateLineupItem
 	{
 		public UpdateLineupItemCommand(Guid id, string place, string interpret, string perfName, string description,
-			string descriptionTranslationCode, DateTime? dateTime, string countryCode, string userName = null)
+			string descriptionTranslationCode, DateTime? dateTime, string countryCode, string userName = null, string userNote = null)
 		{
 			Id = id;
 			Place = place;
@@ -19,6 +19,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 			DateTime = dateTime;
 			CountryCode = countryCode;
 			UserName = userName;
+			UserNote = userNote;
 		}
 
 		public Guid Id { get; }
@@ -38,5 +39,7 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 		public string CountryCode { get; }
 
 		public string UserName { get; } = null;
+
+		public string UserNote { get; }
 	}
 }
