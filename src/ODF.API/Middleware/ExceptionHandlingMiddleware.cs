@@ -22,7 +22,7 @@ namespace ODF.API.Middleware
 
 		public async Task Invoke(HttpContext httpContext)
 		{
-			string countryCode = httpContext.GetCountryCode() ?? Languages.Czech.GetCountryCode();
+			string countryCode = httpContext.GetCountryCodeFromLang() ?? Languages.Czech.GetCountryCode();
 			var translations = await _translationsProvider.GetTranslationsAsync(countryCode, default);
 
 			try

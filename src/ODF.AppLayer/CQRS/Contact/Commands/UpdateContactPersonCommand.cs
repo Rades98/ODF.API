@@ -8,16 +8,16 @@ namespace ODF.AppLayer.CQRS.Contact.Commands
 {
 	public sealed class UpdateContactPersonCommand : ICommand<ValidationDto>, IUpdateContactPerson
 	{
-		public UpdateContactPersonCommand(string email, string title, string name, string surname, IEnumerable<string> roles, string base64Image, Guid id, int order)
+		public UpdateContactPersonCommand(IUpdateContactPerson input)
 		{
-			Email = email;
-			Title = title;
-			Name = name;
-			Surname = surname;
-			Roles = roles;
-			Base64Image = base64Image;
-			Id = id;
-			Order = order;
+			Email = input.Email;
+			Title = input.Title;
+			Name = input.Name;
+			Surname = input.Surname;
+			Roles = input.Roles;
+			Base64Image = input.Base64Image;
+			Id = input.Id;
+			Order = input.Order;
 		}
 
 		public string Email { get; }

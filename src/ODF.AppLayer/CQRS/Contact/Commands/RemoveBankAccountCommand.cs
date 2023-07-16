@@ -6,9 +6,9 @@ namespace ODF.AppLayer.CQRS.Contact.Commands
 {
 	public sealed class RemoveBankAccountCommand : ICommand<ValidationDto>, IRemoveBankAccount
 	{
-		public RemoveBankAccountCommand(string iban)
+		public RemoveBankAccountCommand(IRemoveBankAccount input)
 		{
-			IBAN = iban;
+			IBAN = input.IBAN;
 		}
 
 		public string IBAN { get; }

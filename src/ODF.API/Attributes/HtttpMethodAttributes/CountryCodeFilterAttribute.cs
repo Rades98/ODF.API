@@ -19,7 +19,7 @@ namespace ODF.API.Attributes.HtttpMethodAttributes
 
 		public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
 		{
-			string? countryCode = context.HttpContext.GetCountryCode();
+			string? countryCode = context.HttpContext.GetCountryCodeFromLang();
 
 			if (countryCode != _countryCode)
 			{

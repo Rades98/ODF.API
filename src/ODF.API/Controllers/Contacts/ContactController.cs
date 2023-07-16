@@ -31,9 +31,9 @@ namespace ODF.API.Controllers.Contacts
 
 		[HttpGet(Name = nameof(GetContacts))]
 		[ProducesResponseType(typeof(ContactResponseModel), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetContacts([FromRoute] string countryCode)
+		public async Task<IActionResult> GetContacts()
 		{
-			var contact = await Mediator.Send(new GetContactQuery(countryCode));
+			var contact = await Mediator.Send(new GetContactQuery(CountryCode));
 
 			return Ok(ContactsResponseMapper.GetContactResponse(contact));
 		}
@@ -43,9 +43,9 @@ namespace ODF.API.Controllers.Contacts
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> UpdateContact([FromBody] UpdateContactForm form)
+		public async Task<IActionResult> UpdateContact([FromBody] UpdateContactForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new UpdateContactCommand(form.EventName, form.EventManager, form.Email));
+			var validationResult = await Mediator.Send(new UpdateContactCommand(form), cancellationToken);
 			if (validationResult.IsOk)
 			{
 				return Ok(new UpdateContactResponseModel());

@@ -6,9 +6,9 @@ namespace ODF.AppLayer.CQRS.User.Commands
 {
 	public class ActivateUserCommand : ICommand<ValidationDto>, IActivateUser
 	{
-		public ActivateUserCommand(string hash, string countryCode)
+		public ActivateUserCommand(IActivateUser input, string countryCode)
 		{
-			Hash = hash;
+			Hash = input.Hash;
 			CountryCode = countryCode;
 		}
 

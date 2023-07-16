@@ -30,9 +30,9 @@ namespace ODF.API.Controllers
 		[HttpGet(Name = nameof(GetTranslations))]
 		[ProducesResponseType(typeof(GetTranslationsResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> GetTranslations([FromRoute] string countryCode, int size, int offset, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetTranslations(int size, int offset, CancellationToken cancellationToken)
 		{
-			var translations = await Mediator.Send(new GetTranslationsQuery(countryCode, size, offset), cancellationToken);
+			var translations = await Mediator.Send(new GetTranslationsQuery(CountryCode, size, offset), cancellationToken);
 
 			var responseModel = new GetTranslationsResponseModel("Správa překladů");
 			responseModel.Translations = translations.Translations.Select(tr =>
@@ -40,13 +40,13 @@ namespace ODF.API.Controllers
 				var model = new GetTranslationResponseModel(tr.TranslationCode, tr.Text);
 
 				model.ChangeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit AJ překlad", "transalation_en_submit",
-					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.English.GetCountryCode(), TranslationCode = model.TranslationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { TranslationCode = model.TranslationCode, CountryCode = Languages.English.GetCountryCode() }));
 
 				model.ChangeDeTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit DE překlad", "transalation_de_submit",
-					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.Deutsch.GetCountryCode(), TranslationCode = model.TranslationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { TranslationCode = model.TranslationCode, CountryCode = Languages.Deutsch.GetCountryCode() }));
 
 				model.ChangeEnTranslation = GetNamedAction(nameof(ChangeTranslation), "změnit CZ překlad", "transalation_cz_submit",
-					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = Languages.Czech.GetCountryCode(), TranslationCode = model.TranslationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { TranslationCode = model.TranslationCode, CountryCode = Languages.Czech.GetCountryCode() }));
 
 				return model;
 			});
@@ -73,14 +73,14 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(BadRequestExceptionResponseModel), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> ChangeTranslation(string countryCode, [FromBody] UpdateTranslationForm form, CancellationToken cancellationToken)
+		public async Task<IActionResult> ChangeTranslation([FromBody] UpdateTranslationForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new UpdateTransaltionCommand(form.CountryCode, form.TranslationCode, form.Text), cancellationToken);
+			var validationResult = await Mediator.Send(new UpdateTransaltionCommand(form), cancellationToken);
 
 			if (validationResult.IsOk)
 			{
 				var responseModel = new UpdateTranslationResponseModel(
-					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = form.TranslationCode, Text = form.Text }),
+					TranslationFormComposer.GetChangeTranslationForm(new() { TranslationCode = form.TranslationCode, Text = form.Text }),
 					$"Proměnná {form.TranslationCode} byla úspěšně přeložena pro {form.CountryCode}: {form.Text}.");
 
 				return Ok(responseModel);
@@ -88,7 +88,7 @@ namespace ODF.API.Controllers
 
 			if (validationResult.Errors.Any())
 			{
-				var responseModel = new UpdateTranslationResponseModel(TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = form.TranslationCode, Text = form.Text }));
+				var responseModel = new UpdateTranslationResponseModel(TranslationFormComposer.GetChangeTranslationForm(new() { TranslationCode = form.TranslationCode, Text = form.Text }));
 				return UnprocessableEntity(responseModel);
 			}
 

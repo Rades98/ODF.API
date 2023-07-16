@@ -36,10 +36,9 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(CreateArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> AddArticle([FromBody] AddArticleRequestForm requestForm, [FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> AddArticle([FromBody] AddArticleRequestForm requestForm, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new AddArticleCommand(requestForm.TitleTranslationCode, requestForm.Title,
-				requestForm.TextTranslationCode, requestForm.Text, requestForm.PageId, countryCode, requestForm.ImageUri), cancellationToken);
+			var validationResult = await Mediator.Send(new AddArticleCommand(requestForm, CountryCode), cancellationToken);
 
 			if (validationResult.IsOk)
 			{
@@ -67,10 +66,10 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(GetArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(NotFoundExceptionResponseModel), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetArticle([FromRoute] int articleId, [FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetArticle([FromRoute] int articleId, CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
-			var result = await Mediator.Send(new GetArticleQuery(articleId, countryCode), cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
+			var result = await Mediator.Send(new GetArticleQuery(articleId, CountryCode), cancellationToken);
 
 			if (result != null)
 			{
@@ -85,9 +84,9 @@ namespace ODF.API.Controllers
 		[HttpGet(Name = nameof(GetArticles))]
 		[ProducesResponseType(typeof(GetArticleResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetArticles(int size, int offset, int pageId, [FromRoute] string countryCode)
+		public async Task<IActionResult> GetArticles(int size, int offset, int pageId, CancellationToken cancellationToken)
 		{
-			var articles = await Mediator.Send(new GetArticlesQuery(offset * size, size, pageId, countryCode));
+			var articles = await Mediator.Send(new GetArticlesQuery(offset * size, size, pageId, CountryCode), cancellationToken);
 
 			var responseModel = new GetArticlesResponseModel();
 
@@ -103,11 +102,11 @@ namespace ODF.API.Controllers
 
 		private NamedAction GetTranslateArticleTextAction(string translationCode, string countryCode)
 			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit text do {countryCode}", "translate_article",
-					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { TranslationCode = translationCode }));
 
 		private NamedAction GetTranslateArticleTitleAction(string translationCode, string countryCode)
 			=> GetNamedAction(nameof(TranslationsController.ChangeTranslation), $"Přeložit nadpis do {countryCode}", "translate_article",
-					TranslationFormComposer.GetChangeTranslationForm(new() { CountryCode = countryCode, TranslationCode = translationCode }));
+					TranslationFormComposer.GetChangeTranslationForm(new() { TranslationCode = translationCode }));
 
 		private GetArticleResponseModel MapArticle(ArticleDto art)
 		{

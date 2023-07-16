@@ -22,9 +22,9 @@ namespace ODF.API.Controllers
 		[HttpGet(Name = nameof(GetAssociation))]
 		[ProducesResponseType(typeof(AssociationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetAssociation([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetAssociation(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 			var responseModel = new AssociationResponseModel(translations.Get("association_info"), translations.Get("association_header"));
 
 			responseModel.AddAction(GetQueriedAppAction(nameof(ArticleController.GetArticles), "association_articles", PaginationConsts.DefaultPaginationSetting(1)));

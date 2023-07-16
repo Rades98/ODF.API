@@ -19,9 +19,9 @@ namespace ODF.API.Controllers.Users
 		}
 
 		[HttpGet(Name = nameof(GetSubscription))]
-		public async Task<IActionResult> GetSubscription([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetSubscription(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 			return Ok(translations.Get("work_in_progress"));
 		}
 

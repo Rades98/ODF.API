@@ -27,9 +27,9 @@ namespace ODF.API.Controllers.Lineup
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetLineupRedaction([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetLineupRedaction(CancellationToken cancellationToken)
 		{
-			var lineupItems = await Mediator.Send(new GetLineupQuery(countryCode), cancellationToken);
+			var lineupItems = await Mediator.Send(new GetLineupQuery(CountryCode), cancellationToken);
 			var responseModel = new GetLineupRedactionResponseModel();
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",

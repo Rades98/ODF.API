@@ -30,12 +30,12 @@ namespace ODF.API.Controllers.Users
 		[HttpPost(Name = nameof(LoginUser))]
 		[ProducesResponseType(typeof(UserResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> LoginUser([FromBody] LoginUserForm form, [FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> LoginUser([FromBody] LoginUserForm form, CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-			var userResult = await Mediator.Send(new LoginUserCommand(form.UserName, form.Password, countryCode), cancellationToken);
+			var userResult = await Mediator.Send(new LoginUserCommand(form, CountryCode), cancellationToken);
 
 			if (userResult.IsOk)
 			{
@@ -59,14 +59,11 @@ namespace ODF.API.Controllers.Users
 		[ProducesResponseType(typeof(UserRegisterResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UserRegisterResponseModel), StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> RegisterUser([FromRoute] string countryCode, [FromBody] RegisterUserForm form, CancellationToken cancellationToken)
+		public async Task<IActionResult> RegisterUser([FromBody] RegisterUserForm form, CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 
-			var validationResult = await Mediator.Send(new RegisterUserCommand(
-				countryCode, form.UserName, form.Password, form.Password2,
-				form.Email, form.FirstName, $"{FrontEndUrl}/user-activation/{{hash}}",
-				form.LastName), cancellationToken);
+			var validationResult = await Mediator.Send(new RegisterUserCommand(form, $"{FrontEndUrl}/user-activation/{{hash}}", CountryCode), cancellationToken);
 
 			if (validationResult.IsOk)
 			{
@@ -84,10 +81,10 @@ namespace ODF.API.Controllers.Users
 		[ProducesResponseType(typeof(UserActivationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UserActivationResponseModel), StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> ActivateRegistration([FromRoute] string countryCode, [FromBody] ActivateUserForm form, CancellationToken cancellationToken)
+		public async Task<IActionResult> ActivateRegistration([FromBody] ActivateUserForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new ActivateUserCommand(form.Hash, countryCode), cancellationToken);
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var validationResult = await Mediator.Send(new ActivateUserCommand(form, CountryCode), cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 
 			if (validationResult.IsOk)
 			{
@@ -106,9 +103,9 @@ namespace ODF.API.Controllers.Users
 		[HttpDelete(Name = nameof(LogoutUser))]
 		[ProducesResponseType(typeof(UserResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> LogoutUser([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> LogoutUser(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 
 			if (HttpContext.IsLoggedIn())
 			{

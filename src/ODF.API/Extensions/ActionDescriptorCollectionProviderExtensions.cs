@@ -9,16 +9,16 @@ namespace ODF.API.Extensions
 	public static class ActionDescriptorCollectionProviderExtensions
 	{
 		internal static NamedAction GetNamedAction(
-			this IActionDescriptorCollectionProvider adcp, HttpContext context, string baseUrl,
-			string actionIdentifier, string actionName, string rel, Form? actionForm = null, string? countryCode = null)
+			this IActionDescriptorCollectionProvider adcp, string baseUrl,
+			string actionIdentifier, string actionName, string rel, Form? actionForm = null)
 		{
-			var appAction = adcp.GetAppAction(context, baseUrl, actionIdentifier, rel, countryCode: countryCode);
+			var appAction = adcp.GetAppAction(baseUrl, actionIdentifier, rel);
 			return new(appAction.Curl.Href.ToString()!, actionName, appAction.Curl.Rel, appAction.Curl.Method, form: actionForm);
 		}
 
 		internal static AppAction GetAppAction(
-			this IActionDescriptorCollectionProvider adcp, HttpContext context, string baseUrl,
-			string actionIdentifier, string rel, Form? actionForm = null, string? countryCode = null)
+			this IActionDescriptorCollectionProvider adcp, string baseUrl,
+			string actionIdentifier, string rel, Form? actionForm = null)
 		{
 			var action = adcp.ActionDescriptors.Items.FirstOrDefault(act => act.RouteValues["action"] == actionIdentifier);
 
@@ -27,13 +27,13 @@ namespace ODF.API.Extensions
 				throw new ArgumentException(nameof(action));
 			}
 
-			string link = action.AttributeRouteInfo!.Template!.Replace("{countryCode}", countryCode ?? context.GetCountryCode()!);
+			string link = action.AttributeRouteInfo!.Template!;
 
 			return new($"{baseUrl}/{link}", rel, ((HttpMethodActionConstraint)action.ActionConstraints![0]).HttpMethods.First(), form: actionForm);
 		}
 
 		internal static AppAction GetQueriedAppAction(
-			this IActionDescriptorCollectionProvider adcp, HttpContext context, string baseUrl,
+			this IActionDescriptorCollectionProvider adcp, string baseUrl,
 			string actionIdentifier, string rel, Dictionary<string, string> queryParams, Form? actionForm = null)
 		{
 			var action = adcp.ActionDescriptors.Items.FirstOrDefault(act => act.RouteValues["action"] == actionIdentifier);
@@ -43,8 +43,7 @@ namespace ODF.API.Extensions
 				throw new ArgumentException(nameof(action));
 			}
 
-			string link = action.AttributeRouteInfo!.Template!
-				.Replace("{countryCode}", context.GetCountryCode()!);
+			string link = link = action.AttributeRouteInfo!.Template!;
 
 			string linkAddition = action.Parameters
 											.Where(param => queryParams.ContainsKey(param.Name))
@@ -59,7 +58,7 @@ namespace ODF.API.Extensions
 			return new($"{baseUrl}/{link}", rel, ((HttpMethodActionConstraint)action.ActionConstraints![0]).HttpMethods.First(), form: actionForm);
 		}
 
-		internal static string GetRelativeUrlByAction(this IActionDescriptorCollectionProvider adcp, HttpContext context, string actionIdentifier)
+		internal static string GetRelativeUrlByAction(this IActionDescriptorCollectionProvider adcp, string actionIdentifier)
 		{
 			var action = adcp.ActionDescriptors.Items.FirstOrDefault(act => act.RouteValues["action"] == actionIdentifier);
 
@@ -68,10 +67,7 @@ namespace ODF.API.Extensions
 				throw new ArgumentException(nameof(action));
 			}
 
-			string link = action.AttributeRouteInfo!.Template!
-				.Replace("{countryCode}", context.GetCountryCode()!);
-
-			return link;
+			return action.AttributeRouteInfo!.Template!;
 		}
 	}
 }

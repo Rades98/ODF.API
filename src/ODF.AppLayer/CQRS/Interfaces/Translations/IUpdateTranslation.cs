@@ -2,10 +2,10 @@
 {
 	public interface IUpdateTranslation
 	{
-		string CountryCode { get; }
-
 		string TranslationCode { get; }
 
 		string Text { get; }
+
+		string CountryCode { get; }
 	}
 }

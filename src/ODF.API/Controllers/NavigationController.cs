@@ -29,9 +29,9 @@ namespace ODF.API.Controllers
 		[Authorize]
 		[AllowAnonymous]
 		[ProducesResponseType(typeof(NavigationResponseModel), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetNavigation([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetNavigation(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 
 			var responseModel = new NavigationResponseModel();
 			responseModel.AddAction(GetAppAction(nameof(AboutController.GetAbout), "menu_about"));
@@ -63,7 +63,10 @@ namespace ODF.API.Controllers
 				responseModel.LogoutAction = GetNamedAction(nameof(UserController.LogoutUser), translations.Get("logout_user"), "logout");
 			}
 
-			if (countryCode.ToUpper() == Languages.Czech.GetCountryCode().ToUpper() && HttpContext.IsAdmin())
+			if (Languages.TryParse(CountryCode, out var lang) &&
+				lang is not null
+				&& lang.GetCountryCode() == Languages.Czech.GetCountryCode()
+				&& HttpContext.IsAdmin())
 			{
 				responseModel.MenuItems.Add(GetNamedAction(nameof(RedactionController.GetRedaction), "Redakce", "redactionMenuItem"));
 			}

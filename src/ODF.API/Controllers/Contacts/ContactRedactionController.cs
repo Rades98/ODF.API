@@ -27,9 +27,9 @@ namespace ODF.API.Controllers.Contacts
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetContactsRedaction([FromRoute] string countryCode)
+		public async Task<IActionResult> GetContactsRedaction(CancellationToken cancellationToken)
 		{
-			var contact = await Mediator.Send(new GetContactQuery(countryCode));
+			var contact = await Mediator.Send(new GetContactQuery(CountryCode), cancellationToken);
 
 			var responseModel = new GetContactRedactionNavigationResponseModel();
 

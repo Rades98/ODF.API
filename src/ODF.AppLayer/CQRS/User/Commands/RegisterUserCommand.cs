@@ -6,14 +6,14 @@ namespace ODF.AppLayer.CQRS.User.Commands
 {
 	public class RegisterUserCommand : ICommand<ValidationDto>, IRegisterUser
 	{
-		public RegisterUserCommand(string countryCode, string userName, string password, string password2, string email, string firstName, string actiavtionLinkTemplate, string lastName = null)
+		public RegisterUserCommand(IRegisterUser input, string actiavtionLinkTemplate, string countryCode)
 		{
-			UserName = userName;
-			Password = password;
-			Password2 = password2;
-			Email = email;
-			FirstName = firstName;
-			LastName = lastName;
+			UserName = input.UserName;
+			Password = input.Password;
+			Password2 = input.Password2;
+			Email = input.Email;
+			FirstName = input.FirstName;
+			LastName = input.LastName;
 			CountryCode = countryCode;
 			ActiavtionLinkTemplate = actiavtionLinkTemplate;
 		}

@@ -6,11 +6,11 @@ namespace ODF.AppLayer.CQRS.Translations.Commands
 {
 	public sealed class UpdateTransaltionCommand : ICommand<ValidationDto>, IUpdateTranslation
 	{
-		public UpdateTransaltionCommand(string countryCode, string translationCode, string text)
+		public UpdateTransaltionCommand(IUpdateTranslation input)
 		{
-			CountryCode = countryCode;
-			TranslationCode = translationCode;
-			Text = text;
+			CountryCode = input.CountryCode;
+			TranslationCode = input.TranslationCode;
+			Text = input.Text;
 		}
 
 		public string CountryCode { get; }

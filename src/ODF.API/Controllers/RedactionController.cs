@@ -31,9 +31,9 @@ namespace ODF.API.Controllers
 		[ProducesResponseType(typeof(RedactionResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(UnauthorizedExceptionResponseModel), StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> GetRedaction([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetRedaction(CancellationToken cancellationToken)
 		{
-			var transaltions = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var transaltions = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 
 			var responseModel = new RedactionResponseModel("Redakce");
 

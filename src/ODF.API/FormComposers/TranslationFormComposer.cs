@@ -18,9 +18,6 @@ namespace ODF.API.FormComposers
 			form.AddMember(new("Překlad", nameof(IUpdateTranslation.Text), FormValueTypes.Text, changeTrans.Text,
 				true, errors?.GetErrorMessage(nameof(IUpdateTranslation.Text))));
 
-			form.AddMember(new("Kód země", nameof(IUpdateTranslation.CountryCode), FormValueTypes.Text, changeTrans.CountryCode,
-				false, errors?.GetErrorMessage(nameof(IUpdateTranslation.CountryCode))));
-
 			return form;
 		}
 	}

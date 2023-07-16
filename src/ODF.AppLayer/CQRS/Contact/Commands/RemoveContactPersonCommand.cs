@@ -7,9 +7,9 @@ namespace ODF.AppLayer.CQRS.Contact.Commands
 {
 	public sealed class RemoveContactPersonCommand : ICommand<ValidationDto>, IRemoveContactPerson
 	{
-		public RemoveContactPersonCommand(Guid id)
+		public RemoveContactPersonCommand(IRemoveContactPerson input)
 		{
-			Id = id;
+			Id = input.Id;
 		}
 
 		public Guid Id { get; }
