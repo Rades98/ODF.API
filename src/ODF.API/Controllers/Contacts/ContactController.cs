@@ -38,7 +38,7 @@ namespace ODF.API.Controllers.Contacts
 			return Ok(ContactsResponseMapper.GetContactResponse(contact));
 		}
 
-		[HttpPost(Name = nameof(UpdateContact))]
+		[HttpPut(Name = nameof(UpdateContact))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactResponseModel), StatusCodes.Status200OK)]

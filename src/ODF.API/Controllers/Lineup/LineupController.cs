@@ -48,7 +48,7 @@ namespace ODF.API.Controllers.Lineup
 			return Ok(responseModel);
 		}
 
-		[HttpPut(Name = nameof(AddItemToLineup))]
+		[HttpPost(Name = nameof(AddItemToLineup))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
@@ -74,7 +74,7 @@ namespace ODF.API.Controllers.Lineup
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě události"));
 		}
 
-		[HttpPost(Name = nameof(UpdateLineupItem))]
+		[HttpPut(Name = nameof(UpdateLineupItem))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
@@ -84,7 +84,7 @@ namespace ODF.API.Controllers.Lineup
 		{
 			var validationResult = await Mediator.Send(
 				new UpdateLineupItemCommand(form.Id, form.Place, form.Interpret, form.PerformanceName, form.Description,
-				form.DescriptionTranslationCode, form.DateTime, countryCode, form.UserName), cancellationToken);
+				form.DescriptionTranslationCode, form.DateTime, countryCode, form.UserName, form.UserNote), cancellationToken);
 
 			if (validationResult.IsOk)
 			{

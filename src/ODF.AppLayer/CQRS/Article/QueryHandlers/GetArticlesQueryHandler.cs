@@ -52,7 +52,7 @@ namespace ODF.AppLayer.CQRS.Article.QueryHandlers
 						Id = article.Id,
 						Title = title,
 						Text = text,
-						ImageUri = article.ImageUri ?? new("https://placehold.co/600x400")//temp
+						ImageUri = new(article.ImageUri)
 					};
 				}
 

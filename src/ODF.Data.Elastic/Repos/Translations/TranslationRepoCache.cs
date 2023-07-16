@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace ODF.Data.Elastic.Repos.Translations
 			if (cachedResponse != null)
 			{
 				var res = JsonConvert.DeserializeObject<IEnumerable<Translation>>(Encoding.Default.GetString((byte[])cachedResponse));
-				if (res is not null)
+				if (res is not null && res.ToList().Count > 0)
 				{
 					return res;
 				}

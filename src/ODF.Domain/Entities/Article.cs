@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ODF.Domain.Entities
+﻿namespace ODF.Domain.Entities
 {
 	public class Article
 	{
@@ -12,6 +10,6 @@ namespace ODF.Domain.Entities
 
 		public int PageId { get; set; }
 
-		public Uri? ImageUri { get; set; }
+		public string ImageUri { get; set; } = string.Empty;
 	}
 }

@@ -11,23 +11,19 @@ namespace ODF.AppLayer.CQRS.Article.CommandValidators
 		public override async Task<ValidationResult> ValidateAsync(ValidationContext<AddArticleCommand> context, CancellationToken cancellation = default)
 		{
 			RuleFor(article => article.TitleTranslationCode)
-				.NotEmpty()
-				.NotNull()
+				.Must(code => !string.IsNullOrEmpty(code))
 				.WithMessage("Není vyplněn název překladové proměnné pro nadpis");
 
 			RuleFor(article => article.TextTranslationCode)
-				.NotEmpty()
-				.NotNull()
+				.Must(code => !string.IsNullOrEmpty(code))
 				.WithMessage("Není vyplněn název překladové proměnné pro text");
 
 			RuleFor(article => article.Title)
-				.NotEmpty()
-				.NotNull()
+				.Must(title => !string.IsNullOrEmpty(title))
 				.WithMessage("Jooooooo, článek bez nadpisu");
 
 			RuleFor(article => article.Text)
-				.NotEmpty()
-				.NotNull()
+				.Must(text => !string.IsNullOrEmpty(text))
 				.WithMessage("a TeXT jE KdE?");
 
 			return await base.ValidateAsync(context, cancellation);

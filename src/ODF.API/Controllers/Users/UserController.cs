@@ -80,7 +80,7 @@ namespace ODF.API.Controllers.Users
 			return InternalServerError(new ExceptionResponseModel(translations.Get("registration_failed")));
 		}
 
-		[HttpPost("activation", Name = nameof(ActivateRegistration))]
+		[HttpPut("activation", Name = nameof(ActivateRegistration))]
 		[ProducesResponseType(typeof(UserActivationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(UserActivationResponseModel), StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]

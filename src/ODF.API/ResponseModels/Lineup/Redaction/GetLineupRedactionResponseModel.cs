@@ -16,5 +16,8 @@ namespace ODF.API.ResponseModels.Lineup.Redaction
 
 		[JsonProperty("lineupItems", Required = Required.Always)]
 		public IEnumerable<GetLineupItemRedactionResponseModel> LineupItems { get; set; } = new List<GetLineupItemRedactionResponseModel>();
+
+		[JsonProperty("redactionPartName", Required = Required.Always)]
+		public string RedactionPartName { get; set; } = string.Empty;
 	}
 }

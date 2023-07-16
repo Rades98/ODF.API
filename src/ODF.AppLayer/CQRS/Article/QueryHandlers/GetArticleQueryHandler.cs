@@ -41,7 +41,7 @@ namespace ODF.AppLayer.CQRS.Article.QueryHandlers
 						Id = article.Id,
 						Title = title,
 						Text = text,
-						ImageUri = article.ImageUri
+						ImageUri = new(article.ImageUri)
 					};
 				}
 

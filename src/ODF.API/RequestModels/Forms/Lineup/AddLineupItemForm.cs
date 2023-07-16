@@ -24,9 +24,9 @@ namespace ODF.API.RequestModels.Forms.Lineup
 		public DateTime DateTime { get; set; }
 
 		[JsonProperty("userName", Required = Required.AllowNull)]
-		public string? UserName { get; set; }
+		public string? UserName { get; set; } = null;
 
 		[JsonProperty("userNote", Required = Required.AllowNull)]
-		public string? UserNote { get; set; }
+		public string? UserNote { get; set; } = null;
 	}
 }

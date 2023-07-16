@@ -23,7 +23,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 		}
 
-		[HttpPost(Name = nameof(UpdateAddress))]
+		[HttpPut(Name = nameof(UpdateAddress))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactAddressResponseModel), StatusCodes.Status200OK)]

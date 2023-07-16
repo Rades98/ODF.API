@@ -13,7 +13,7 @@ using ODF.Domain.SettingModels;
 namespace ODF.API.Controllers.Base
 {
 	[ApiController]
-	[Route("/{countryCode}/[controller]")]
+	[Route("/api/{countryCode}/[controller]")]
 	public abstract class BaseController : Controller
 	{
 		private readonly IMediator _mediator;

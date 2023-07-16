@@ -68,7 +68,7 @@ namespace ODF.API.Controllers
 			return Ok(responseModel);
 		}
 
-		[HttpPost(Name = nameof(ChangeTranslation))]
+		[HttpPut(Name = nameof(ChangeTranslation))]
 		[ProducesResponseType(typeof(UpdateTranslationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(BadRequestExceptionResponseModel), StatusCodes.Status400BadRequest)]

@@ -33,7 +33,7 @@ namespace ODF.AppLayer.CQRS.Lineup.CommandValidators
 					.WithMessage("Událost nelze přiřadit neexistujícímu uživateli");
 
 				RuleFor(command => command.UserName)
-					.Must(command => user.IsActive)
+					.Must(command => user?.IsActive ?? false)
 					.WithMessage("Uživatel musí být aktivován, aby se dal používat na tyhle čupr finty");
 			}
 

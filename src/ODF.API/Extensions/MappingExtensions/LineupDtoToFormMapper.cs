@@ -15,7 +15,8 @@ namespace ODF.API.Extensions.MappingExtensions
 				Interpret = model.Interpret,
 				PerformanceName = model.PerformanceName,
 				Place = model.Place,
-				UserName = model.UserName
+				UserName = model.UserName,
+				UserNote = model.UserNote,
 			};
 	}
 }

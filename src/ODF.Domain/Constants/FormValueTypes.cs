@@ -3,7 +3,7 @@
 	public static class FormValueTypes
 	{
 		public const string Text = "text";
-		public const string FormatedText = "formated-text";
+		public const string FormatedText = "richtext";
 		public const string Number = "number";
 		public const string Url = "url";
 		public const string TextArray = "textarray";

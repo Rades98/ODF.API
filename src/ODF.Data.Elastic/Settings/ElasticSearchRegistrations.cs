@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Elasticsearch.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -391,30 +392,27 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 2, Text ="Der Link ist abgelaufen.", TranslationCode = "error_activate_hash_too_old" },
 			};
 
+			var insertTasks = new List<Task>();
+
+			var transCodes = client.Search<Translation>(s => s.Size(10000)).Documents;
+
 			sysTrans.ForEach(tran =>
 			{
-				var actual = client.Search<Translation>(x => x
-					.Query(q => q
-						.Bool(bq => bq
-							.Filter(
-								fq => fq.Terms(t => t.Field(f => f.TranslationCode).Terms(tran.TranslationCode)),
-								fq => fq.Terms(t => t.Field(f => f.LanguageId).Terms(tran.LanguageId))
-							)
-						)
-					)
-					.Size(1)).Documents.FirstOrDefault();
-
-				if (actual is null)
+				if (!transCodes.Any(x => x.TranslationCode == tran.TranslationCode))
 				{
-					var res = client.Index(tran, i => i);
-
-					if (res.ServerError is not null)
+					insertTasks.Add(Task.Factory.StartNew(async () =>
 					{
-						throw new ElasticsearchClientException(JsonConvert.SerializeObject(res.ServerError));
-					}
+						var res = await client.IndexAsync<Translation>(tran, i => i);
+
+						if (res.ServerError is not null)
+						{
+							throw new ElasticsearchClientException(JsonConvert.SerializeObject(res.ServerError));
+						}
+					}));
 				}
 			});
 
+			Task.WaitAll(insertTasks.ToArray());
 
 			return client;
 		}

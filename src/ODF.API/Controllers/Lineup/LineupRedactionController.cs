@@ -34,6 +34,7 @@ namespace ODF.API.Controllers.Lineup
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
 					LineupItemFormComposer.GetAddLineupItemForm(new(), usersDataSource: GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source")));
+			responseModel.RedactionPartName = "Úprava programu";
 
 			responseModel.LineupItems = lineupItems
 				.OrderBy(ord => ord.DateTime)
@@ -48,6 +49,8 @@ namespace ODF.API.Controllers.Lineup
 						LineupItemFormComposer.GetDeleteLineupItemForm(new() { Id = x.Id })),
 					UpdateLineupItem = GetNamedAction(nameof(LineupController.UpdateLineupItem), $"Upravit", "update_ineup_item",
 						LineupItemFormComposer.GetUdpateLineupItemForm(x.ToUpdateForm(), usersDataSource: GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source"))),
+					UserName = x.UserName,
+					UserNote = x.UserNote,
 				});
 
 			return Ok(responseModel);

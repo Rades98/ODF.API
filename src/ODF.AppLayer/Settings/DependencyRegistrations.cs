@@ -16,7 +16,7 @@ namespace ODF.AppLayer.Settings
 		public static IServiceCollection AddAppLayerServices(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.UseMailingService(configuration);
-			services.AddMediatR(Assembly.GetExecutingAssembly())
+			services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
 				.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), lifetime: ServiceLifetime.Transient)
 				.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipeline<,>))
 				.AddTransient(typeof(IRequestPostProcessor<,>), typeof(ResourceNotFoundPostProcessor<,>));

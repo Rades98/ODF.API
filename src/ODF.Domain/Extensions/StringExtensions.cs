@@ -26,6 +26,6 @@ namespace ODF.Domain.Extensions
 			=> PostalCodeRegex.IsMatch(postalCode);
 
 		public static string ToCamelCase(this string input)
-			=> string.Concat(input[0].ToString().ToLower(), input.AsSpan(1).ToString());
+			=> string.IsNullOrEmpty(input) ? "" : string.Concat(input[0].ToString().ToLower(), input.AsSpan(1).ToString());
 	}
 }
