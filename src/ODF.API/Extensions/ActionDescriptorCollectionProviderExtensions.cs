@@ -43,7 +43,7 @@ namespace ODF.API.Extensions
 				throw new ArgumentException(nameof(action));
 			}
 
-			string link = link = action.AttributeRouteInfo!.Template!;
+			string link = action.AttributeRouteInfo!.Template!;
 
 			string linkAddition = action.Parameters
 											.Where(param => queryParams.ContainsKey(param.Name))
