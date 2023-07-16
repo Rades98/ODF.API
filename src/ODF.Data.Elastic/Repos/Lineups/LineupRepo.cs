@@ -51,12 +51,13 @@ namespace ODF.Data.Elastic.Repos.Lineups
 			StringBuilder script = new StringBuilder();
 
 			lineupItem.PerformanceName.AddToScriptWithParamIsfEdited(nameof(lineupItem.PerformanceName), scriptParams, script);
-			lineupItem.UserName.AddToScriptWithParamIsfEdited(lineupItem.UserName, scriptParams, script);
 			lineupItem.Interpret.AddToScriptWithParamIsfEdited(nameof(lineupItem.Interpret), scriptParams, script);
 			lineupItem.Place.AddToScriptWithParamIsfEdited(nameof(lineupItem.Place), scriptParams, script);
 			lineupItem.DateTime.AddToScriptWithParamIsfEdited(nameof(lineupItem.DateTime), scriptParams, script);
+			lineupItem.UserName.AddToScriptWithParamIsfEdited(nameof(lineupItem.UserName), scriptParams, script);
+			lineupItem.UserNote.AddToScriptWithParamIsfEdited(nameof(lineupItem.UserNote), scriptParams, script);
 
-			return (await _elasticClient.UpdateByQueryAsync<LineupItem>(s => s
+			var result = await _elasticClient.UpdateByQueryAsync<LineupItem>(s => s
 					.Query(q => q
 						.Bool(bq => bq
 							.Filter(
@@ -68,7 +69,9 @@ namespace ODF.Data.Elastic.Repos.Lineups
 					.Script(s => s
 						.Source(script.ToString())
 						.Params(scriptParams))
-					.Refresh(true), cancellationToken)).IsValid;
+					.Refresh(true), cancellationToken);
+
+			return result.IsValid;
 		}
 
 		public async Task<LineupItem> GetAsync(Guid id, CancellationToken cancellationToken)

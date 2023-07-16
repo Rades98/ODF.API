@@ -29,10 +29,12 @@ namespace ODF.Data.Elastic.Repos.Articles
 				PageId = pageId,
 				TextTranslationCode = textTranslationCode,
 				TitleTranslationCode = titleTranslationCode,
-				ImageUri = imageUrl,
+				ImageUri = imageUrl.ToString() ?? "https://placehold.co/600x400",
 			};
 
-			return (await _elasticClient.IndexAsync(article, i => i, cancellationToken)).IsValid;
+			var result = await _elasticClient.IndexAsync<Article>(article, i => i, cancellationToken);
+
+			return result.IsValid;
 		}
 
 		public async Task<Article> GetArticleAsync(int id, CancellationToken cancellationToken)

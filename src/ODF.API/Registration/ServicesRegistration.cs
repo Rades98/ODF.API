@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
+using ODF.API.Cookies;
 using ODF.API.Middleware;
 using ODF.API.Registration.SettingModels;
 using ODF.API.Swagger;
@@ -23,15 +24,8 @@ namespace ODF.API.Registration
 					.AddAppLayerServices(conf);
 
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-					.AddCookie(opts =>
-					{
-						opts.ExpireTimeSpan = TimeSpan.FromDays(1);
-						opts.SlidingExpiration = true;
-						opts.Cookie.HttpOnly = false;
-						opts.Cookie.Name = "folklorova-auth_cookie";
-						opts.Cookie.SameSite = SameSiteMode.Lax;
+					.AddCookie(CookieProps.CookieAuthenticationOpts);
 
-					});
 			services.AddDataProtection()
 					.SetApplicationName($"folklor-ova-{env.EnvironmentName}")
 					.PersistKeysToFileSystem(new DirectoryInfo($@"{env.ContentRootPath}\keys"));

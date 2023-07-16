@@ -25,7 +25,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 		}
 
-		[HttpPost(Name = nameof(UpdateContactPerson))]
+		[HttpPut(Name = nameof(UpdateContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactPersonResponseModel), StatusCodes.Status200OK)]
@@ -47,7 +47,7 @@ namespace ODF.API.Controllers.Contacts
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při aktualizaci kontaktní osoby"));
 		}
 
-		[HttpPut(Name = nameof(AddContactPerson))]
+		[HttpPost(Name = nameof(AddContactPerson))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(CreateContactPersonResponseModel), StatusCodes.Status200OK)]

@@ -18,7 +18,7 @@ namespace ODF.API.FormComposers
 			form.AddMember(new("Kód nadpisu", nameof(IAddArticle.TitleTranslationCode), FormValueTypes.Text, requestform.TitleTranslationCode, true,
 				errors?.GetErrorMessage(nameof(IAddArticle.TitleTranslationCode))));
 
-			form.AddMember(new("Text", nameof(IAddArticle.Text), FormValueTypes.Text, requestform.Text, true,
+			form.AddMember(new("Text", nameof(IAddArticle.Text), FormValueTypes.FormatedText, requestform.Text, true,
 				errors?.GetErrorMessage(nameof(IAddArticle.Text))));
 
 			form.AddMember(new("Kód textu", nameof(IAddArticle.TextTranslationCode), FormValueTypes.Text, requestform.TextTranslationCode, true,

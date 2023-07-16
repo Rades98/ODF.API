@@ -24,7 +24,7 @@ namespace ODF.API.Controllers.Contacts
 		{
 		}
 
-		[HttpPut(Name = nameof(AddBankAccount))]
+		[HttpPost(Name = nameof(AddBankAccount))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(CreateContactBankAccResponseModel), StatusCodes.Status200OK)]

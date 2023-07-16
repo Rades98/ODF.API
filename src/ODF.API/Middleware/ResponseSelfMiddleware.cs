@@ -9,11 +9,11 @@ namespace ODF.API.Middleware
 {
 	public class ResponseSelfMiddleware
 	{
+		private static Regex SelfReg = new(@"""href"":\s*(""[^""]+"")\s*,\s*""rel""\s*:\s*""_self""\s*,\s*""method""\s*:\s*""""", RegexOptions.Compiled, TimeSpan.FromSeconds(20));
+		private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { Error = (sender, args) => { args.ErrorContext.Handled = true; } };
+
 		private readonly RequestDelegate _next;
 		private readonly ApiSettings _apiSettings;
-
-		private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { Error = (sender, args) => { args.ErrorContext.Handled = true; } };
-		private static Regex SelfReg = new(@"""_self""\s*:\s*{[^}]*}}", RegexOptions.Compiled, TimeSpan.FromSeconds(20));
 
 		public ResponseSelfMiddleware(RequestDelegate next, IOptions<ApiSettings> apiSettings)
 		{
@@ -50,28 +50,14 @@ namespace ODF.API.Middleware
 
 		private string GetModifiedResponse(string response, HttpContext httpContext)
 		{
-			if (!httpContext.IsApiRequest())
+			if (!httpContext.IsApiRequest() || JsonConvert.DeserializeObject<ApiModel>(response, _jsonSerializerSettings) is null)
 			{
 				return response;
 			}
 
-			var responseBody = JsonConvert.DeserializeObject<ApiModel>(response, _jsonSerializerSettings);
+			string resplacement = $"\"href\": \"{new Uri($"{_apiSettings.ApiUrl}{httpContext.Request.Path}")}\", \"rel\":\"self\", \"method\": \"{httpContext.Request.Method}\"";
 
-			if (responseBody is null)
-			{
-				return response;
-			}
-
-			string method = httpContext.Request.Method;
-
-			var link = httpContext.Request.Path;
-
-			responseBody.Self.Curl.Href = new Uri($"{_apiSettings.ApiUrl}{link}");
-			responseBody.Self.Curl.Method = method;
-			responseBody.Self.Curl.Rel = "self";
-			string stringResposne = JsonConvert.SerializeObject(responseBody);
-
-			return SelfReg.Replace(response, stringResposne[1..^1]);
+			return SelfReg.Replace(response, resplacement);
 		}
 	}
 }

@@ -10,5 +10,11 @@ namespace ODF.API.ResponseModels.Lineup.Redaction
 
 		[JsonProperty("deleteLineupItem", Required = Required.Always)]
 		public NamedAction? DeleteLineupItem { get; set; }
+
+		[JsonProperty("userName", Required = Required.Always)]
+		public string UserName { get; set; } = string.Empty;
+
+		[JsonProperty("userNote", Required = Required.Always)]
+		public string UserNote { get; set; } = string.Empty;
 	}
 }

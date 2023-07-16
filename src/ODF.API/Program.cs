@@ -46,6 +46,7 @@ builder.Services.AddOpenTelemetry()
 		.AddAspNetCoreInstrumentation()
 		.AddHttpClientInstrumentation()
 		.AddRuntimeInstrumentation()
+		.AddConsoleExporter()
 		.AddPrometheusExporter());
 
 //Health checks
@@ -64,23 +65,8 @@ if (app.Environment.IsDevelopment())
 	app.UseCors(x => x
 	.AllowAnyMethod()
 	.AllowAnyHeader()
-	.SetIsOriginAllowed(origin => true)
-	.AllowCredentials());
-
-	app.UseWhen(
-		delegate (HttpContext httpContext)
-		{
-			return !(httpContext.Request.Path.ToString().Contains("/metrics") ||
-					httpContext.Request.Path.ToString().Contains("/health") ||
-					httpContext.Request.Path == new PathString("/"));
-		}
-		,
-		delegate (IApplicationBuilder appBuilder)
-		{
-			appBuilder.UseHttpsRedirection();
-			appBuilder.UseResponseCompression();
-		}
-	);
+	.AllowCredentials()
+	.WithOrigins("http://localhost:4200"));
 }
 else
 {
@@ -89,29 +75,29 @@ else
 	.AllowAnyHeader()
 	.AllowCredentials()
 	.WithOrigins("https://folklorova.cz"));
-
-	app.UseHttpsRedirection();
-	app.UseWhen(
-		delegate (HttpContext httpContext)
-		{
-			return !(httpContext.Request.Path.ToString().Contains("/metrics") ||
-					httpContext.Request.Path.ToString().Contains("/health") ||
-					httpContext.Request.Path == new PathString("/"));
-		}
-		,
-		delegate (IApplicationBuilder appBuilder)
-		{
-			appBuilder.UseResponseCompression();
-		}
-	);
 }
+
+app.UseWhen(
+	delegate (HttpContext httpContext)
+	{
+		return !(httpContext.Request.Path.ToString().Contains("/metrics") ||
+				httpContext.Request.Path.ToString().Contains("/health") ||
+				httpContext.Request.Path == new PathString("/"));
+	}
+	,
+	delegate (IApplicationBuilder appBuilder)
+	{
+		app.UseHttpsRedirection();
+		appBuilder.UseResponseCompression();
+	}
+);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/cz/navigation", true, true));
+app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/api/cz/navigation", true, true));
 
 //TODO move to some other location like create chatting controller
 app.MapPost("{countryCode}/sendMsgToAll", [Authorize(Roles = UserRoles.Admin)] async ([FromQuery] string countryCode, [FromQuery] string msg, IHubContext<ChatHub> hubContext, CancellationToken ct) =>

@@ -30,7 +30,7 @@ namespace ODF.API.Controllers
 		{
 		}
 
-		[HttpPut(Name = nameof(AddArticle))]
+		[HttpPost(Name = nameof(AddArticle))]
 		[Authorize(Roles = UserRoles.Admin)]
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(CreateArticleResponseModel), StatusCodes.Status200OK)]
@@ -41,9 +41,17 @@ namespace ODF.API.Controllers
 			var validationResult = await Mediator.Send(new AddArticleCommand(requestForm.TitleTranslationCode, requestForm.Title,
 				requestForm.TextTranslationCode, requestForm.Text, requestForm.PageId, countryCode, requestForm.ImageUri), cancellationToken);
 
-			if (!validationResult.IsOk)
+			if (validationResult.IsOk)
 			{
-				return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
+				var responseModel = new CreateArticleResponseModel("Článek byl úspěšně přidán.", ArticleFormComposer.GetAddArticleForm(requestForm));
+
+				responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(requestForm.Title, Languages.Deutsch.GetCountryCode());
+				responseModel.AddTextDeTranslation = GetTranslateArticleTextAction(requestForm.Text, Languages.Deutsch.GetCountryCode());
+
+				responseModel.AddTitleEnTranslation = GetTranslateArticleTitleAction(requestForm.Title, Languages.English.GetCountryCode());
+				responseModel.AddTextEnTranslation = GetTranslateArticleTextAction(requestForm.Text, Languages.English.GetCountryCode());
+
+				return Ok(responseModel);
 			}
 
 			if (validationResult.Errors.Any())
@@ -52,15 +60,7 @@ namespace ODF.API.Controllers
 				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
 			}
 
-			var responseModel = new CreateArticleResponseModel("Článek byl úspěšně přidán.");
-
-			responseModel.AddTitleDeTranslation = GetTranslateArticleTitleAction(requestForm.Title, Languages.Deutsch.GetCountryCode());
-			responseModel.AddTextDeTranslation = GetTranslateArticleTextAction(requestForm.Text, Languages.Deutsch.GetCountryCode());
-
-			responseModel.AddTitleEnTranslation = GetTranslateArticleTitleAction(requestForm.Title, Languages.English.GetCountryCode());
-			responseModel.AddTextEnTranslation = GetTranslateArticleTextAction(requestForm.Text, Languages.English.GetCountryCode());
-
-			return Ok(responseModel);
+			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
 		}
 
 		[HttpGet("{articleId}", Name = nameof(GetArticle))]

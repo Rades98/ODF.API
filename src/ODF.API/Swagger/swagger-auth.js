@@ -169,7 +169,7 @@
         let password = document.getElementById('password').value;
 
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '/cz/user', true);
+        xhr.open('POST', '/api/cz/user', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
 
         xhr.onreadystatechange = function () {
@@ -201,7 +201,7 @@
 
     function logout() {
         let xhr = new XMLHttpRequest();
-        xhr.open('DELETE', '/cz/user', true);
+        xhr.open('DELETE', '/api/cz/user', true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {

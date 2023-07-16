@@ -35,7 +35,7 @@ namespace ODF.API.FormComposers
 				errors?.GetErrorMessage(nameof(IAddLineupItem.UserName)), usersDataSource));
 
 			requestForm.AddMember(new("Poznámka pro uživatele", nameof(IAddLineupItem.UserNote), FormValueTypes.Text, form.UserName, true,
-				errors?.GetErrorMessage(nameof(IAddLineupItem.UserNote)), usersDataSource));
+				errors?.GetErrorMessage(nameof(IAddLineupItem.UserNote))));
 
 			return requestForm;
 		}
@@ -78,8 +78,8 @@ namespace ODF.API.FormComposers
 			requestForm.AddMember(new("Jméno uživatele", nameof(IUpdateLineupItem.UserName), FormValueTypes.Text, form.UserName, true,
 				errors?.GetErrorMessage(nameof(IUpdateLineupItem.UserName)), usersDataSource));
 
-			requestForm.AddMember(new("Poznámka pro uživatele", nameof(IUpdateLineupItem.UserNote), FormValueTypes.Text, form.UserName, true,
-				errors?.GetErrorMessage(nameof(IUpdateLineupItem.UserNote)), usersDataSource));
+			requestForm.AddMember(new("Poznámka pro uživatele", nameof(IUpdateLineupItem.UserNote), FormValueTypes.Text, form.UserNote, true,
+				errors?.GetErrorMessage(nameof(IUpdateLineupItem.UserNote))));
 
 			return requestForm;
 		}

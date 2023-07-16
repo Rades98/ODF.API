@@ -54,7 +54,7 @@ namespace ODF.Data.Redis.Settings
 				db.StringSetAsync(usr.GetRedisKey(usr.UserName), usrSerialized);
 			}
 
-			userName = "FS kokot";
+			userName = "FS_kokot";
 
 			if (string.IsNullOrEmpty(db.StringGet(new User().GetRedisKey(userName))))
 			{
