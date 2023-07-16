@@ -13,7 +13,7 @@ using ODF.Domain.SettingModels;
 namespace ODF.API.Controllers.Base
 {
 	[ApiController]
-	[Route("/api/{countryCode}/[controller]")]
+	[Route("/api/[controller]")]
 	public abstract class BaseController : Controller
 	{
 		private readonly IMediator _mediator;
@@ -30,6 +30,8 @@ namespace ODF.API.Controllers.Base
 
 		public Uri SignalHubUrl => _signalHubUrl;
 
+		public string CountryCode => HttpContext.GetCountryCodeFromLang();
+
 		public ITranslationsProvider TranslationsProvider => _translationsProvider;
 
 		protected BaseController(IMediator mediator, IOptions<ApiSettings> apiSettings, IActionDescriptorCollectionProvider adcp, ITranslationsProvider translationsProvider)
@@ -44,17 +46,17 @@ namespace ODF.API.Controllers.Base
 			_signalHubUrl = new(_baseUrl + apiSettings.Value.SignalChatHubPath);
 		}
 
-		internal NamedAction GetNamedAction(string actionIdentifier, string actionName, string rel, Form? actionForm = null, string? countryCode = null)
-			=> _adcp.GetNamedAction(HttpContext, ApiBaseUrl, actionIdentifier, actionName, rel, actionForm, countryCode);
+		internal NamedAction GetNamedAction(string actionIdentifier, string actionName, string rel, Form? actionForm = null)
+			=> _adcp.GetNamedAction(ApiBaseUrl, actionIdentifier, actionName, rel, actionForm);
 
-		internal AppAction GetAppAction(string actionIdentifier, string rel, Form? actionForm = null, string? countryCode = null)
-			=> _adcp.GetAppAction(HttpContext, ApiBaseUrl, actionIdentifier, rel, actionForm, countryCode);
+		internal AppAction GetAppAction(string actionIdentifier, string rel, Form? actionForm = null)
+			=> _adcp.GetAppAction(ApiBaseUrl, actionIdentifier, rel, actionForm);
 
 		internal AppAction GetQueriedAppAction(string actionIdentifier, string rel, Dictionary<string, string> queryParams, Form? actionForm = null)
-		 => _adcp.GetQueriedAppAction(HttpContext, ApiBaseUrl, actionIdentifier, rel, queryParams, actionForm);
+		 => _adcp.GetQueriedAppAction(ApiBaseUrl, actionIdentifier, rel, queryParams, actionForm);
 
 		internal string GetRelativeUrlByAction(string actionIdentifier)
-			=> _adcp.GetRelativeUrlByAction(HttpContext, actionIdentifier);
+			=> _adcp.GetRelativeUrlByAction(actionIdentifier);
 
 		internal static IActionResult InternalServerError(ExceptionResponseModel response)
 			=> new ApiResult(System.Net.HttpStatusCode.InternalServerError, response);

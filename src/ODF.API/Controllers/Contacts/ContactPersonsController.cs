@@ -32,7 +32,7 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> UpdateContactPerson([FromBody] UpdateContactPersonForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new UpdateContactPersonCommand(form.Email, form.Title, form.Name, form.Surname, form.Roles, form.Base64Image, form.Id, form.Order), cancellationToken);
+			var validationResult = await Mediator.Send(new UpdateContactPersonCommand(form), cancellationToken);
 			if (validationResult.IsOk)
 			{
 				return Ok(new UpdateContactPersonResponseModel());
@@ -55,7 +55,7 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> AddContactPerson([FromBody] AddContactPersonForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new AddContactPersonCommand(form.Email, form.Title, form.Name, form.Surname, form.Roles, form.Base64Image), cancellationToken);
+			var validationResult = await Mediator.Send(new AddContactPersonCommand(form), cancellationToken);
 
 			if (validationResult.IsOk)
 			{
@@ -78,7 +78,7 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> RemoveContactPerson([FromBody] RemoveContactPersonForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new RemoveContactPersonCommand(form.Id), cancellationToken);
+			var validationResult = await Mediator.Send(new RemoveContactPersonCommand(form), cancellationToken);
 
 			if (validationResult.IsOk)
 			{

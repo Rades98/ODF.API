@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using ODF.AppLayer.Repos;
+using ODF.Data.Elastic.Settings;
 using ODF.Domain.Entities;
 
 namespace ODF.Data.Elastic.Repos.Articles
@@ -41,10 +42,7 @@ namespace ODF.Data.Elastic.Repos.Articles
 
 			var response = await _repo.GetArticleAsync(id, cancellationToken);
 
-			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), new MemoryCacheEntryOptions()
-			{
-				AbsoluteExpiration = DateTime.Now.AddMinutes(60)
-			});
+			_cache.Set(cacheKey, Encoding.Default.GetBytes(JsonConvert.SerializeObject(response)), CacheSetting.MemoryCacheEntryOptions);
 
 			return response;
 		}

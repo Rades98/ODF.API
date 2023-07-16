@@ -23,18 +23,20 @@ namespace ODF.API.Controllers
 		[HttpGet(Name = nameof(GetSupportedLanguages))]
 		[ProducesResponseType(typeof(LanguageResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetSupportedLanguages([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetSupportedLanguages(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 
 			var languages = Languages.GetAll().Select(lang =>
 			{
 				string actionName = string.Format(translations.Get("app_language_switch"), lang.GetCountryCode());
 				var languageModel = new LanguageModel(lang.Name, lang.GetCountryCode());
 
-				if (lang.GetCountryCode().ToLower() != countryCode.ToLower())
+				if (Languages.TryParse(CountryCode, out var language) &&
+					language is not null &&
+					lang.GetCountryCode() != language.GetCountryCode())
 				{
-					languageModel.ChangeLanguage = GetNamedAction(nameof(NavigationController.GetNavigation), actionName, "nav", countryCode: lang.GetCountryCode());
+					languageModel.ChangeLanguage = GetNamedAction(nameof(NavigationController.GetNavigation), actionName, "nav");
 				}
 
 				return languageModel;

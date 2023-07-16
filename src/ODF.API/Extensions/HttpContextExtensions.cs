@@ -6,8 +6,6 @@ namespace ODF.API.Extensions
 {
 	public static class HttpContextExtensions
 	{
-		private const string CountryParam = "countryCode";
-
 		public static bool IsAdmin(this HttpContext context)
 			=> context.User.FindFirstValue(ClaimTypes.Role) == UserRoles.Admin;
 
@@ -44,27 +42,10 @@ namespace ODF.API.Extensions
 		public static bool IsLoggedIn(this HttpContext context)
 			=> context.User.Identity?.IsAuthenticated ?? false;
 
-		public static string? GetCountryCode(this HttpContext httpContext)
+		public static string GetCountryCodeFromLang(this HttpContext httpContext)
 		{
-			if (!httpContext.IsApiRequest())
-			{
-				return Languages.Czech.GetCountryCode().ToLower();
-			}
-
-			if (httpContext.Request.Query.ContainsKey(CountryParam))
-			{
-				return httpContext.Request.Query[CountryParam];
-			}
-			else if (httpContext.Request.Headers.ContainsKey(CountryParam))
-			{
-				return httpContext.Request.Headers[CountryParam];
-			}
-			else if (httpContext.Request.RouteValues.ContainsKey(CountryParam))
-			{
-				return httpContext.Request.RouteValues[CountryParam]!.ToString();
-			}
-
-			return null;
+			string userLang = httpContext.Request.GetTypedHeaders().AcceptLanguage.FirstOrDefault()?.Value.Value ?? "";
+			return Languages.TryParse(userLang, out var lang) ? lang!.GetCountryCode() : Languages.Czech.GetCountryCode();
 		}
 
 		public static bool IsApiRequest(this HttpContext httpContext)

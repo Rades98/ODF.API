@@ -97,16 +97,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/api/cz/navigation", true, true));
+app.MapGet("", [Authorize][AllowAnonymous] () => Results.Redirect("/api/navigation", true, true));
 
 //TODO move to some other location like create chatting controller
-app.MapPost("{countryCode}/sendMsgToAll", [Authorize(Roles = UserRoles.Admin)] async ([FromQuery] string countryCode, [FromQuery] string msg, IHubContext<ChatHub> hubContext, CancellationToken ct) =>
+app.MapPost("/sendMsgToAll", [Authorize(Roles = UserRoles.Admin)] async ([FromQuery] string countryCode, [FromQuery] string msg, IHubContext<ChatHub> hubContext, CancellationToken ct) =>
 {
 	await hubContext.Clients.All.SendAsync("ReceiveBroadcastMessage", msg, cancellationToken: ct);
 
 	return Results.Ok();
 });
-app.MapPost("{countryCode}/sendDirect", [Authorize] async ([FromQuery] string countryCode, [FromQuery] string msg, [FromQuery] string userName, IHubContext<ChatHub> hubContext, HttpContext context, CancellationToken ct) =>
+app.MapPost("/sendDirect", [Authorize] async ([FromQuery] string countryCode, [FromQuery] string msg, [FromQuery] string userName, IHubContext<ChatHub> hubContext, HttpContext context, CancellationToken ct) =>
 {
 	await hubContext.Clients.User(userName).SendAsync("ReceiveDirectMessage", new ChatMessage(context.GetUserName(), userName, msg), cancellationToken: ct);
 	return Results.Ok();

@@ -7,14 +7,14 @@ namespace ODF.AppLayer.CQRS.Contact.Commands
 {
 	public sealed class AddContactPersonCommand : ICommand<ValidationDto>, IAddContactPerson
 	{
-		public AddContactPersonCommand(string email, string title, string name, string surname, IEnumerable<string> roles, string base64Image)
+		public AddContactPersonCommand(IAddContactPerson input)
 		{
-			Email = email;
-			Title = title;
-			Name = name;
-			Roles = roles;
-			Base64Image = base64Image;
-			Surname = surname;
+			Email = input.Email;
+			Title = input.Title;
+			Name = input.Name;
+			Roles = input.Roles;
+			Base64Image = input.Base64Image;
+			Surname = input.Surname;
 		}
 
 		public string Email { get; }

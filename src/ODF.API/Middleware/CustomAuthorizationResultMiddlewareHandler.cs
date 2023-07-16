@@ -29,7 +29,7 @@ namespace ODF.API.Middleware
 		{
 			if (!authorizeResult.Succeeded)
 			{
-				string? countryCode = context.GetCountryCode() ?? Languages.Czech.GetCountryCode();
+				string? countryCode = context.GetCountryCodeFromLang() ?? Languages.Czech.GetCountryCode();
 
 				var translations = await _translationsProvider.GetTranslationsAsync(countryCode, default);
 
@@ -39,7 +39,7 @@ namespace ODF.API.Middleware
 
 				string message = isLoggedIn ? translations.Get("unauthorized_msg_logged") : translations.Get("unauthorized_msg_annonymous");
 
-				var loginAction = _adcp.GetNamedAction(context, $"{context.Request.Scheme}://{context.Request.Host}",
+				var loginAction = _adcp.GetNamedAction($"{context.Request.Scheme}://{context.Request.Host}",
 					nameof(UserController.LoginUser), translations.Get("login_user"), "login", UserFormComposer.GetLoginForm(new(), translations));
 
 				var responseModel = new UnauthorizedExceptionResponseModel(title, message, !isLoggedIn ? loginAction : null);

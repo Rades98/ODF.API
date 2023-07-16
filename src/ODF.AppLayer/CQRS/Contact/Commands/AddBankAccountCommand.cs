@@ -6,11 +6,11 @@ namespace ODF.AppLayer.CQRS.Contact.Commands
 {
 	public sealed class AddBankAccountCommand : ICommand<ValidationDto>, IAddBankAccount
 	{
-		public AddBankAccountCommand(string bank, string accountId, string iban)
+		public AddBankAccountCommand(IAddBankAccount input)
 		{
-			Bank = bank;
-			AccountId = accountId;
-			IBAN = iban;
+			Bank = input.Bank;
+			AccountId = input.AccountId;
+			IBAN = input.IBAN;
 		}
 
 		public string Bank { get; }

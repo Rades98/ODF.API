@@ -22,9 +22,9 @@ namespace ODF.API.Controllers
 		[HttpGet(Name = nameof(GetDonation))]
 		[ProducesResponseType(typeof(DonationResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetDonation([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetDonation(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 			var result = await Mediator.Send(new GetBankAccountsQRQuery(), cancellationToken);
 
 			var qrData = Enumerable.Empty<string>();

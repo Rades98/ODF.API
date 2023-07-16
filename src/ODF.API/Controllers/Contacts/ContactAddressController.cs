@@ -28,9 +28,9 @@ namespace ODF.API.Controllers.Contacts
 		[CountryCodeFilter("cz")]
 		[ProducesResponseType(typeof(UpdateContactAddressResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressForm form)
+		public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new UpdateContactAddressCommand(form.Street, form.City, form.PostalCode, form.Country));
+			var validationResult = await Mediator.Send(new UpdateContactAddressCommand(form), cancellationToken);
 
 			if (validationResult.IsOk)
 			{

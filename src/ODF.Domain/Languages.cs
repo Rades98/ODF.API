@@ -23,7 +23,7 @@ namespace ODF.Domain
 
 		public string Name { get; }
 
-		public string GetCountryCode() => _regionInfo.TwoLetterISORegionName;
+		public string GetCountryCode() => _regionInfo.TwoLetterISORegionName.ToLower();
 	}
 
 	/// <summary>
@@ -51,8 +51,8 @@ namespace ODF.Domain
 		/// <returns>true if found</returns>
 		public static bool TryParse(string countryCode, out Language? language)
 		{
-			string code = countryCode.ToUpper();
-			var lang = GetAll().FirstOrDefault(language => language.GetCountryCode() == code);
+			string code = countryCode;
+			var lang = GetAll().FirstOrDefault(language => language.Culture.Name.ToLower().Contains(code));
 
 			if (lang is not null)
 			{

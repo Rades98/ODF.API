@@ -6,12 +6,12 @@ namespace ODF.AppLayer.CQRS.Contact.Commands
 {
 	public sealed class UpdateContactAddressCommand : ICommand<ValidationDto>, IUpdateContactAddress
 	{
-		public UpdateContactAddressCommand(string street, string city, string postalCode, string country)
+		public UpdateContactAddressCommand(IUpdateContactAddress input)
 		{
-			Street = street;
-			City = city;
-			PostalCode = postalCode;
-			Country = country;
+			Street = input.Street;
+			City = input.City;
+			PostalCode = input.PostalCode;
+			Country = input.Country;
 		}
 
 		public string Street { get; }

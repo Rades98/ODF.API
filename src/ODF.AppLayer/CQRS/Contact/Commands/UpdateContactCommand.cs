@@ -6,11 +6,11 @@ namespace ODF.AppLayer.CQRS.Contact.Commands
 {
 	public sealed class UpdateContactCommand : ICommand<ValidationDto>, IUpdateContact
 	{
-		public UpdateContactCommand(string eventName, string eventManager, string email)
+		public UpdateContactCommand(IUpdateContact input)
 		{
-			EventManager = eventManager;
-			Email = email;
-			EventName = eventName;
+			EventManager = input.EventManager;
+			Email = input.Email;
+			EventName = input.EventName;
 		}
 
 		public string EventName { get; }

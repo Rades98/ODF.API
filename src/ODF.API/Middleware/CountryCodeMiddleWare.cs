@@ -15,7 +15,7 @@ namespace ODF.API.Middleware
 
 		public async Task Invoke(HttpContext httpContext)
 		{
-			if (!Languages.TryParse(httpContext.GetCountryCode()!, out var lang))
+			if (!Languages.TryParse(httpContext.GetCountryCodeFromLang()!, out var lang))
 			{
 				httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 				return;

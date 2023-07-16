@@ -7,18 +7,17 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 {
 	public sealed class AddLineupItemCommand : ICommand<ValidationDto>, IAddLineupItem
 	{
-		public AddLineupItemCommand(string place, string interpret, string perfName, string description,
-			string descriptionTranslationCode, DateTime dateTime, string countryCode, string userName = null, string userNote = null)
+		public AddLineupItemCommand(IAddLineupItem input, string countryCode)
 		{
-			Place = place;
-			Interpret = interpret;
-			PerformanceName = perfName;
-			DescriptionTranslationCode = descriptionTranslationCode;
-			Description = description;
-			DateTime = dateTime;
+			Place = input.Place;
+			Interpret = input.Interpret;
+			PerformanceName = input.PerformanceName;
+			DescriptionTranslationCode = input.DescriptionTranslationCode;
+			Description = input.Description;
+			DateTime = input.DateTime;
 			CountryCode = countryCode;
-			UserName = userName;
-			UserNote = userNote;
+			UserName = input.UserName;
+			UserNote = input.UserNote;
 		}
 
 		public string Place { get; }

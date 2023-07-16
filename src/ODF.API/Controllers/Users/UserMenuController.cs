@@ -25,9 +25,9 @@ namespace ODF.API.Controllers.Users
 		[HttpGet(Name = nameof(GetMenu))]
 		[ProducesResponseType(typeof(UserMenuResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetMenu([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetMenu(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 			var responseModel = new UserMenuResponseModel();
 			responseModel.UserLineupAction = GetNamedAction(nameof(GetUserLineup), translations.Get("user_menu_lineup"), "user_lineup");
 			responseModel.UserSubscriptionAction = GetNamedAction(nameof(UserSubscriptionController.GetSubscription), translations.Get("user_menu_subscription"), "user_subscription");
@@ -38,9 +38,9 @@ namespace ODF.API.Controllers.Users
 		[HttpGet("lineup", Name = nameof(GetUserLineup))]
 		[ProducesResponseType(typeof(UserLineupResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetUserLineup([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetUserLineup(CancellationToken cancellationToken)
 		{
-			var result = await Mediator.Send(new GetUserLineupQuery(HttpContext.GetUserName(), countryCode), cancellationToken);
+			var result = await Mediator.Send(new GetUserLineupQuery(HttpContext.GetUserName(), CountryCode), cancellationToken);
 
 			var responseModel = new UserLineupResponseModel();
 

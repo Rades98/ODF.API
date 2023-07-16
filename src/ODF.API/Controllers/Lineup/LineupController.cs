@@ -28,9 +28,9 @@ namespace ODF.API.Controllers.Lineup
 		[HttpGet(Name = nameof(GetLineup))]
 		[ProducesResponseType(typeof(LineupResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetLineup([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetLineup(CancellationToken cancellationToken)
 		{
-			var result = await Mediator.Send(new GetLineupQuery(countryCode), cancellationToken);
+			var result = await Mediator.Send(new GetLineupQuery(CountryCode), cancellationToken);
 
 			var responseModel = new LineupResponseModel();
 
@@ -54,11 +54,9 @@ namespace ODF.API.Controllers.Lineup
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(AddLineupResponseModel), StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(StatusCodes.Status202Accepted)]
-		public async Task<IActionResult> AddItemToLineup([FromRoute] string countryCode, [FromBody] AddLineupItemForm form, CancellationToken cancellationToken)
+		public async Task<IActionResult> AddItemToLineup([FromBody] AddLineupItemForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new AddLineupItemCommand(
-				form.Place, form.Interpret, form.PerformanceName,
-				form.Description, form.DescriptionTranslationCode, form.DateTime, countryCode, form.UserName, form.UserNote), cancellationToken);
+			var validationResult = await Mediator.Send(new AddLineupItemCommand(form, CountryCode), cancellationToken);
 
 			if (validationResult.IsOk)
 			{
@@ -80,11 +78,10 @@ namespace ODF.API.Controllers.Lineup
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		[ProducesResponseType(typeof(AddLineupResponseModel), StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(StatusCodes.Status202Accepted)]
-		public async Task<IActionResult> UpdateLineupItem([FromRoute] string countryCode, [FromBody] UpdateLineupItemForm form, CancellationToken cancellationToken)
+		public async Task<IActionResult> UpdateLineupItem([FromBody] UpdateLineupItemForm form, CancellationToken cancellationToken)
 		{
 			var validationResult = await Mediator.Send(
-				new UpdateLineupItemCommand(form.Id, form.Place, form.Interpret, form.PerformanceName, form.Description,
-				form.DescriptionTranslationCode, form.DateTime, countryCode, form.UserName, form.UserNote), cancellationToken);
+				new UpdateLineupItemCommand(form, CountryCode), cancellationToken);
 
 			if (validationResult.IsOk)
 			{
@@ -109,7 +106,7 @@ namespace ODF.API.Controllers.Lineup
 		[ProducesResponseType(StatusCodes.Status202Accepted)]
 		public async Task<IActionResult> DeleteLineupItem([FromBody] DeleteLineupItemForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new DeleteLineupItemCommand(form.Id), cancellationToken);
+			var validationResult = await Mediator.Send(new DeleteLineupItemCommand(form), cancellationToken);
 
 			if (validationResult.IsOk)
 			{

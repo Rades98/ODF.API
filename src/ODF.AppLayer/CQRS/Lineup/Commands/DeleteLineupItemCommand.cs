@@ -7,9 +7,9 @@ namespace ODF.AppLayer.CQRS.Lineup.Commands
 {
 	public sealed class DeleteLineupItemCommand : ICommand<ValidationDto>, IDeleteLineupItem
 	{
-		public DeleteLineupItemCommand(Guid id)
+		public DeleteLineupItemCommand(IDeleteLineupItem input)
 		{
-			Id = id;
+			Id = input.Id;
 		}
 
 		public Guid Id { get; }

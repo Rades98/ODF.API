@@ -32,7 +32,7 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> AddBankAccount([FromBody] AddBankAccountForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new AddBankAccountCommand(form.Bank, form.AccountId, form.IBAN), cancellationToken);
+			var validationResult = await Mediator.Send(new AddBankAccountCommand(form), cancellationToken);
 
 			if (validationResult.IsOk)
 			{
@@ -55,7 +55,7 @@ namespace ODF.API.Controllers.Contacts
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> RemoveBankAccount([FromBody] RemoveBankAccountForm form, CancellationToken cancellationToken)
 		{
-			var validationResult = await Mediator.Send(new RemoveBankAccountCommand(form.IBAN), cancellationToken);
+			var validationResult = await Mediator.Send(new RemoveBankAccountCommand(form), cancellationToken);
 
 			if (validationResult.IsOk)
 			{

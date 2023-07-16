@@ -22,9 +22,9 @@ namespace ODF.API.Controllers
 		[HttpGet(Name = nameof(GetAbout))]
 		[ProducesResponseType(typeof(AboutResponseModel), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(ExceptionResponseModel), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetAbout([FromRoute] string countryCode, CancellationToken cancellationToken)
+		public async Task<IActionResult> GetAbout(CancellationToken cancellationToken)
 		{
-			var translations = await TranslationsProvider.GetTranslationsAsync(countryCode, cancellationToken);
+			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 
 			var responseModel = new AboutResponseModel(translations.Get("about_info"), translations.Get("about_header"));
 
