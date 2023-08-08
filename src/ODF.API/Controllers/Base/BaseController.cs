@@ -26,6 +26,7 @@ namespace ODF.API.Controllers.Base
 		public IMediator Mediator => _mediator;
 
 		public string ApiBaseUrl => _baseUrl;
+
 		public string FrontEndUrl => _feUrl;
 
 		public Uri SignalHubUrl => _signalHubUrl;
