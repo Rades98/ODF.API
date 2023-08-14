@@ -11,15 +11,15 @@ namespace ODF.API.ResponseModels.Donations
 		}
 
 		[JsonProperty("header", Required = Required.Always)]
-		public string Header { get; set; }
+		public string Header { get; set; } = string.Empty;
 
 		[JsonProperty("text", Required = Required.Always)]
-		public string Text { get; set; }
+		public string Text { get; set; } = string.Empty;
 
 		[JsonProperty("bankAccounts", Required = Required.Always)]
 		public IEnumerable<DonationBankAccResponseModel> BankAccounts { get; set; } = Enumerable.Empty<DonationBankAccResponseModel>();
 
 		[JsonProperty("additionalMessage", Required = Required.Always)]
-		public string AdditionalMessage { get; set; }
+		public string AdditionalMessage { get; set; } = string.Empty;
 	}
 }
