@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ODF.API.ResponseModels.Base;
 using ODF.API.ResponseModels.Common;
 
@@ -15,7 +14,7 @@ namespace ODF.API.ResponseModels.Navigation
 		public NamedAction? LoginAction { get; set; }
 
 		[JsonProperty("menuItems", Required = Required.Always)]
-		public ICollection<NamedAction> MenuItems { get; } = new Collection<NamedAction>();
+		public Dictionary<string, NamedAction> MenuItems { get; } = new();
 
 		[JsonProperty("languageMutations", Required = Required.Always)]
 		public NamedAction? LanguageMutations { get; set; }

@@ -20,12 +20,12 @@ namespace ODF.API.ResponseModels.Contacts.Redaction
 		public NamedAction? AddBankAccount { get; set; }
 
 		[JsonProperty("removeBankAccountActions", Required = Required.Always)]
-		public IEnumerable<NamedAction> RemoveBankAccountActions { get; set; } = new List<NamedAction>();
+		public GetRemoveBankAccountResponseModel? RemoveBankAccountActions { get; set; }
 
 		[JsonProperty("addContactPerson", Required = Required.Always)]
 		public NamedAction? AddContactPerson { get; set; }
 
-		[JsonProperty("contactPerson", Required = Required.Always)]
-		public IEnumerable<GetContactPersonRedactionResponseModel> ContactPersons { get; set; } = new List<GetContactPersonRedactionResponseModel>();
+		[JsonProperty("contactPersons", Required = Required.Always)]
+		public GetContactPersonsRedactionResponseModel? ContactPersons { get; set; }
 	}
 }

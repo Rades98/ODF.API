@@ -33,6 +33,7 @@ namespace ODF.Domain
 	{
 		public static readonly Language Czech = new(0, new("cs-CZ"), "Čeština");
 		public static readonly Language English = new(1, new("en-GB"), "English");
+		public static readonly Language EnglishUs = new(1, new("en-US"), "English");
 		public static readonly Language Deutsch = new(2, new("de-DE"), "Deutsch");
 
 		public static IEnumerable<Language> GetAll()
@@ -52,7 +53,7 @@ namespace ODF.Domain
 		public static bool TryParse(string countryCode, out Language? language)
 		{
 			string code = countryCode;
-			var lang = GetAll().FirstOrDefault(language => language.Culture.Name.ToLower().Contains(code));
+			var lang = GetAll().FirstOrDefault(language => language.Culture.IetfLanguageTag.ToLower().Contains(code.ToLower()));
 
 			if (lang is not null)
 			{

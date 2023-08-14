@@ -33,7 +33,7 @@ namespace ODF.API.Controllers.Lineup
 			var responseModel = new GetLineupRedactionResponseModel();
 
 			responseModel.AddLineupItem = GetNamedAction(nameof(LineupController.AddItemToLineup), $"Přidat item do programu", "add_lineup_item",
-					LineupItemFormComposer.GetAddLineupItemForm(new(), usersDataSource: GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source")));
+					LineupItemFormComposer.GetAddLineupItemForm(new() { DateTime = DateTime.Now }, usersDataSource: GetAppAction(nameof(DataSourceController.GetUsers), "get_users_source")));
 			responseModel.RedactionPartName = "Úprava programu";
 
 			responseModel.LineupItems = lineupItems
