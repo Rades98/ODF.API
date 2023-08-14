@@ -41,7 +41,13 @@ namespace ODF.API.Controllers
 				});
 			}
 
-			var responseModel = new DonationResponseModel(qrData, translations.Get("donations_header"), translations.Get("donations_text"), translations.Get("donations_text2"));
+			var responseModel = new DonationResponseModel()
+			{
+				BankAccounts = qrData,
+				Header = translations.Get("donations_header"),
+				Text = translations.Get("donations_text"),
+				AdditionalMessage = translations.Get("donations_text2")
+			};
 			return Ok(responseModel);
 		}
 	}
