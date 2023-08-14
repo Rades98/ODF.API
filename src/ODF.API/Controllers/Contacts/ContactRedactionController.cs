@@ -43,26 +43,33 @@ namespace ODF.API.Controllers.Contacts
 			responseModel.AddBankAccount = GetNamedAction(nameof(ContactBankAccountsController.AddBankAccount),
 				"Přidat bankovní účet", "addBankAccount", ContactFormComposer.GetAddBankAcountForm(new()));
 
-			responseModel.RemoveBankAccountActions = contact.BankAccounts.Select(bankAcc
+			responseModel.RemoveBankAccountActions = new()
+			{
+				Title = "Odebrat bankovní spojení",
+				RemoveBankAccountActions = contact.BankAccounts.Select(bankAcc
 				=> GetNamedAction(nameof(ContactBankAccountsController.RemoveBankAccount),
 				$"Smazat bankovní účet {bankAcc.IBAN}", "removeBankAccount",
-				ContactFormComposer.GetRemoveBankAcountForm(new() { IBAN = bankAcc.IBAN })));
+				ContactFormComposer.GetRemoveBankAcountForm(new() { IBAN = bankAcc.IBAN })))
+			};
 
 			responseModel.AddContactPerson = GetNamedAction(nameof(ContactPersonsController.AddContactPerson),
 				"Přidat kontaktní osobu", "addContactPerson", ContactFormComposer.GetAddContactPersonForm());
 
 			// Contact persons
-			responseModel.ContactPersons = contact.ContactPersons.Select(person => new GetContactPersonRedactionResponseModel()
+			responseModel.ContactPersons = new()
 			{
-				Title = person.Title,
-				Name = person.Name,
-				Surname = person.Surname,
-				Email = person.Email,
+				Title = "Upravit kontaktní osoby",
+				ContactPersons = contact.ContactPersons.Select(person => new GetContactPersonRedactionResponseModel()
+				{
+					Title = person.Title,
+					Name = person.Name,
+					Surname = person.Surname,
+					Email = person.Email,
 
-				DeleteContactPerson = GetNamedAction(nameof(ContactPersonsController.RemoveContactPerson),
+					DeleteContactPerson = GetNamedAction(nameof(ContactPersonsController.RemoveContactPerson),
 					"Smazat", "removeContactPerson", ContactFormComposer.GetRemoveContactPersonForm(new() { Id = person.Id })),
 
-				UpdateContactPerson = GetNamedAction(nameof(ContactPersonsController.UpdateContactPerson),
+					UpdateContactPerson = GetNamedAction(nameof(ContactPersonsController.UpdateContactPerson),
 					"Upravit", "updateContactPerson", ContactFormComposer.GetUpdateContactPersonForm(new()
 					{
 						Base64Image = person.Base64Image,
@@ -74,7 +81,8 @@ namespace ODF.API.Controllers.Contacts
 						Roles = person.Roles,
 						Title = person.Title,
 					})),
-			});
+				})
+			};
 
 			return Ok(responseModel);
 		}

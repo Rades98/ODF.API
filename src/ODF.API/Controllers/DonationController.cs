@@ -27,14 +27,27 @@ namespace ODF.API.Controllers
 			var translations = await TranslationsProvider.GetTranslationsAsync(CountryCode, cancellationToken);
 			var result = await Mediator.Send(new GetBankAccountsQRQuery(), cancellationToken);
 
-			var qrData = Enumerable.Empty<string>();
+			var qrData = Enumerable.Empty<DonationBankAccResponseModel>();
 
 			if (result.Any())
 			{
-				qrData = result.Select(x => x.ToString());
+				qrData = result.Select(x => new DonationBankAccResponseModel()
+				{
+					AccountId = x.AccountId,
+					AccountIdTranslation = translations.Get("contact_bank"),
+					IBAN = x.IBAN,
+					IBANTranslation = translations.Get("contact_iban"),
+					QrString = x.ToString()
+				});
 			}
 
-			var responseModel = new DonationResponseModel(qrData, translations.Get("donations_header"), translations.Get("donations_text"));
+			var responseModel = new DonationResponseModel()
+			{
+				BankAccounts = qrData,
+				Header = translations.Get("donations_header"),
+				Text = translations.Get("donations_text"),
+				AdditionalMessage = translations.Get("donations_text2")
+			};
 			return Ok(responseModel);
 		}
 	}

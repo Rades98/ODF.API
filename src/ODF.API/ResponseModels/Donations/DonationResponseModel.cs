@@ -5,20 +5,21 @@ namespace ODF.API.ResponseModels.Donations
 {
 	public class DonationResponseModel : BaseResponseModel
 	{
-		public DonationResponseModel(IEnumerable<string> qrStrings, string header, string text) : base()
+		public DonationResponseModel() : base()
 		{
-			QrStrings = qrStrings;
-			Header = header;
-			Text = text;
+
 		}
 
 		[JsonProperty("header", Required = Required.Always)]
-		public string Header { get; }
+		public string Header { get; set; } = string.Empty;
 
 		[JsonProperty("text", Required = Required.Always)]
-		public string Text { get; }
+		public string Text { get; set; } = string.Empty;
 
-		[JsonProperty("qrString", Required = Required.Always)]
-		public IEnumerable<string> QrStrings { get; }
+		[JsonProperty("bankAccounts", Required = Required.Always)]
+		public IEnumerable<DonationBankAccResponseModel> BankAccounts { get; set; } = Enumerable.Empty<DonationBankAccResponseModel>();
+
+		[JsonProperty("additionalMessage", Required = Required.Always)]
+		public string AdditionalMessage { get; set; } = string.Empty;
 	}
 }

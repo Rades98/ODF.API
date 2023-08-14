@@ -17,6 +17,8 @@ namespace ODF.AppLayer.Dtos.ContactDtos
 
 		public string ConstantSymbol { get; set; } = string.Empty; // X-KS constant symbol
 
+		public string AccountId { get; set; } = string.Empty;
+
 		public override string ToString()
 		{
 			string ibanFormated = IBAN.Replace(" ", "").ToUpper();

@@ -147,9 +147,9 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 1, Text ="Subscriptions", TranslationCode = "user_menu_subscription"},
 				new(){ IsSystem = true, LanguageId = 2, Text ="Abonnements", TranslationCode = "user_menu_subscription"},
 
-				new(){ IsSystem = true, LanguageId = 0, Text ="Donate", TranslationCode = "menu_donation"},
-				new(){ IsSystem = true, LanguageId = 1, Text ="Donate", TranslationCode = "menu_donation"},
-				new(){ IsSystem = true, LanguageId = 2, Text ="Donate", TranslationCode = "menu_donation"},
+				new(){ IsSystem = true, LanguageId = 0, Text ="Podpořte nás!", TranslationCode = "menu_donation"},
+				new(){ IsSystem = true, LanguageId = 1, Text ="Donate us!", TranslationCode = "menu_donation"},
+				new(){ IsSystem = true, LanguageId = 2, Text ="Spendet uns!", TranslationCode = "menu_donation"},
 
 				new(){ IsSystem = true, LanguageId = 0, Text ="Kontakt", TranslationCode = "menu_contacts"},
 				new(){ IsSystem = true, LanguageId = 1, Text ="Contact", TranslationCode = "menu_contacts"},
@@ -267,9 +267,9 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 1, Text ="The specified user is not active, please activate it with the link in the e-mail", TranslationCode = "error_login_inactive_user" },
 				new(){ IsSystem = true, LanguageId = 2, Text ="Der angegebene Benutzer ist nicht aktiv, bitte aktivieren Sie ihn über den Link in der E-Mail", TranslationCode = "error_login_inactive_user" },
 
-				new(){ IsSystem = true, LanguageId = 0, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
-				new(){ IsSystem = true, LanguageId = 1, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
-				new(){ IsSystem = true, LanguageId = 2, Text ="Festival Ostravské dny folkloru", TranslationCode = "contact_acc_id" },
+				new(){ IsSystem = true, LanguageId = 0, Text ="Číslo účtu", TranslationCode = "contact_acc_id" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="Account number", TranslationCode = "contact_acc_id" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="Accountnummer", TranslationCode = "contact_acc_id" },
 
 				new(){ IsSystem = true, LanguageId = 0, Text ="Bankovní spojení", TranslationCode = "contact_bank" },
 				new(){ IsSystem = true, LanguageId = 1, Text ="Bank account", TranslationCode = "contact_bank" },
@@ -295,9 +295,13 @@ namespace ODF.Data.Elastic.Settings
 				new() { IsSystem = true, LanguageId = 1, Text = "Support our festival", TranslationCode = "donations_header" },
 				new() { IsSystem = true, LanguageId = 2, Text = "Unterstützen Sie unser Festival", TranslationCode = "donations_header" },
 
-				new() { IsSystem = true, LanguageId = 0, Text = "Peníze můžete zaslat pomocí přiložených QR kódů", TranslationCode = "donations_text" },
-				new() { IsSystem = true, LanguageId = 1, Text = "You can send money using the attached QR codes", TranslationCode = "donations_text" },
-				new() { IsSystem = true, LanguageId = 2, Text = "Mit den beigefügten QR-Codes können Sie Geld versenden", TranslationCode = "donations_text" },
+				new() { IsSystem = true, LanguageId = 0, Text = "Máte-li zájem o rozvíjení kulturního dění na Ostravsku a chcete nám tak pomoci prezentovat kulturní dědictví našich předků, kteří se rozhodli spojit své životy s naším regionem, máte nyní možnost nás podpořit finančním darem. Tyto peníze nám umožní realizovat hlavní záměry a myšlenky festivalu Ostravské dny folkloru. Za případný příspěvek pro Vás máme nachystanou odměnu.\r\nK podpoře můžete využít QR kód:", TranslationCode = "donations_text" },
+				new() { IsSystem = true, LanguageId = 1, Text = "If you are interested in developing cultural events in Ostrava and want to help us present the cultural heritage of our ancestors who decided to connect their lives with our region, you now have the opportunity to support us with a financial donation. This money will enable us to realize the main intentions and ideas of the Ostrava Folklore Days festival. We have prepared a reward for you for any contribution.\r\nYou can use the QR code to support:", TranslationCode = "donations_text" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Wenn Sie an der Entwicklung kultureller Veranstaltungen in Ostrava interessiert sind und uns dabei helfen möchten, das kulturelle Erbe unserer Vorfahren zu präsentieren, die beschlossen haben, ihr Leben mit unserer Region zu verbinden, haben Sie jetzt die Möglichkeit, uns mit einer finanziellen Spende zu unterstützen. Dieses Geld wird es uns ermöglichen, die Hauptabsichten und Ideen des Festivals „Ostrauer Folkloretage“ zu verwirklichen. Für jeden Beitrag haben wir eine Belohnung für Sie vorbereitet.\r\nMit dem QR-Code können Sie Folgendes unterstützen:", TranslationCode = "donations_text" },
+
+				new() { IsSystem = true, LanguageId = 0, Text = "V případě, že byste měli zájem nám pomoci materiálně, kontaktujte nás prosím na info@folklorova.cz\r\nDěkujeme! #folklorspojuje", TranslationCode = "donations_text2" },
+				new() { IsSystem = true, LanguageId = 1, Text = "If you are interested in helping us materially, please contact us at info@folklorova.cz\r\nThank you! #folkloreconnects", TranslationCode = "donations_text2" },
+				new() { IsSystem = true, LanguageId = 2, Text = "Wenn Sie daran interessiert sind, uns materiell zu unterstützen, kontaktieren Sie uns bitte unter info@folklorova.cz\r\nDanke schön! #folkloreverbindet", TranslationCode = "donations_text2" },
 
 				new() { IsSystem = true, LanguageId = 0, Text = "Na tomto zatím pracujeme", TranslationCode = "work_in_progress" },
 				new() { IsSystem = true, LanguageId = 1, Text = "We are still working on this", TranslationCode = "work_in_progress" },
@@ -390,6 +394,26 @@ namespace ODF.Data.Elastic.Settings
 				new(){ IsSystem = true, LanguageId = 0, Text ="Platnost odkazu vypršela.", TranslationCode = "error_activate_hash_too_old" },
 				new(){ IsSystem = true, LanguageId = 1, Text ="The link has expired.", TranslationCode = "error_activate_hash_too_old" },
 				new(){ IsSystem = true, LanguageId = 2, Text ="Der Link ist abgelaufen.", TranslationCode = "error_activate_hash_too_old" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="o-nas", TranslationCode = "menuitem_about" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="about-us", TranslationCode = "menuitem_about" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="über-uns", TranslationCode = "menuitem_about" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="folklor-ova", TranslationCode = "menuitem_association" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="folklor-ova", TranslationCode = "menuitem_association" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="folklor-ova", TranslationCode = "menuitem_association" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="program-festivalu", TranslationCode = "menuitem_lineup" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="festival-program", TranslationCode = "menuitem_lineup" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="festivalprogramm", TranslationCode = "menuitem_lineup" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="donate", TranslationCode = "menuitem_donation" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="donate", TranslationCode = "menuitem_donation" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="donate", TranslationCode = "menuitem_donation" },
+
+				new(){ IsSystem = true, LanguageId = 0, Text ="kontakt", TranslationCode = "menuitem_contact" },
+				new(){ IsSystem = true, LanguageId = 1, Text ="contact", TranslationCode = "menuitem_contact" },
+				new(){ IsSystem = true, LanguageId = 2, Text ="kontakt", TranslationCode = "menuitem_contact" },
 			};
 
 			var insertTasks = new List<Task>();

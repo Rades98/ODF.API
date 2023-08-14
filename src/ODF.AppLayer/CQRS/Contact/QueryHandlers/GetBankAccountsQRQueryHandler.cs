@@ -23,7 +23,7 @@ namespace ODF.AppLayer.CQRS.Contact.QueryHandlers
 		{
 			var accs = await _contactRepo.GetBankAccountsAsync(cancellationToken);
 
-			return accs.Select(acc => new BankAccountQRDto() { IBAN = acc.IBAN });
+			return accs.Select(acc => new BankAccountQRDto() { IBAN = acc.IBAN, AccountId = acc.AccountId });
 		}
 	}
 }

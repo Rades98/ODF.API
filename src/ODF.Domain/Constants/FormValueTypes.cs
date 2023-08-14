@@ -9,5 +9,6 @@
 		public const string TextArray = "textarray";
 		public const string DateTimeLocal = "datetime-local";
 		public const string Password = "password";
+		public const string Base64Image = "base64image";
 	}
 }

@@ -79,10 +79,10 @@ namespace ODF.API.FormComposers
 			form.AddMember(new("Jméno", nameof(IAddContactPerson.Name), FormValueTypes.Text, reqForm?.Name ?? "", true,
 				errors?.GetErrorMessage(nameof(IAddContactPerson.Name))));
 
-			form.AddMember(new("Příjmení", nameof(IAddContactPerson.Surname), FormValueTypes.Text, reqForm?.Surname ?? "text", true,
+			form.AddMember(new("Příjmení", nameof(IAddContactPerson.Surname), FormValueTypes.Text, reqForm?.Surname ?? "", true,
 				errors?.GetErrorMessage(nameof(IAddContactPerson.Surname))));
 
-			form.AddMember(new("Obrázek", nameof(IAddContactPerson.Base64Image), FormValueTypes.Text, reqForm?.Base64Image ?? "text", true,
+			form.AddMember(new("Obrázek", nameof(IAddContactPerson.Base64Image), FormValueTypes.Base64Image, reqForm?.Base64Image ?? "", true,
 				errors?.GetErrorMessage(nameof(IAddContactPerson.Base64Image))));
 
 			form.AddMember(new("Role", nameof(IAddContactPerson.Roles), FormValueTypes.Text, reqForm?.Roles ?? Enumerable.Empty<string>(), true,
@@ -107,7 +107,7 @@ namespace ODF.API.FormComposers
 			form.AddMember(new("Příjmení", nameof(IUpdateContactPerson.Surname), FormValueTypes.Text, person.Surname, true,
 				errors?.GetErrorMessage(nameof(IUpdateContactPerson.Surname))));
 
-			form.AddMember(new("Obrázek", nameof(IUpdateContactPerson.Base64Image), FormValueTypes.Text, person.Base64Image, true,
+			form.AddMember(new("Obrázek", nameof(IUpdateContactPerson.Base64Image), FormValueTypes.Base64Image, person.Base64Image, true,
 				errors?.GetErrorMessage(nameof(IUpdateContactPerson.Base64Image))));
 
 			form.AddMember(new("Role", nameof(IUpdateContactPerson.Roles), FormValueTypes.TextArray, person.Roles, true,

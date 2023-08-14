@@ -38,11 +38,11 @@ namespace ODF.API.Controllers
 
 			responseModel.LanguageMutations = GetNamedAction(nameof(SupportedLanguagesController.GetSupportedLanguages), translations.Get("menu_lang"), "languageSelection");
 
-			responseModel.MenuItems.Add(GetNamedAction(nameof(AboutController.GetAbout), translations.Get("menu_about"), "aboutMenuItem"));
-			responseModel.MenuItems.Add(GetNamedAction(nameof(AssociationController.GetAssociation), translations.Get("menu_association"), "associationMenuItem"));
-			responseModel.MenuItems.Add(GetNamedAction(nameof(LineupController.GetLineup), translations.Get("menu_lineup"), "lineupMenuItem"));
-			responseModel.MenuItems.Add(GetNamedAction(nameof(DonationController.GetDonation), translations.Get("menu_donation"), "donationMenuItem"));
-			responseModel.MenuItems.Add(GetNamedAction(nameof(ContactController.GetContacts), translations.Get("menu_contacts"), "contactMenuItem"));
+			responseModel.MenuItems.Add("aboutMenuItem", GetNamedAction(nameof(AboutController.GetAbout), translations.Get("menu_about"), translations.Get("menuitem_about")));
+			responseModel.MenuItems.Add("associationMenuItem", GetNamedAction(nameof(AssociationController.GetAssociation), translations.Get("menu_association"), translations.Get("menuitem_association")));
+			responseModel.MenuItems.Add("donationMenuItem", GetNamedAction(nameof(DonationController.GetDonation), translations.Get("menu_donation"), translations.Get("menuitem_donation")));
+			responseModel.MenuItems.Add("contactMenuItem", GetNamedAction(nameof(ContactController.GetContacts), translations.Get("menu_contacts"), translations.Get("menuitem_contact")));
+			responseModel.MenuItems.Add("lineupMenuItem", GetNamedAction(nameof(LineupController.GetLineup), translations.Get("menu_lineup"), translations.Get("menuitem_lineup")));
 
 			responseModel.ActivateUserAction = GetAppAction(nameof(UserController.ActivateRegistration), "activate_user", UserFormComposer.GetActivateUserForm(new()));
 
@@ -68,7 +68,7 @@ namespace ODF.API.Controllers
 				&& lang.GetCountryCode() == Languages.Czech.GetCountryCode()
 				&& HttpContext.IsAdmin())
 			{
-				responseModel.MenuItems.Add(GetNamedAction(nameof(RedactionController.GetRedaction), "Redakce", "redactionMenuItem"));
+				responseModel.MenuItems.Add("redactionMenuItem", GetNamedAction(nameof(RedactionController.GetRedaction), "Redakce", "fakin-redakce-dzea"));
 			}
 
 			return Ok(responseModel);

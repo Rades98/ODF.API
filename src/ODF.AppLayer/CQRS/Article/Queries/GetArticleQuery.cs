@@ -3,16 +3,5 @@ using ODF.AppLayer.Mediator;
 
 namespace ODF.AppLayer.CQRS.Article.Queries
 {
-	public sealed class GetArticleQuery : IQuery<ArticleDto>
-	{
-		public GetArticleQuery(int id, string countryCode)
-		{
-			Id = id;
-			CountryCode = countryCode;
-		}
-
-		public int Id { get; }
-
-		public string CountryCode { get; }
-	}
+	public sealed record GetArticleQuery(int Id, string CountryCode) : IQuery<ArticleDto>;
 }

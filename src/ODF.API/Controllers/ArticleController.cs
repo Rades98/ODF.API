@@ -55,8 +55,7 @@ namespace ODF.API.Controllers
 
 			if (validationResult.Errors.Any())
 			{
-				var responseForm = ArticleFormComposer.GetAddArticleForm(requestForm, validationResult.Errors);
-				return UnprocessableEntity(new CreateContactPersonResponseModel(responseForm));
+				return UnprocessableEntity(new CreateContactPersonResponseModel(ArticleFormComposer.GetAddArticleForm(requestForm, validationResult.Errors)));
 			}
 
 			return InternalServerError(new ExceptionResponseModel("Vyskytla se chyba při tvorbě článku"));
